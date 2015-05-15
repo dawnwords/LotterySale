@@ -18,12 +18,8 @@ var treeOpt = {
         }
     },
     types: {
-        '#': {
-            max_depth: 2, check_node: false, uncheck_node: false
-        },
-        default: {
-            icon: false, check_node: true, uncheck_node: true
-        }
+        '#': {icon: false},
+        'default': {icon: false}
     },
     checkbox: {
         keep_selected_style: false
