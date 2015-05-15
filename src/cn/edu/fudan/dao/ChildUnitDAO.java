@@ -23,14 +23,15 @@ public class ChildUnitDAO extends BaseDAO<List<Unit>> {
     @Override
     protected List<Unit> processData(Connection connection) throws Exception {
         List<Unit> result = new ArrayList<>();
-        String sql = "select id,name from tab_unit where fatherid =?";
+        String sql = "select id,name,level from tab_unit where fatherid =?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, unitId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             String id = String.valueOf(rs.getInt(1));
             String name = rs.getString(2);
-            result.add(new Unit(id, name));
+            int level = rs.getInt(3);
+            result.add(new Unit(id, name, level));
         }
         return result;
     }
