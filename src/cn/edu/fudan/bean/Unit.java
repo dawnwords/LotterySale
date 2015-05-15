@@ -7,14 +7,16 @@ import com.google.gson.Gson;
  */
 public class Unit {
     private String id;
-    private String name;
+    private String text;
+    private boolean children;
 
     public Unit() {
     }
 
-    public Unit(String id, String name) {
+    public Unit(String id, String text) {
         this.id = id;
-        this.name = name;
+        this.text = text;
+        this.children = true;
     }
 
     public String getId() {
@@ -25,12 +27,20 @@ public class Unit {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public boolean hasChildren() {
+        return children;
+    }
+
+    public void setChildren(boolean children) {
+        this.children = children;
     }
 
     @Override
