@@ -16,7 +16,30 @@ public abstract class BaseServlet<T> extends HttpServlet {
 
     private static final Gson gson = new Gson();
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected static final int POST = 1;
+    protected static final int GET = 2;
+
+    private int supportMethod;
+
+    protected BaseServlet(int supportMethod) {
+        this.supportMethod = supportMethod;
+    }
+
+    @Override
+    protected final void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if ((supportMethod & POST) != 0) {
+            execute(request, response);
+        }
+    }
+
+    @Override
+    protected final void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if ((supportMethod & GET) != 0) {
+            execute(req, resp);
+        }
+    }
+
+    private void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=UTF-8");
         response.setContentType("application/json");
@@ -27,11 +50,6 @@ public abstract class BaseServlet<T> extends HttpServlet {
             writer.write(gson.toJson(e));
         }
         writer.flush();
-    }
-
-    @Override
-    protected final void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
     }
 
     protected abstract T processRequest(HttpServletRequest request) throws Exception;

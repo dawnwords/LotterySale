@@ -13,6 +13,10 @@ import java.util.List;
 @WebServlet(name = "ChildUnitServlet", urlPatterns = "/cunit")
 public class ChildUnitServlet extends BaseServlet<List<Unit>> {
 
+    public ChildUnitServlet() {
+        super(GET);
+    }
+
     @Override
     protected List<Unit> processRequest(HttpServletRequest request) throws Exception {
         String unitId = request.getParameter("unitId");
