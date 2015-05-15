@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
+<head lang="zh-CN">
     <meta charset="UTF-8">
     <title>浦东新区民政彩票管理系统</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="js/jstree/themes/default/style.min.css"/>
     <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="js/echarts-all.js"></script>
+    <script src="js/jstree/jstree.min.js"></script>
+    <script src="js/unit.js" charset="UTF-8"></script>
     <script src="js/charts.js" charset="UTF-8"></script>
+    <script src="js/main.js" charset="UTF-8"></script>
 </head>
 <body>
-<div class="col-sm-3">
-    unit tree
-</div>
-<div class="col-sm-9">
-    <div id="chart"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <div id="unit-tree"></div>
+            <div id="unit-selected"></div>
+        </div>
+        <div class="col-sm-9">
+            <div id="chart"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

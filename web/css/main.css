@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+#chart {
+    height: 510px;
+}
+
+.tag {
+    font-size: 60%;
+    padding: 2px 4px;
+    margin: 2px;
+}
