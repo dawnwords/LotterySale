@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+    <context-param>
+        <param-name>DBHost</param-name>
+        <param-value>10.141.211.124</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DBPort</param-name>
+        <param-value>3306</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DBUser</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DBPass</param-name>
+        <param-value>123456</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DBName</param-name>
+        <param-value>pdmzcp</param-value>
+    </context-param>
 </web-app>
