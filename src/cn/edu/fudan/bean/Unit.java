@@ -10,6 +10,17 @@ public class Unit {
     private String text;
     private String type;
     private boolean children;
+    private State state;
+
+    private class State {
+        private boolean opened, disabled, selected;
+
+        public State(int lv) {
+            this.opened = false;
+            this.disabled = lv < 2;
+            this.selected = false;
+        }
+    }
 
     public Unit() {
     }
@@ -19,38 +30,7 @@ public class Unit {
         this.text = text;
         this.type = "level-" + level;
         this.children = true;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean hasChildren() {
-        return children;
-    }
-
-    public void setChildren(boolean children) {
-        this.children = children;
+        this.state = new State(level);
     }
 
     @Override

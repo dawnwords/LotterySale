@@ -9,3 +9,8 @@
     padding: 2px 4px;
     margin: 2px;
 }
+
+[aria-level="1"] > a > .jstree-checkbox,
+[aria-level="2"] > a > .jstree-checkbox {
+    display: none;
+}
