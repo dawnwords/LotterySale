@@ -4,12 +4,34 @@
 var graphData = [];
 var chart;
 
-var newSeries = function () {
+var newSeries = function (maxmin, avg, mark) {
+    var markPoint = {
+        data: maxmin ? [{
+            type: 'max',
+            name: '最大值'
+        }, {
+            type: 'min',
+            name: '最小值'
+        }] : []
+    };
+    var markLine = {
+        data: avg ? [{
+            type: 'average',
+            name: '平均值'
+        }] : []
+    };
+    var itemStyle = {
+        normal: {
+            label: {
+                show: mark
+            }
+        }
+    };
     return [
-        {name: "电脑", type: "bar", data: []},
-        {name: "即开", type: "bar", data: []},
-        {name: "中福在线", type: "bar", data: []},
-        {name: "总量", type: "bar", data: []}
+        {name: "电脑", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
+        {name: "即开", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
+        {name: "中福在线", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
+        {name: "总量", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
     ];
 };
 
@@ -70,13 +92,16 @@ var getOpt = function (x, series) {
 var updateSaleGraph = function () {
     if (graphData == null || graphData.length == 0)return;
     chart.clear();
-    var data, times = [], series,
-        dimen = +$("input[name=time]:checked", "#funcbar-time").val(),
-        timeFormat = function (s) {
-            return formatter[dimen](s);
-        };
+    var dimen = +$("input[name=time]:checked", "#funcbar-time").val(),
+        maxmin = $("#funcbar-view-maxmin").is(":checked"),
+        avg = $("#funcbar-view-avg").is(":checked"),
+        mark = $("#funcbar-view-mark").is(":checked");
+
+    var data, times = [], series, timeFormat = function (s) {
+        return formatter[dimen](s);
+    };
     if (graphData.length == 1) {
-        series = newSeries();
+        series = newSeries(maxmin, avg, mark);
         data = graphData[0];
         data = [data.yearData, data.quarterData, data.monthData][dimen];
         for (var i in data) {
@@ -100,7 +125,7 @@ var updateSaleGraph = function () {
         var options = [];
         for (var time in times) {
             timeline.push(time);
-            series = newSeries();
+            series = newSeries(maxmin, avg, mark);
             for (var i in graphData) {
                 data = graphData[i];
                 data = [data.yearData, data.quarterData, data.monthData][dimen];
