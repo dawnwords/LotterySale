@@ -9,16 +9,16 @@ import java.util.List;
  */
 public class UnitSale {
     private int unitid;
-    private List<SaleData> yearData, seasonData, monthData;
+    private List<SaleData> yearData, quarterData, monthData;
 
 
     public UnitSale() {
     }
 
-    public UnitSale(int unitid, List<SaleData> yearData, List<SaleData> seasonData, List<SaleData> monthData) {
+    public UnitSale(int unitid, List<SaleData> yearData, List<SaleData> quarterData, List<SaleData> monthData) {
         this.unitid = unitid;
         this.yearData = yearData;
-        this.seasonData = seasonData;
+        this.quarterData = quarterData;
         this.monthData = monthData;
     }
 
