@@ -29,7 +29,7 @@ public class Unit {
         this.id = id;
         this.text = text;
         this.type = "level-" + level;
-        this.children = true;
+        this.children = level < 3;
         this.state = new State(level);
     }
 
