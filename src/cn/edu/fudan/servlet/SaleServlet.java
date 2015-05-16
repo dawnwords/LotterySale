@@ -5,6 +5,7 @@ import cn.edu.fudan.dao.UnitSaleDAO;
 import cn.edu.fudan.request.SaleRequest;
 
 import javax.servlet.annotation.WebServlet;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +23,6 @@ public class SaleServlet extends BaseServlet<SaleRequest, List<UnitSale>> {
     protected List<UnitSale> processRequest(SaleRequest request) throws Exception {
         int[] unitids = request.unitId;
         log(Arrays.toString(unitids));
-        return new UnitSaleDAO(this, unitids).getResult();
+        return unitids.length == 0 ? new ArrayList<UnitSale>() : new UnitSaleDAO(this, unitids).getResult();
     }
 }
