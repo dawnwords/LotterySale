@@ -4,55 +4,63 @@
 var graphData = [];
 var chart;
 
+var newSeries = function () {
+    return [
+        {name: "电脑", type: "bar", data: []},
+        {name: "即开", type: "bar", data: []},
+        {name: "中福在线", type: "bar", data: []},
+        {name: "总量", type: "bar", data: []}
+    ];
+};
+
+var pushSeries = function (series, d) {
+    series[0].data.push(d.s1);
+    series[1].data.push(d.s2);
+    series[2].data.push(d.s3);
+    series[3].data.push(d.stotal);
+};
+
+var formatter = [
+    function (s) {
+        return s + "年";
+    },
+    function (s) {
+        var tokens = s.split("/");
+        return tokens[0] + "年第" + (+tokens[1]) / 3 + "季度"
+    },
+    function (s) {
+        return s;
+    }
+];
+
+var getOpt = function (x, series) {
+    return {
+        calculable: true,
+        grid: {'y': 80, 'y2': 100},
+        xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
+        yAxis: [{name: '销量', show: true, type: 'value'}],
+        tooltip: {trigger: 'axis'},
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            x: 'right',
+            y: 'center',
+            feature: {
+                mark: {show: true},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        series: series
+    };
+};
+
 var updateSaleGraph = function () {
     if (graphData == null || graphData.length == 0)return;
     var dimen = +$("input[name=time]:checked", "#funcbar-time").val();
     chart.clear();
-    var data, times = [], series, newSeries = function () {
-        return [
-            {name: "电脑", type: "bar", data: []},
-            {name: "即开", type: "bar", data: []},
-            {name: "中福在线", type: "bar", data: []},
-            {name: "总量", type: "bar", data: []}
-        ];
-    }, pushSeries = function (series, d) {
-        series[0].data.push(d.s1);
-        series[1].data.push(d.s2);
-        series[2].data.push(d.s3);
-        series[3].data.push(d.stotal);
-    }, getOpt = function (x, series) {
-        return {
-            calculable: true,
-            grid: {'y': 80, 'y2': 100},
-            xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
-            yAxis: [{name: '销量', show: true, type: 'value'}],
-            tooltip: {trigger: 'axis'},
-            toolbox: {
-                show: true,
-                orient: 'vertical',
-                x: 'right',
-                y: 'center',
-                feature: {
-                    mark: {show: true},
-                    magicType: {show: true, type: ['line', 'bar']},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
-                }
-            },
-            series: series
-        };
-    }, formatter = [
-        function (s) {
-            return s + "年";
-        },
-        function (s) {
-            var tokens = s.split("/");
-            return tokens[0] + "年第" + (+tokens[1]) / 3 + "季度"
-        },
-        function (s) {
-            return s;
-        }
-    ], timeFormat = function (s) {
+    var data, times = [], series, timeFormat = function (s) {
         return formatter[dimen](s);
     };
     if (graphData.length == 1) {
