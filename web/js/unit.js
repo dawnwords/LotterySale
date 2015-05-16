@@ -12,8 +12,10 @@ var treeOpt = {
         data: {
             url: "../cunit",
             dataType: "json",
+            type: 'post',
+            contentType: "application/json",
             data: function (node) {
-                return node.id === "#" ? null : {unitId: node.id};
+                return JSON.stringify(node.id === "#" ? null : {unitId: node.id});
             }
         }
     },
