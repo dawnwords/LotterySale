@@ -4,6 +4,10 @@
     height: 510px;
 }
 
+.funcbar .hide{
+    display: none;
+}
+
 .tag {
     font-size: 60%;
     padding: 2px 4px;
