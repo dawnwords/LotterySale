@@ -76,7 +76,7 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
         return result;
     }
 
-    private class NameSaleData{
+    private class NameSaleData {
         String name;
         List<SaleData> data;
 
@@ -90,13 +90,13 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
         YEAR("", new TimeFormatter() {
             @Override
             public String format(String year, String quarter, String month) {
-                return year + "年";
+                return year;
             }
         }),
         QUARTER(", tab_sales.salequarter", new TimeFormatter() {
             @Override
             public String format(String year, String quarter, String month) {
-                return year + "年第" + quarter + "季度";
+                return year + "/" + (Integer.parseInt(quarter) * 3);
             }
         }),
         MONTH(", tab_sales.salemonth", new TimeFormatter() {
