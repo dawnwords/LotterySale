@@ -14,10 +14,13 @@ var newSeries = function () {
 };
 
 var pushSeries = function (series, d) {
-    series[0].data.push(d.s1);
-    series[1].data.push(d.s2);
-    series[2].data.push(d.s3);
-    series[3].data.push(d.stotal);
+    var correct = function (i) {
+        return i < 1 ? undefined : i;
+    };
+    series[0].data.push(correct(d.s1));
+    series[1].data.push(correct(d.s2));
+    series[2].data.push(correct(d.s3));
+    series[3].data.push(correct(d.stotal));
 };
 
 var formatter = [
@@ -34,6 +37,10 @@ var formatter = [
 ];
 
 var getOpt = function (x, series) {
+    var dataItemNames = [];
+    for (var i in series) {
+        dataItemNames.push(series[i].name);
+    }
     return {
         calculable: true,
         grid: {'y': 80, 'y2': 100},
@@ -52,17 +59,22 @@ var getOpt = function (x, series) {
                 saveAsImage: {show: true}
             }
         },
+        legend: {
+            x: 'left',
+            data: dataItemNames
+        },
         series: series
     };
 };
 
 var updateSaleGraph = function () {
     if (graphData == null || graphData.length == 0)return;
-    var dimen = +$("input[name=time]:checked", "#funcbar-time").val();
     chart.clear();
-    var data, times = [], series, timeFormat = function (s) {
-        return formatter[dimen](s);
-    };
+    var data, times = [], series,
+        dimen = +$("input[name=time]:checked", "#funcbar-time").val(),
+        timeFormat = function (s) {
+            return formatter[dimen](s);
+        };
     if (graphData.length == 1) {
         series = newSeries();
         data = graphData[0];
