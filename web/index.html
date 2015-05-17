@@ -18,47 +18,58 @@
 <body>
 <div class="container">
     <div class="row">
-        <div id="unit" class="col-md-3">
-            <div id="unit-tree"></div>
-            <div id="unit-selected"></div>
+        <div class="col-md-3">
+            <div id="unit">
+                <div class="unit-wrapper">
+                    <div class="unit-title">选择城市</div>
+                    <div class="unit-content" id="unit-tree"></div>
+                </div>
+                <div class="unit-wrapper">
+                    <div class="unit-title">已选城市</div>
+                    <div class="unit-content" id="unit-selected"></div>
+                </div>
+                <div id="unit-center"></div>
+            </div>
         </div>
         <div class="col-md-9">
-            <ul id="nav-bar" class="nav nav-tabs">
-                <li role="presentation" class="active"><a href="#" data-toggle="tab" data-mode="0">销量分析</a></li>
-                <li role="presentation"><a href="#" data-toggle="tab" data-mode="1">同/环比</a></li>
-            </ul>
-            <div class="row" id="funcbar">
-                <div class="funcbar col-xs-5" id="funcbar-time">
-                    <label class="checkbox-inline">
-                        <input type="radio" name="time" value="0" checked>年度
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="radio" name="time" value="1">季度
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="radio" name="time" value="2">月度
-                    </label>
+            <div class="funcbar-wrapper">
+                 <ul id="nav-bar" class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="" data-toggle="tab" data-mode="0">销量分析</a></li>
+                    <li role="presentation"><a href="" data-toggle="tab" data-mode="1">同/环比</a></li>
+                </ul>
+                <div class="row" id="funcbar">
+                    <div class="funcbar col-xs-5" id="funcbar-time">
+                        <label class="radio-inline">
+                            <input type="radio" name="time" value="0" checked>年度
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="time" value="1">季度
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="time" value="2">月度
+                        </label>
+                    </div>
+                    <div class="funcbar hide col-xs-5" id="funcbar-compare">
+                        <label class="radio-inline">
+                            <input type="radio" name="compare" value="0" checked>同比
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="compare" value="1">环比
+                        </label>
+                    </div>
+                    <div class="funcbar col-xs-5 right" id="funcbar-view">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="funcbar-view-mark">指标值
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="funcbar-view-avg">平均值
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="funcbar-view-maxmin">最值
+                        </label>
+                    </div>
+                    <button class="btn btn-primary col-xs-2" id="funcbar-refresh" type="button">刷新图表</button>
                 </div>
-                <div class="funcbar hide col-xs-5" id="funcbar-compare">
-                    <label class="checkbox-inline">
-                        <input type="radio" name="compare" value="0" checked>同比
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="radio" name="compare" value="1">环比
-                    </label>
-                </div>
-                <div class="funcbar col-xs-5" id="funcbar-view">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="funcbar-view-mark">指标值
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="funcbar-view-avg">平均值
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="funcbar-view-maxmin">最值
-                    </label>
-                </div>
-                <button class="btn btn-primary col-xs-2" id="funcbar-refresh" type="button">刷新图表</button>
             </div>
             <div id="chart"></div>
         </div>

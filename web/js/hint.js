@@ -12,7 +12,7 @@ function Hint(element, content) {
     }).on('show.bs.popover', function () {
         setTimeout(function () {
             hint.popover('hide');
-        }, 2000);
+        }, 5000);
     }).on('hidden.bs.popover', function () {
         isShowing = false;
     });
