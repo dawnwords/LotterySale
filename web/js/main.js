@@ -3,7 +3,7 @@
  */
 $(document).ready(function () {
     var mode = 0,
-        tree = $("#unit-tree").jstree(treeOpt),
+        tree = new Unit("#unit-tree", "#unit-selected"),
         time = $("#funcbar-time"),
         compare = $("#funcbar-compare"),
         refresh = $("#funcbar-refresh"),
@@ -13,8 +13,6 @@ $(document).ready(function () {
         hint = new Hint("#unit", "同环比只支持选中一个单位");
 
     chart = echarts.init(document.getElementById('chart'));
-
-    tree.bind("changed.jstree", check_unit);
 
     $("#nav-bar a").click(function () {
         mode = $(this).data("mode");
@@ -32,10 +30,10 @@ $(document).ready(function () {
     compare.find("input[name=compare]").change(updateGraph);
 
     refresh.click(function () {
-        var unitid = tree.jstree('get_selected');
+        var unitid = tree.getSelectedIds();
         if (mode) {
-            if (unitid.length == 1 && +$("#unit-tree").jstree('get_node', unitid, true).attr('aria-level') == 4) {
-                console.log(tree.jstree('get_node', unitid[0]));
+            if (unitid.length == 1 && tree.getNodeLevelById(unitid[0]) == 4) {
+                console.log(tree.getNodeById(unitid[0]));
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
                 hint.show();
