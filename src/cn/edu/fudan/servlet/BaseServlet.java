@@ -1,7 +1,6 @@
 package cn.edu.fudan.servlet;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,21 +42,22 @@ public abstract class BaseServlet<RequestType, ResponseType> extends HttpServlet
     private void execute(HttpServletRequest request, HttpServletResponse response, int method) throws IOException {
         if ((supportMethod & method) != 0) {
             request.setCharacterEncoding("utf-8");
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/json");
+
             String json = "", line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
             while ((line = reader.readLine()) != null) {
                 json += line;
             }
             log("received request:" + json);
-            RequestType req = gson.fromJson(json, requestType);
 
-            response.setCharacterEncoding("utf-8");
-            response.setContentType("application/json");
             PrintWriter writer = response.getWriter();
             try {
+                RequestType req = gson.fromJson(json, requestType);
                 json = gson.toJson(processRequest(req));
             } catch (Exception e) {
-                json = gson.toJson(e.getMessage());
+                json = String.format("{error: '%s:%s'}", e.getClass().getSimpleName(), e.getMessage());
             }
             log("send response:" + json);
             writer.write(json);
