@@ -33,8 +33,8 @@ $(document).ready(function () {
     refresh.click(function () {
         var unitid = tree.jstree('get_selected');
         if (mode) {
-            if (unitid.length == 1) {
-                console.log(tree.jstree('get_type', tree.jstree('get_node', unitid[0])));
+            if (unitid.length == 1 && +$("#unit-tree").jstree('get_node',unitid,true).attr('aria-level') == 4) {
+                console.log(tree.jstree('get_node', unitid[0]));
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
                 //TODO handle multi-unit choice
@@ -58,7 +58,6 @@ var postAjax = function (url, data) {
         type: 'POST',
         data: JSON.stringify(data),
         success: function (d) {
-            console.log(d);
             graphData = d;
             updateGraph();
         }

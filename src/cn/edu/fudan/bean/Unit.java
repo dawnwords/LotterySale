@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 public class Unit {
     private String id;
     private String text;
-    private String type;
     private boolean children;
     private State state;
 
@@ -28,7 +27,6 @@ public class Unit {
     public Unit(String id, String text, int level) {
         this.id = id;
         this.text = text;
-        this.type = "level-" + level;
         this.children = level < 3;
         this.state = new State(level);
     }
