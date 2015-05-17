@@ -37,7 +37,7 @@ var newSeries = function (maxmin, avg, mark) {
 
 var pushSeries = function (series, d) {
     var correct = function (i) {
-        return i < 1 ? undefined : i;
+        return i < 0 ? undefined : i;
     };
     series[0].data.push(correct(d.s1));
     series[1].data.push(correct(d.s2));
@@ -54,7 +54,8 @@ var formatter = [
         return tokens[0] + "年第" + (+tokens[1]) / 3 + "季度"
     },
     function (s) {
-        return s;
+        var tokens = s.split("/");
+        return tokens[1] == '01' ? s : tokens[1];
     }
 ];
 
@@ -89,35 +90,51 @@ var getOpt = function (x, series) {
     };
 };
 
-var updateSaleGraph = function () {
-    if (graphData == null || graphData.length == 0)return;
-    chart.clear();
-    var dimen = +$("input[name=time]:checked", "#funcbar-time").val(),
-        maxmin = $("#funcbar-view-maxmin").is(":checked"),
+var isArray = function (o) {
+    return Object.prototype.toString.call(o) === '[object Array]';
+}
+
+var updateGraph = function () {
+    if (graphData == null) return;
+    var maxmin = $("#funcbar-view-maxmin").is(":checked"),
         avg = $("#funcbar-view-avg").is(":checked"),
         mark = $("#funcbar-view-mark").is(":checked");
 
-    var data, times = [], series, timeFormat = function (s) {
+    chart.clear();
+    var dimen;
+    if (isArray(graphData)) {
+        if (graphData.length > 0) {
+            dimen = +$("input[name=time]:checked", "#funcbar-time").val();
+            updateSaleGraph(dimen, maxmin, avg, mark);
+        }
+    } else {
+        dimen = +$("input[name=compare]:checked", "#funcbar-compare").val();
+        updateCompareSaleGraph(dimen, maxmin, avg, mark);
+    }
+};
+
+var updateSaleGraph = function (dimen, maxmin, avg, mark) {
+    var data, d, i, times = [], series, timeFormat = function (s) {
         return formatter[dimen](s);
     };
     if (graphData.length == 1) {
         series = newSeries(maxmin, avg, mark);
         data = graphData[0];
         data = [data.yearData, data.quarterData, data.monthData][dimen];
-        for (var i in data) {
-            var d = data[i];
+        for (i in data) {
+            d = data[i];
             pushSeries(series, d);
             times.push(timeFormat(d.time));
         }
         chart.setOption(getOpt(times, series));
     } else {
-        var unitNames = [];
-        for (var i in graphData) {
+        var x = [];
+        for (i in graphData) {
             data = graphData[i];
-            unitNames.push(data.unitName);
+            x.push(data.unitName);
 
             data = [data.yearData, data.quarterData, data.monthData][dimen];
-            for (var d in data) {
+            for (d in data) {
                 times[data[d].time] = d;
             }
         }
@@ -126,12 +143,12 @@ var updateSaleGraph = function () {
         for (var time in times) {
             timeline.push(time);
             series = newSeries(maxmin, avg, mark);
-            for (var i in graphData) {
+            for (i in graphData) {
                 data = graphData[i];
                 data = [data.yearData, data.quarterData, data.monthData][dimen];
                 pushSeries(series, data[times[time]]);
             }
-            options.push(getOpt(unitNames, series));
+            options.push(getOpt(x, series));
         }
         chart.setOption({
             options: options,
@@ -152,21 +169,38 @@ var updateSaleGraph = function () {
     }
 };
 
-var getTimeData = function (selectedUnit) {
-    $.ajax({
-        url: '../sale',
-        dataType: 'json',
-        contentType: 'application/json',
-        type: 'POST',
-        data: JSON.stringify({unitId: selectedUnit}),
-        success: function (data) {
-            console.log(data);
-            graphData = data;
-            updateSaleGraph();
+var updateCompareSaleGraph = function (dimen, maxmin, avg, mark) {
+    var timeline = dimen ? graphData.month : graphData.year,
+        data = dimen ? graphData.monthData : graphData.yearData,
+        xData = dimen ? graphData.year : graphData.month,
+        options = [], series, x, i, timeFormatter = function (s) {
+            return s + (dimen ? "月" : "年");
+        };
+
+    for (i in timeline) {
+        series = newSeries(maxmin, avg, mark);
+        x = [];
+        for (var d in xData) {
+            x.push(xData[d] + (dimen ? "年" : "月"));
+            pushSeries(series, data[i][d] == undefined ? {} : data[i][d]);
+        }
+        options.push(getOpt(x, series));
+    }
+
+    chart.setOption({
+        options: options,
+        timeline: {
+            data: timeline,
+            label: {formatter: timeFormatter},
+            checkpointStyle: {
+                symbol: 'auto',
+                symbolSize: 'auto',
+                color: 'blue',
+                bordercolor: 'blue',
+                label: {show: false, textStyle: {color: 'auto'}}
+            },
+            autoPlay: false,
+            playInterval: 2000
         }
     });
-};
-
-var getRatioData = function () {
-
 };
