@@ -4,17 +4,34 @@
 $(document).ready(function () {
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected"),
+        hint = new Hint("#unit", "同环比只支持选中一个单位"),
+        chart = new Chart('chart'),
+        tab = $("#nav-bar").find("a"),
         time = $("#funcbar-time"),
         compare = $("#funcbar-compare"),
         refresh = $("#funcbar-refresh"),
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
-        mark = $("#funcbar-view-mark"),
-        hint = new Hint("#unit", "同环比只支持选中一个单位");
+        mark = $("#funcbar-view-mark");
 
-    chart = echarts.init(document.getElementById('chart'));
+    function postAjax(url, data) {
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(data),
+            success: function (data) {
+                chart.setGraphData(data);
+            }
+        });
+    }
 
-    $("#nav-bar a").click(function () {
+    function updateGraph() {
+        chart.updateGraph(maxmin.is(":checked"), avg.is(":checked"), mark.is(":checked"));
+    }
+
+    function clickTab() {
         mode = $(this).data("mode");
         if (mode) {
             time.addClass("hide");
@@ -24,12 +41,9 @@ $(document).ready(function () {
             compare.addClass("hide");
         }
         refresh.trigger('click');
-    });
+    }
 
-    time.find("input[name=time]").change(updateGraph);
-    compare.find("input[name=compare]").change(updateGraph);
-
-    refresh.click(function () {
+    function clickRefresh() {
         var unitid = tree.getSelectedIds();
         if (mode) {
             if (unitid.length == 1 && tree.getNodeLevelById(unitid[0]) == 4) {
@@ -41,24 +55,16 @@ $(document).ready(function () {
         } else {
             postAjax("../sale", {unitId: unitid});
         }
-    });
+    }
+
+    tab.click(clickTab);
+
+    refresh.click(clickRefresh);
 
     maxmin.click(updateGraph);
     avg.click(updateGraph);
     mark.click(updateGraph);
-
+    time.find("input[name=time]").change(updateGraph);
+    compare.find("input[name=compare]").change(updateGraph);
 });
 
-var postAjax = function (url, data) {
-    $.ajax({
-        url: url,
-        dataType: 'json',
-        contentType: 'application/json',
-        type: 'POST',
-        data: JSON.stringify(data),
-        success: function (d) {
-            graphData = d;
-            updateGraph();
-        }
-    });
-};
