@@ -9,7 +9,8 @@ $(document).ready(function () {
         refresh = $("#funcbar-refresh"),
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
-        mark = $("#funcbar-view-mark");
+        mark = $("#funcbar-view-mark"),
+        hint = new Hint("#unit", "同环比只支持选中一个单位");
 
     chart = echarts.init(document.getElementById('chart'));
 
@@ -33,11 +34,11 @@ $(document).ready(function () {
     refresh.click(function () {
         var unitid = tree.jstree('get_selected');
         if (mode) {
-            if (unitid.length == 1 && +$("#unit-tree").jstree('get_node',unitid,true).attr('aria-level') == 4) {
+            if (unitid.length == 1 && +$("#unit-tree").jstree('get_node', unitid, true).attr('aria-level') == 4) {
                 console.log(tree.jstree('get_node', unitid[0]));
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
-                //TODO handle multi-unit choice
+                hint.show();
             }
         } else {
             postAjax("../sale", {unitId: unitid});
@@ -47,8 +48,8 @@ $(document).ready(function () {
     maxmin.click(updateGraph);
     avg.click(updateGraph);
     mark.click(updateGraph);
-});
 
+});
 
 var postAjax = function (url, data) {
     $.ajax({

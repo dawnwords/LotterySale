@@ -4,8 +4,16 @@
     height: 510px;
 }
 
-.funcbar .hide{
+.funcbar .hide {
     display: none;
+}
+
+.hint, .hint > .popover-content {
+    background-color: #f2dede !important;
+}
+
+.hint > .arrow:after {
+    border-right-color: #f2dede !important;
 }
 
 .tag {
