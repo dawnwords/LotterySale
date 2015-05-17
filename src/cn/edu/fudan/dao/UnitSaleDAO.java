@@ -61,10 +61,10 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
             String year = rs.getString(2);
             String quarter = rs.getString(3);
             String month = rs.getString(4);
-            double s1 = rs.getDouble(5);
-            double s2 = rs.getDouble(6);
-            double s3 = rs.getDouble(7);
-            double stotal = rs.getDouble(8);
+            double s1 = nullDouble(rs, 5);
+            double s2 = nullDouble(rs, 6);
+            double s3 = nullDouble(rs, 7);
+            double stotal = nullDouble(rs, 8);
 
             if (!result.containsKey(unitid)) {
                 String unitName = rs.getString(9);

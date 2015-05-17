@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -57,4 +58,9 @@ public abstract class BaseDAO<T> {
     }
 
     protected abstract T processData(Connection connection) throws Exception;
+
+    protected double nullDouble(ResultSet rs, int columnIndex) throws SQLException {
+        Double d = (Double)rs.getObject(columnIndex);
+        return d == null?-1:d;
+    }
 }

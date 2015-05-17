@@ -39,10 +39,10 @@ public class CompareSaleDAO extends BaseDAO<CompareUnitSale> {
             }
             String year = rs.getString(3);
             String month = rs.getString(4);
-            double s1 = rs.getDouble(5);
-            double s2 = rs.getDouble(6);
-            double s3 = rs.getDouble(7);
-            double stotal = rs.getDouble(8);
+            double s1 = nullDouble(rs, 5);
+            double s2 = nullDouble(rs, 6);
+            double s3 = nullDouble(rs, 7);
+            double stotal = nullDouble(rs, 8);
             result.pushData(year, month, s1, s2, s3, stotal);
         }
         return result;
