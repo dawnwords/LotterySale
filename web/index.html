@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="js/jstree/themes/default/style.min.css"/>
     <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="js/echarts.js"></script>
+    <script src="js/echarts/theme.js"></script>
+    <script src="js/echarts/echarts.js"></script>
     <script src="js/jstree/jstree.min.js"></script>
     <script src="js/hint.js"></script>
     <script src="js/unit.js" charset="UTF-8"></script>
@@ -23,7 +24,6 @@
     <div class="left-side" id="unit">
         <div class="unit-wrapper">
             <div class="unit-title">选择城市</div>
-            <div class="unit-deselect btn btn-default">清空选择</div>
             <div class="unit-content" id="unit-tree"></div>
         </div>
         <div class="unit-wrapper">
@@ -41,13 +41,13 @@
             <div class="row" id="funcbar">
                 <div class="funcbar col-xs-5" id="funcbar-time">
                     <label class="radio-inline">
-                        <input type="radio" name="time" value="0" checked>年度
+                        <input type="radio" name="time" value="0">年度
                     </label>
                     <label class="radio-inline">
                         <input type="radio" name="time" value="1">季度
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="time" value="2">月度
+                        <input type="radio" name="time" value="2" checked>月度
                     </label>
                 </div>
                 <div class="funcbar hide col-xs-5" id="funcbar-compare">

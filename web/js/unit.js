@@ -24,7 +24,7 @@ function Unit(treeElement, selectedElement) {
                     if (nodes.length > 0) {
                         if (!nodes[0].state.opened) {
                             nodes.unshift({
-                                text: "全选这一级",
+                                text: "全选",
                                 children: false,
                                 state: {opened: false, disabled: false, selected: false}
                             })

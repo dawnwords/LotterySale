@@ -3,7 +3,7 @@
  */
 function Chart(elementId) {
     var graphData = [];
-    var chart = echarts.init(document.getElementById(elementId), 'macarons');
+    var chart = echarts.init(document.getElementById(elementId), theme());
     var calculable = true;
     var currentOpt;
 
