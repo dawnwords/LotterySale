@@ -22,15 +22,6 @@
     overflow-x: hidden;
 }
 
-#unit{
-    position: relative;
-}
-#unit-center{
-    position: absolute;
-    left: 50%;
-    top: 30%;
-}
-
 [aria-level="1"] > a > .jstree-checkbox,
 [aria-level="2"] > a > .jstree-checkbox {
     display: none;
@@ -46,6 +37,7 @@
 /* left */
 .hint, .hint .popover-content {
     background-color: #f2dede !important;
+    white-space:nowrap;
 }
 
 .hint .arrow:after {
