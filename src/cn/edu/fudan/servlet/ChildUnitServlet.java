@@ -19,8 +19,7 @@ public class ChildUnitServlet extends BaseServlet<SingleUnitRequest, List<Unit>>
 
     @Override
     protected List<Unit> processRequest(SingleUnitRequest request) throws Exception {
-        String unitId = request == null ? "0" : String.valueOf(request.unitId);
-        return new ChildUnitDAO(this, unitId).getResult();
+        return new ChildUnitDAO(this, request == null ? 0 : request.unitId).getResult();
     }
 
 }

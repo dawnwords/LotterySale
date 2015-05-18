@@ -6,7 +6,7 @@ import com.google.gson.Gson;
  * Created by Dawnwords on 2015/5/15.
  */
 public class Unit {
-    private String id;
+    private int id;
     private String text;
     private boolean children;
     private State state;
@@ -15,7 +15,7 @@ public class Unit {
         private boolean opened, disabled, selected;
 
         public State(int lv) {
-            this.opened = false;
+            this.opened = lv == 0;
             this.disabled = lv < 2;
             this.selected = false;
         }
@@ -24,7 +24,7 @@ public class Unit {
     public Unit() {
     }
 
-    public Unit(String id, String text, int level) {
+    public Unit(int id, String text, int level) {
         this.id = id;
         this.text = text;
         this.children = level < 3;
