@@ -25,7 +25,7 @@ public class CompareSaleDAO extends BaseDAO<CompareUnitSale> {
         String sql = "SELECT tab_sales.unitid, tab_unit.name, tab_sales.saleyear, tab_sales.salemonth, " +
                 "tab_sales.s1, tab_sales.s2, tab_sales.s3, tab_sales.stotal FROM tab_sales " +
                 "INNER JOIN tab_unit ON tab_sales.unitid = tab_unit.id WHERE tab_sales.unitid = ? " +
-                "AND tab_unit.level = 3 ORDER BY tab_sales.saleyear, tab_sales.salemonth";
+                "ORDER BY tab_sales.saleyear, tab_sales.salemonth";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, unitId);
         ResultSet rs = ps.executeQuery();

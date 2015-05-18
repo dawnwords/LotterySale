@@ -47,7 +47,7 @@ function Unit(treeElement, selectedElement) {
     var unitSelected = $(selectedElement);
 
     var isSelectAll = function (node) {
-        return isNaN(+node.id);
+        return isNaN(+((node.id === undefined) ? node : node.id));
     };
 
     var getNodeTag = function (node) {
@@ -110,15 +110,17 @@ function Unit(treeElement, selectedElement) {
     });
 
     this.getSelectedIds = function () {
-        return tree.jstree('get_selected');
+        var result = tree.jstree('get_selected');
+        for (var i = result.length; i--;) {
+            if (isSelectAll(result[i])) {
+                result.splice(i, 1);
+            }
+        }
+        return result;
     };
 
     this.getNodeById = function (id) {
         return tree.jstree('get_node', id);
-    };
-
-    this.getNodeLevelById = function (id) {
-        return +tree.jstree('get_node', id, true).attr('aria-level');
     };
 
     this.deselectAll = function () {

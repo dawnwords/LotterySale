@@ -51,7 +51,7 @@ $(document).ready(function () {
     function clickRefresh() {
         var unitid = tree.getSelectedIds();
         if (mode) {
-            if (unitid.length == 1 && tree.getNodeLevelById(unitid[0]) == 4) {
+            if (unitid.length == 1) {
                 console.log(tree.getNodeById(unitid[0]));
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
