@@ -4,6 +4,7 @@
 function Chart(elementId) {
     var graphData = [];
     var chart = echarts.init(document.getElementById(elementId));
+    var calculable = true;
 
     var newSeries = function (maxmin, avg, mark) {
         var markPoint = {
@@ -66,7 +67,7 @@ function Chart(elementId) {
             dataItemNames.push(series[i].name);
         }
         return {
-            calculable: true,
+            calculable: calculable,
             title: {
                 text: '',
                 subtext: '浦东新区民政彩票管理系统',
@@ -78,6 +79,7 @@ function Chart(elementId) {
                     color: 'rgba(204, 204, 204, 0.37)'
                 }
             },
+            dataZoom: {show: true},
             grid: {'y': 80, 'y2': 100},
             xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
             yAxis: [{name: '销量', show: true, type: 'value'}],
@@ -119,7 +121,7 @@ function Chart(elementId) {
                 pushSeries(series, d);
                 times.push(timeFormat(d.time));
             }
-            chart.setOption(getOpt(times, series));
+            chart.setOption({options: [getOpt(times, series)]});
         } else {
             var x = [];
             for (i in graphData) {
@@ -197,6 +199,16 @@ function Chart(elementId) {
             }
         });
     };
+
+    chart.on(echarts.config.EVENT.MAGIC_TYPE_CHANGED, function (param) {
+        if (param.type == 'magicTypeChanged') {
+            var option = chart.getOption();
+            calculable = param.magicType.bar;
+            option.calculable = calculable;
+            chart.setOption(option);
+            chart.refresh();
+        }
+    });
 
     this.updateGraph = function (maxmin, avg, mark) {
         if (graphData == null) return;
