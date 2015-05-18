@@ -148,7 +148,7 @@ function Chart(elementId) {
                 pushSeries(series, d);
                 times.push(timeFormat(d.time));
             }
-            setOption({options: [seriesOpt(times, series)]});
+            setOption(seriesOpt(times, series));
         } else {
             var x = [];
             for (i in graphData) {
@@ -197,11 +197,12 @@ function Chart(elementId) {
     };
 
     chart.on(echarts.config.EVENT.MAGIC_TYPE_CHANGED, function (param) {
+        calculable = param.magicType.bar;
         if (currentOpt.options === undefined) {
-            currentOpt.calculable = param.magicType.bar;
+            currentOpt.calculable = calculable;
         } else {
             for (var i in currentOpt.options) {
-                currentOpt.options[i].calculable = param.magicType.bar;
+                currentOpt.options[i].calculable = calculable;
             }
         }
         chart.setOption(currentOpt);
