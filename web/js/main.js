@@ -45,7 +45,8 @@ $(document).ready(function () {
             time.removeClass("hide");
             compare.addClass("hide");
         }
-        refresh.trigger('click');
+        tree.deselectAll();
+        chart.setGraphData(null);
     }
 
     function clickRefresh() {
