@@ -37,6 +37,69 @@ function Chart(elementId) {
         ];
     };
 
+    var timelineOpt = function (options, data, timeFormat) {
+        return {
+            options: options,
+            timeline: {
+                data: data,
+                y2: 50,
+                label: {formatter: timeFormat},
+                checkpointStyle: {
+                    symbol: 'auto',
+                    symbolSize: 'auto',
+                    color: 'blue',
+                    bordercolor: 'blue',
+                    label: {show: false, textStyle: {color: 'auto'}}
+                },
+                autoPlay: false,
+                playInterval: 2000
+            }
+        };
+    };
+
+    var seriesOpt = function (x, series) {
+        var dataItemNames = [];
+        for (var i in series) {
+            dataItemNames.push(series[i].name);
+        }
+        return {
+            calculable: calculable,
+            title: {
+                text: '',
+                subtext: '浦东新区民政彩票管理系统',
+                x: 'center',
+                y: 150,
+                zlevel: 0,
+                subtextStyle: {
+                    fontSize: 40,
+                    color: 'rgba(204, 204, 204, 0.37)'
+                }
+            },
+            dataZoom: {show: true},
+            grid: {y: 50, y2: 150},
+            xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
+            yAxis: [{name: '销量', show: true, type: 'value'}],
+            tooltip: {trigger: 'axis'},
+            toolbox: {
+                show: true,
+                orient: 'vertical',
+                x: 'right',
+                y: 'center',
+                feature: {
+                    mark: {show: true},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                x: 'left',
+                data: dataItemNames
+            },
+            series: series
+        };
+    };
+
     var pushSeries = function (series, d) {
         var correct = function (i) {
             return i < 0 ? undefined : i;
@@ -61,49 +124,6 @@ function Chart(elementId) {
         }
     ];
 
-    var getOpt = function (x, series) {
-        var dataItemNames = [];
-        for (var i in series) {
-            dataItemNames.push(series[i].name);
-        }
-        return {
-            calculable: calculable,
-            title: {
-                text: '',
-                subtext: '浦东新区民政彩票管理系统',
-                x: 'center',
-                y: 150,
-                zlevel: 0,
-                subtextStyle: {
-                    fontSize: 40,
-                    color: 'rgba(204, 204, 204, 0.37)'
-                }
-            },
-            dataZoom: {show: true},
-            grid: {'y': 80, 'y2': 100},
-            xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
-            yAxis: [{name: '销量', show: true, type: 'value'}],
-            tooltip: {trigger: 'axis'},
-            toolbox: {
-                show: true,
-                orient: 'vertical',
-                x: 'right',
-                y: 'center',
-                feature: {
-                    mark: {show: true},
-                    magicType: {show: true, type: ['line', 'bar']},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
-                }
-            },
-            legend: {
-                x: 'left',
-                data: dataItemNames
-            },
-            series: series
-        };
-    };
-
     var isArray = function (o) {
         return Object.prototype.toString.call(o) === '[object Array]';
     };
@@ -121,7 +141,7 @@ function Chart(elementId) {
                 pushSeries(series, d);
                 times.push(timeFormat(d.time));
             }
-            chart.setOption({options: [getOpt(times, series)]});
+            chart.setOption({options: [seriesOpt(times, series)]});
         } else {
             var x = [];
             for (i in graphData) {
@@ -143,24 +163,9 @@ function Chart(elementId) {
                     data = [data.yearData, data.quarterData, data.monthData][dimen];
                     pushSeries(series, data[times[time]]);
                 }
-                options.push(getOpt(x, series));
+                options.push(seriesOpt(x, series));
             }
-            chart.setOption({
-                options: options,
-                timeline: {
-                    data: timeline,
-                    label: {formatter: timeFormat},
-                    checkpointStyle: {
-                        symbol: 'auto',
-                        symbolSize: 'auto',
-                        color: 'blue',
-                        bordercolor: 'blue',
-                        label: {show: false, textStyle: {color: 'auto'}}
-                    },
-                    autoPlay: false,
-                    playInterval: 2000
-                }
-            });
+            chart.setOption(timelineOpt(options, timeline, timeFormat));
         }
     };
 
@@ -179,25 +184,9 @@ function Chart(elementId) {
                 x.push(xData[d] + (dimen ? "年" : "月"));
                 pushSeries(series, data[i][d] == undefined ? {} : data[i][d]);
             }
-            options.push(getOpt(x, series));
+            options.push(seriesOpt(x, series));
         }
-
-        chart.setOption({
-            options: options,
-            timeline: {
-                data: timeline,
-                label: {formatter: timeFormatter},
-                checkpointStyle: {
-                    symbol: 'auto',
-                    symbolSize: 'auto',
-                    color: 'blue',
-                    bordercolor: 'blue',
-                    label: {show: false, textStyle: {color: 'auto'}}
-                },
-                autoPlay: false,
-                playInterval: 2000
-            }
-        });
+        chart.setOption(timelineOpt(options, timeline, timeFormatter));
     };
 
     chart.on(echarts.config.EVENT.MAGIC_TYPE_CHANGED, function (param) {
