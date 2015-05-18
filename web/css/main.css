@@ -1,4 +1,30 @@
 @charset "UTF-8";
+.header{
+    height: 100px;
+    min-width: 1104px;
+    margin: 5px 30px;
+    background: url("../imgs/logo.png") no-repeat;
+}
+.header h1{
+    margin: 0 120px;
+    line-height: 100px;
+    font-family: '微软雅黑', '黑体', arial, sans-serif;
+}
+
+.content{
+    min-width: 1024px;
+    margin: 0 40px;
+}
+
+.left-side{
+    float: left;
+    width: 30%;
+}
+
+.right-side{
+    float: right;
+    width: 70%;
+}
 
 /* left-top */
 .unit-wrapper {
@@ -16,7 +42,7 @@
 }
 
 .unit-content{
-    height: 240px;
+    min-height: 240px;
     background-color: white;
     overflow-y: scroll;
     overflow-x: hidden;

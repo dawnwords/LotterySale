@@ -1,7 +1,11 @@
 /**
  * Created by Dawnwords on 2015/5/15.
  */
+
 $(document).ready(function () {
+    $(".unit-content").height((document.body.scrollHeight - 236) / 2);
+    $("#chart").height(document.body.scrollHeight - 252);
+
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected"),
         hint = new Hint("#unit", "同环比只支持选中一个单位"),
