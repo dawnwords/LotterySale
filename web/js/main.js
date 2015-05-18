@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected"),
-        hint = new Hint("#unit", "同环比只支持选中一个单位"),
+        hint = new Hint("#unit", "同环比只支持选中一个单位", 2400),
         chart = new Chart('chart'),
         tab = $("#nav-bar").find("a"),
         time = $("#funcbar-time"),

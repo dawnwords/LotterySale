@@ -1,7 +1,7 @@
 /**
  * Created by Dawnwords on 2015/5/17.
  */
-function Hint(element, content) {
+function Hint(element, content, displayTime) {
     var hint = $(element), isShowing = false;
     hint.popover({
         content: content,
@@ -12,7 +12,7 @@ function Hint(element, content) {
     }).on('show.bs.popover', function () {
         setTimeout(function () {
             hint.popover('hide');
-        }, 5000);
+        }, displayTime);
     }).on('hidden.bs.popover', function () {
         isShowing = false;
     });
