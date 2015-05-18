@@ -78,6 +78,15 @@ function Unit(treeElement, selectedElement) {
         }
     };
 
+    var pushNodeWithoutRedundancy = function remove(nodes, target) {
+        for (var i = nodes.length; i--;) {
+            if (nodes[i] === target) {
+                return;
+            }
+        }
+        nodes.push(nodes, target);
+    };
+
     var selectAndDeselectHandler = function (data, isSelect) {
         var tree = data.instance,
             selected = data.node,
@@ -91,7 +100,7 @@ function Unit(treeElement, selectedElement) {
                 if (sibling !== selected) {
                     if (isSelect) {
                         tree.check_node(sibling);
-                        nodes.push(sibling);
+                        pushNodeWithoutRedundancy(nodes, sibling);
                     } else {
                         tree.uncheck_node(sibling);
                         deleteNode(nodes, sibling);
