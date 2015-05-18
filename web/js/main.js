@@ -16,7 +16,8 @@ $(document).ready(function () {
         refresh = $("#funcbar-refresh"),
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
-        mark = $("#funcbar-view-mark");
+        mark = $("#funcbar-view-mark"),
+        deselect = $(".unit-deselect");
 
     function postAjax(url, data) {
         $.ajax({
@@ -70,5 +71,7 @@ $(document).ready(function () {
     mark.click(updateGraph);
     time.find("input[name=time]").change(updateGraph);
     compare.find("input[name=compare]").change(updateGraph);
+
+    deselect.click(tree.deselectAll);
 });
 

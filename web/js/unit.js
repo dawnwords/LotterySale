@@ -39,7 +39,7 @@ function Unit(treeElement, selectedElement) {
         for (var i in nodes) {
             var node = nodes[i];
             html += '<a class="btn btn-default tag" role="button">' + node.text
-                + '<button type="button" class="close" aria-label="Close"><span aria-hidden="true" data-nodeid="'
+                + '&nbsp;<button type="button" class="close" aria-label="Close"><span aria-hidden="true" data-nodeid="'
                 + node.id + '">&times;</span></button></a>';
         }
         unitSelected.html(html);
@@ -59,4 +59,9 @@ function Unit(treeElement, selectedElement) {
     this.getNodeLevelById = function (id) {
         return +tree.jstree('get_node', id, true).attr('aria-level');
     };
+
+    this.deselectAll = function () {
+        tree.jstree('deselect_all');
+        unitSelected.html('');
+    }
 }
