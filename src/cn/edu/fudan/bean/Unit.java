@@ -16,7 +16,7 @@ public class Unit {
 
         public State(int lv) {
             this.opened = lv == 0;
-            this.disabled = lv < 2;
+            this.disabled = false;
             this.selected = false;
         }
     }

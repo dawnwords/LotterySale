@@ -57,11 +57,6 @@
     overflow-x: hidden;
 }
 
-[aria-level="1"] > a > .jstree-checkbox,
-[aria-level="2"] > a > .jstree-checkbox {
-    display: none;
-}
-
 /* left-bottom */
 .tag {
     padding: 4px 8px;
