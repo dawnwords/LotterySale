@@ -67,6 +67,17 @@ function Chart(elementId) {
         }
         return {
             calculable: true,
+            title: {
+                text: '',
+                subtext: '浦东新区民政彩票管理系统',
+                x: 'center',
+                y: 150,
+                zlevel: 0,
+                subtextStyle: {
+                    fontSize: 40,
+                    color: 'rgba(204, 204, 204, 0.37)'
+                }
+            },
             grid: {'y': 80, 'y2': 100},
             xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
             yAxis: [{name: '销量', show: true, type: 'value'}],
