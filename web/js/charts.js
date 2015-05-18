@@ -3,8 +3,9 @@
  */
 function Chart(elementId) {
     var graphData = [];
-    var chart = echarts.init(document.getElementById(elementId));
+    var chart = echarts.init(document.getElementById(elementId), 'macarons');
     var calculable = true;
+    var currentOpt;
 
     var newSeries = function (maxmin, avg, mark) {
         var markPoint = {
@@ -44,11 +45,12 @@ function Chart(elementId) {
                 data: data,
                 y2: 50,
                 label: {formatter: timeFormat},
+                symbolSize: 6,
                 checkpointStyle: {
                     symbol: 'auto',
-                    symbolSize: 'auto',
-                    color: 'blue',
-                    bordercolor: 'blue',
+                    symbolSize: 6,
+                    color: '#337ab6',
+                    bordercolor: '#337ab6',
                     label: {show: false, textStyle: {color: 'auto'}}
                 },
                 autoPlay: false,
@@ -128,6 +130,11 @@ function Chart(elementId) {
         return Object.prototype.toString.call(o) === '[object Array]';
     };
 
+    var setOption = function (opt) {
+        currentOpt = opt;
+        chart.setOption(opt);
+    };
+
     var updateSaleGraph = function (dimen, maxmin, avg, mark) {
         var data, d, i, times = [], series, timeFormat = function (s) {
             return formatter[dimen](s);
@@ -141,7 +148,7 @@ function Chart(elementId) {
                 pushSeries(series, d);
                 times.push(timeFormat(d.time));
             }
-            chart.setOption({options: [seriesOpt(times, series)]});
+            setOption({options: [seriesOpt(times, series)]});
         } else {
             var x = [];
             for (i in graphData) {
@@ -165,7 +172,7 @@ function Chart(elementId) {
                 }
                 options.push(seriesOpt(x, series));
             }
-            chart.setOption(timelineOpt(options, timeline, timeFormat));
+            setOption(timelineOpt(options, timeline, timeFormat));
         }
     };
 
@@ -186,17 +193,18 @@ function Chart(elementId) {
             }
             options.push(seriesOpt(x, series));
         }
-        chart.setOption(timelineOpt(options, timeline, timeFormatter));
+        setOption(timelineOpt(options, timeline, timeFormatter));
     };
 
     chart.on(echarts.config.EVENT.MAGIC_TYPE_CHANGED, function (param) {
-        if (param.type == 'magicTypeChanged') {
-            var option = chart.getOption();
-            calculable = param.magicType.bar;
-            option.calculable = calculable;
-            chart.setOption(option);
-            chart.refresh();
+        if (currentOpt.options === undefined) {
+            currentOpt.calculable = param.magicType.bar;
+        } else {
+            for (var i in currentOpt.options) {
+                currentOpt.options[i].calculable = param.magicType.bar;
+            }
         }
+        chart.setOption(currentOpt);
     });
 
     this.updateGraph = function (maxmin, avg, mark) {

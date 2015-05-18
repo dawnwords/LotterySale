@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
     $(".unit-content").height((document.body.scrollHeight - 236) / 2);
-    $("#chart").height(document.body.scrollHeight - 252);
+    $("#chart").height(document.body.scrollHeight - 262);
 
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected"),
