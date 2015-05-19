@@ -51,9 +51,9 @@ function Unit(treeElement, selectedElement) {
     };
 
     var getNodeTag = function (node) {
-        return '<a class="btn btn-default tag" role="button">' + node.text
-            + '&nbsp;<button type="button" class="close" aria-label="Close"><span aria-hidden="true" data-nodeid="'
-            + node.id + '">&times;</span></button></a>';
+        return '<div class="btn btn-default tag" role="button">' + node.text
+            + '&nbsp;<button type="button" class="close" aria-label="Close" data-nodeid="'
+            + node.id + '"><span aria-hidden="true" >&times;</span></button></div>';
     };
 
     var updateUnitSelected = function (nodes) {
@@ -65,8 +65,8 @@ function Unit(treeElement, selectedElement) {
             }
         }
         unitSelected.html(html);
-        unitSelected.find("span").click(function () {
-            tree.uncheck_node(tree.get_node($(this).data("nodeid")));
+        unitSelected.find("button").click(function () {
+            tree.jstree('uncheck_node', tree.jstree('get_node', $(this).data("nodeid")));
         });
     };
 
