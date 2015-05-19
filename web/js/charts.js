@@ -3,7 +3,7 @@
  */
 function Chart(elementId) {
     var graphData = [];
-    var chart = echarts.init(document.getElementById(elementId), theme());
+    var chart = echarts.init(document.getElementById(elementId));
     var calculable = true;
     var currentOpt;
 
