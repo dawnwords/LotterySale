@@ -34,10 +34,17 @@ public class CompareUnitSale {
             this.month.add(month);
             this.monthData.add(new ArrayList<SaleData>());
         }
-        this.yearData.get(this.year.indexOf(year)).add(new SaleData(month, s1, s2, s3, stotal));
-        this.monthData.get(this.month.indexOf(month)).add(new SaleData(year, s1, s2, s3, stotal));
+        this.yearData.get(this.year.indexOf(year)).add(new SaleData(monthToDateString(month), s1, s2, s3, stotal));
+        this.monthData.get(this.month.indexOf(month)).add(new SaleData(yearToDateString(year), s1, s2, s3, stotal));
     }
 
+    private String monthToDateString(String month) {
+        return "2014/" + month + "/01";
+    }
+
+    private String yearToDateString(String year) {
+        return year + "/01/01";
+    }
 
     @Override
     public String toString() {

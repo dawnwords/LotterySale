@@ -114,7 +114,8 @@ function Chart(elementId) {
 
     var formatter = [
         function (s) {
-            return s + "年";
+            var tokens = s.split("/");
+            return tokens[0] + "年";
         },
         function (s) {
             var tokens = s.split("/");
@@ -122,7 +123,7 @@ function Chart(elementId) {
         },
         function (s) {
             var tokens = s.split("/");
-            return tokens[1] == '01' ? s : tokens[1];
+            return tokens[1] == '01' ? (tokens[0] + "-" + tokens[1]) : tokens[1];
         }
     ];
 
@@ -146,7 +147,7 @@ function Chart(elementId) {
             for (i in data) {
                 d = data[i];
                 pushSeries(series, d);
-                times.push(timeFormat(d.time));
+                times.push(d.time);
             }
             setOption(seriesOpt(times, series));
         } else {

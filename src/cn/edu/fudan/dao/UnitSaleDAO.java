@@ -89,19 +89,19 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
         YEAR("", new TimeFormatter() {
             @Override
             public String format(String year, String quarter, String month) {
-                return year;
+                return year + "/01/01";
             }
         }),
         QUARTER(", tab_sales.salequarter", new TimeFormatter() {
             @Override
             public String format(String year, String quarter, String month) {
-                return year + "/" + (Integer.parseInt(quarter) * 3);
+                return year + "/" + (Integer.parseInt(quarter) * 3) + "/01";
             }
         }),
         MONTH(", tab_sales.salemonth", new TimeFormatter() {
             @Override
             public String format(String year, String quarter, String month) {
-                return year + "/" + month;
+                return year + "/" + month + "/01";
             }
         });
         protected String sql;
