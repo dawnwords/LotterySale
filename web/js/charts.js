@@ -34,7 +34,7 @@ function Chart(elementId) {
             {name: "电脑", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
             {name: "即开", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
             {name: "中福在线", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
-            {name: "总量", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
+            {name: "总量", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle}
         ];
     };
 
@@ -60,10 +60,6 @@ function Chart(elementId) {
     };
 
     var seriesOpt = function (x, series) {
-        var dataItemNames = [];
-        for (var i in series) {
-            dataItemNames.push(series[i].name);
-        }
         return {
             calculable: calculable,
             title: {
@@ -96,7 +92,8 @@ function Chart(elementId) {
             },
             legend: {
                 x: 'left',
-                data: dataItemNames
+                selected: {'电脑': false, '即开': false, '中福在线': false, '总量': true},
+                data: ['电脑', '即开', '中福在线', '总量']
             },
             series: series
         };
@@ -147,7 +144,7 @@ function Chart(elementId) {
             for (i in data) {
                 d = data[i];
                 pushSeries(series, d);
-                times.push(d.time);
+                times.push(timeFormat(d.time));
             }
             setOption(seriesOpt(times, series));
         } else {
