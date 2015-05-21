@@ -70,7 +70,7 @@ function Unit(treeElement, selectedElement) {
         });
     };
 
-    var deleteNode = function remove(nodes, toDelete) {
+    var deleteNode = function (nodes, toDelete) {
         for (var i = nodes.length; i--;) {
             if (nodes[i] === toDelete) {
                 nodes.splice(i, 1);
@@ -78,7 +78,7 @@ function Unit(treeElement, selectedElement) {
         }
     };
 
-    var pushNodeWithoutRedundancy = function remove(nodes, target) {
+    var pushNodeWithoutRedundancy = function (nodes, target) {
         for (var i = nodes.length; i--;) {
             if (nodes[i] === target) {
                 return;
@@ -90,13 +90,14 @@ function Unit(treeElement, selectedElement) {
     var selectAndDeselectHandler = function (data, isSelect) {
         var tree = data.instance,
             selected = data.node,
-            nodes = tree.get_selected(true);
+            nodes = tree.get_selected(true),
+            siblings = tree.get_node(selected.parent).children,
+            sibling, i;
 
         if (isSelectAll(selected)) {
             deleteNode(nodes, selected);
-            var siblings = tree.get_node(selected.parent).children;
-            for (var i in siblings) {
-                var sibling = tree.get_node(siblings[i]);
+            for (i in siblings) {
+                sibling = tree.get_node(siblings[i]);
                 if (sibling !== selected) {
                     if (isSelect) {
                         tree.check_node(sibling);
@@ -106,6 +107,20 @@ function Unit(treeElement, selectedElement) {
                         deleteNode(nodes, sibling);
                     }
                 }
+            }
+        } else if (!isSelect) {
+            var selectAllNode, notAllSelected = false;
+            for (i in siblings) {
+                sibling = tree.get_node(siblings[i]);
+                if (isSelectAll(sibling)) {
+                    selectAllNode = sibling;
+                } else if (tree.is_checked(sibling)) {
+                    notAllSelected = true;
+                }
+            }
+            if (!notAllSelected) {
+                tree.uncheck_node(selectAllNode);
+                deleteNode(nodes, selectAllNode);
             }
         }
         updateUnitSelected(nodes);
