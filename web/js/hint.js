@@ -1,10 +1,13 @@
 /**
  * Created by Dawnwords on 2015/5/17.
  */
-function Hint(element, content, displayTime) {
+function Hint(element, displayTime) {
     var hint = $(element), isShowing = false;
+    var msg = "";
     hint.popover({
-        content: content,
+        content: function () {
+            return msg;
+        },
         template: "<div class='popover text-danger hint' role='tooltip'><div class='arrow'></div><div class='popover-content'></div></div>",
         trigger: 'manual',
         animation: true,
@@ -16,9 +19,10 @@ function Hint(element, content, displayTime) {
     }).on('hidden.bs.popover', function () {
         isShowing = false;
     });
-    this.show = function () {
+    this.show = function (message) {
         if (!isShowing) {
             isShowing = true;
+            msg = message;
             hint.popover('show');
         }
     }
