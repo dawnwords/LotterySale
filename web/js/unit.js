@@ -1,7 +1,7 @@
 /**
  * Created by Dawnwords on 2015/5/15.
  */
-function Unit(treeElement, selectedElement) {
+function Unit(treeElement, selectedElement, searchElement) {
     var tree = $(treeElement).jstree({
         core: {
             animation: 0,
@@ -42,6 +42,33 @@ function Unit(treeElement, selectedElement) {
             three_state: false
         },
         plugins: ['checkbox', 'types']
+    });
+
+    var search = $(searchElement).typeahead({
+        source: function (query, process) {
+            var data = JSON.stringify({
+                keyword: query,
+                count: 8
+            });
+            console.log(data);
+            $.ajax({
+                url: "../sunit",
+                dataType: "json",
+                type: 'post',
+                contentType: "application/json",
+                data: data,
+                success: function (data) {
+                    if (data.length > 0) {
+                        process(data);
+                    }
+                }
+            });
+        },
+        autoSelect: true,
+        afterSelect: function (data) {
+            tree.jstree('check_node', tree.jstree('get_node', data.id));
+            search.val("");
+        }
     });
 
     var unitSelected = $(selectedElement);
