@@ -10,6 +10,7 @@
     <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="js/echarts/echarts.js"></script>
     <script src="js/jstree/jstree.min.js"></script>
+    <script src="js/typeahead/bootstrap3-typeahead.min.js"></script>
     <script src="js/hint.js"></script>
     <script src="js/unit.js" charset="UTF-8"></script>
     <script src="js/charts.js" charset="UTF-8"></script>
@@ -27,8 +28,13 @@
         </div>
         <div class="unit-wrapper">
             <div class="unit-title">已选节点</div>
-            <div class="unit-deselect btn btn-default">清空选择</div>
-            <div class="unit-content" id="unit-selected"></div>
+            <div class="unit-content">
+                <from class="form-inline">
+                    <input class="form-control" id="unit-keyword" type="text" placeholder="关键字"/>
+                    <button class="btn btn-danger" id="unit-deselect" type="submit">清空</button>
+                </from>
+                <div id="unit-selected"></div>
+            </div>
         </div>
     </div>
     <div class="right-side">

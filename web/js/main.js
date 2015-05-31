@@ -7,7 +7,7 @@ $(document).ready(function () {
     $("#chart").height(document.body.scrollHeight - 262);
 
     var mode = 0,
-        tree = new Unit("#unit-tree", "#unit-selected"),
+        tree = new Unit("#unit-tree", "#unit-selected", "#unit-keyword"),
         hint = new Hint("#unit", 2400),
         chart = new Chart('chart'),
         tab = $("#nav-bar").find("a"),
@@ -17,7 +17,7 @@ $(document).ready(function () {
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
         mark = $("#funcbar-view-mark"),
-        deselect = $(".unit-deselect");
+        deselect = $("#unit-deselect");
 
     function postAjax(url, data) {
         $.ajax({
@@ -56,7 +56,7 @@ $(document).ready(function () {
                 console.log(tree.getNodeById(unitid[0]));
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
-                hint.show("同环比只支持选中一个单位");
+                hint.show(unitid.length == 0 ? "请至少选中一个单位" : "同环比只支持选中一个单位");
             }
         } else {
             postAjax("../sale", {unitId: unitid});
