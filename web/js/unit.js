@@ -46,17 +46,15 @@ function Unit(treeElement, selectedElement, searchElement) {
 
     var search = $(searchElement).typeahead({
         source: function (query, process) {
-            var data = JSON.stringify({
-                keyword: query,
-                count: 8
-            });
-            console.log(data);
             $.ajax({
                 url: "../sunit",
                 dataType: "json",
                 type: 'post',
                 contentType: "application/json",
-                data: data,
+                data: JSON.stringify({
+                    keyword: query,
+                    count: 8
+                }),
                 success: function (data) {
                     if (data.length > 0) {
                         process(data);
@@ -66,7 +64,35 @@ function Unit(treeElement, selectedElement, searchElement) {
         },
         autoSelect: true,
         afterSelect: function (data) {
-            tree.jstree('check_node', tree.jstree('get_node', data.id));
+            $.ajax({
+                url: "../aunit",
+                dataType: "json",
+                type: "post",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    unitId: data.id
+                }),
+                success: function (ancestors) {
+                    var openNode = function (i) {
+                        var afterOpen = function () {
+                            openNode(i + 1);
+                            tree.off("after_open.jstree", afterOpen);
+                        };
+                        if (i == ancestors.length) {
+                            tree.jstree('check_node', tree.jstree('get_node', data.id));
+                        } else {
+                            var node = tree.jstree('get_node', ancestors[i]);
+                            if (tree.jstree("is_open", node)) {
+                                openNode(i + 1);
+                            } else {
+                                tree.jstree("open_node", node);
+                                tree.on("after_open.jstree", afterOpen);
+                            }
+                        }
+                    };
+                    openNode(0);
+                }
+            });
             search.val("");
         }
     });
@@ -153,12 +179,22 @@ function Unit(treeElement, selectedElement, searchElement) {
         updateUnitSelected(nodes);
     };
 
-    tree.bind("select_node.jstree", function (e, data) {
+    tree.on("select_node.jstree", function (e, data) {
         selectAndDeselectHandler(data, true);
     });
-    tree.bind("deselect_node.jstree", function (e, data) {
+    tree.on("deselect_node.jstree", function (e, data) {
         selectAndDeselectHandler(data, false);
     });
+
+    var checkEvent = function (name) {
+        tree.on(name, function (e, data) {
+            console.log(name, data.node.id);
+        });
+    };
+    checkEvent("before_open.jstree");
+    checkEvent("open_node.jstree");
+    checkEvent("after_open.jstree");
+    checkEvent("load_node.jstree");
 
     this.getSelectedIds = function () {
         var result = tree.jstree('get_selected');
