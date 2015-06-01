@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -41,26 +40,20 @@ public abstract class BaseServlet<RequestType, ResponseType> extends HttpServlet
 
     private void execute(HttpServletRequest request, HttpServletResponse response, int method) throws IOException {
         if ((supportMethod & method) != 0) {
-            request.setCharacterEncoding("utf-8");
+            String result;
+            try {
+                RequestType req = gson.fromJson(new InputStreamReader(request.getInputStream(), "utf-8"), requestType);
+                log("receive request:" + req);
+                result = gson.toJson(processRequest(req));
+            } catch (Exception e) {
+                result = String.format("{error: '%s:%s'}", e.getClass().getSimpleName(), e.getMessage());
+            }
+            log("send response:" + result);
+
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
-
-            String json = "", line;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            while ((line = reader.readLine()) != null) {
-                json += line;
-            }
-            log("received request:" + json);
-
             PrintWriter writer = response.getWriter();
-            try {
-                RequestType req = gson.fromJson(json, requestType);
-                json = gson.toJson(processRequest(req));
-            } catch (Exception e) {
-                json = String.format("{error: '%s:%s'}", e.getClass().getSimpleName(), e.getMessage());
-            }
-            log("send response:" + json);
-            writer.write(json);
+            writer.write(result);
             writer.flush();
         }
     }
