@@ -186,16 +186,6 @@ function Unit(treeElement, selectedElement, searchElement) {
         selectAndDeselectHandler(data, false);
     });
 
-    var checkEvent = function (name) {
-        tree.on(name, function (e, data) {
-            console.log(name, data.node.id);
-        });
-    };
-    checkEvent("before_open.jstree");
-    checkEvent("open_node.jstree");
-    checkEvent("after_open.jstree");
-    checkEvent("load_node.jstree");
-
     this.getSelectedIds = function () {
         var result = tree.jstree('get_selected');
         for (var i = result.length; i--;) {
