@@ -94,7 +94,7 @@
 
 #funcbar {
     height: 58px;
-    padding: 0 40px;
+    padding: 0 20px;
     background-color: white;
     margin: 0 2px;
 }
@@ -103,11 +103,12 @@
     margin-top: 12px;
 }
 
-.funcbar {
-    padding-top: 18px;
+.funcbar.left {
+    padding-top: 8px;
 }
 
 .funcbar.right {
+    padding-top: 18px;
     text-align: right;
 }
 

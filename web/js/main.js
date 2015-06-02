@@ -14,6 +14,7 @@ $(document).ready(function () {
         tab = $("#nav-bar").find("a"),
         time = $("#funcbar-time"),
         compare = $("#funcbar-compare"),
+        population = $("#funcbar-population"),
         refresh = $("#funcbar-refresh"),
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
@@ -73,6 +74,7 @@ $(document).ready(function () {
     mark.click(updateGraph);
     time.find("input[name=time]").change(updateGraph);
     compare.find("input[name=compare]").change(updateGraph);
+    population.find("input[name=population]").change(updateGraph);
 
     deselect.click(tree.deselectAll);
 });

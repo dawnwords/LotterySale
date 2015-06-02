@@ -29,6 +29,7 @@
         <form class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="unit-keyword">快速检索:</label>
+
                 <div class="col-sm-9">
                     <input class="form-control" id="unit-keyword" type="text" placeholder="请输入节点名称"/>
                 </div>
@@ -48,26 +49,39 @@
                 <li role="presentation"><a href="" data-toggle="tab" data-mode="1">同/环比</a></li>
             </ul>
             <div class="row" id="funcbar">
-                <div class="funcbar col-xs-5" id="funcbar-time">
-                    <label class="radio-inline">
-                        <input type="radio" name="time" value="0">年度
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="time" value="1">季度
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="time" value="2" checked>月度
-                    </label>
+                <div class="col-md-5 funcbar left">
+                    <div id="funcbar-time">
+                        <label class="radio-inline">
+                            <input type="radio" name="time" value="0">年度
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="time" value="1">季度
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="time" value="2" checked>月度
+                        </label>
+                    </div>
+                    <div class="hide" id="funcbar-compare">
+                        <label class="radio-inline">
+                            <input type="radio" name="compare" value="0" checked>同比
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="compare" value="1">环比
+                        </label>
+                    </div>
+                    <div id="funcbar-population">
+                        <label class="radio-inline">
+                            <input type="radio" name="population" value="0" checked>非人均
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="population" value="1">人均/户籍
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="population" value="2">人均/来沪
+                        </label>
+                    </div>
                 </div>
-                <div class="funcbar hide col-xs-5" id="funcbar-compare">
-                    <label class="radio-inline">
-                        <input type="radio" name="compare" value="0" checked>同比
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="compare" value="1">环比
-                    </label>
-                </div>
-                <div class="funcbar col-xs-5 right" id="funcbar-view">
+                <div class="funcbar col-md-5 right" id="funcbar-view">
                     <label class="checkbox-inline">
                         <input type="checkbox" id="funcbar-view-mark">指标值
                     </label>
@@ -78,7 +92,7 @@
                         <input type="checkbox" id="funcbar-view-maxmin">最值
                     </label>
                 </div>
-                <button class="btn btn-primary col-xs-2" id="funcbar-refresh" type="button">刷新图表</button>
+                <button class="btn btn-primary col-md-2" id="funcbar-refresh" type="button">刷新图表</button>
             </div>
         </div>
         <div id="chart"></div>

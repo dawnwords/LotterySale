@@ -99,14 +99,14 @@ function Chart(elementId) {
         };
     };
 
-    var pushSeries = function (series, d) {
+    var pushSeries = function (series, d, populationAvg) {
         var correct = function (i) {
             return i < 0 ? undefined : i;
         };
-        series[0].data.push(correct(d.s1));
-        series[1].data.push(correct(d.s2));
-        series[2].data.push(correct(d.s3));
-        series[3].data.push(correct(d.stotal));
+        series[0].data.push(correct(populationAvg(d.s1)));
+        series[1].data.push(correct(populationAvg(d.s2)));
+        series[2].data.push(correct(populationAvg(d.s3)));
+        series[3].data.push(correct(populationAvg(d.stotal)));
     };
 
     var formatter = [
@@ -133,17 +133,30 @@ function Chart(elementId) {
         chart.setOption(opt);
     };
 
-    var updateSaleGraph = function (dimen, maxmin, avg, mark) {
-        var data, d, i, times = [], series, timeFormat = function (s) {
+    var populationAvgs = function (data) {
+        return [
+            function (d) {
+                    return d;
+            }, function (d) {
+                return data.population1 > 0 ? d / data.population1 : -1;
+            }, function (d) {
+                return data.population2 > 0 ? d / data.population2 : -1;
+            }
+        ];
+    };
+
+    var updateSaleGraph = function (dimen, maxmin, avg, mark, popmod) {
+        var data, d, i, times = [], series, populationAvg, timeFormat = function (s) {
             return formatter[dimen](s);
         };
         if (graphData.length == 1) {
             series = newSeries(maxmin, avg, mark);
             data = graphData[0];
+            populationAvg = populationAvgs(data)[popmod];
             data = [data.yearData, data.quarterData, data.monthData][dimen];
             for (i in data) {
                 d = data[i];
-                pushSeries(series, d);
+                pushSeries(series, d, populationAvg);
                 times.push(timeFormat(d.time));
             }
             setOption(seriesOpt(times, series));
@@ -165,8 +178,9 @@ function Chart(elementId) {
                 series = newSeries(maxmin, avg, mark);
                 for (i in graphData) {
                     data = graphData[i];
+                    populationAvg = populationAvgs(data)[popmod];
                     data = [data.yearData, data.quarterData, data.monthData][dimen];
-                    pushSeries(series, data[times[time]]);
+                    pushSeries(series, data[times[time]], populationAvg);
                 }
                 options.push(seriesOpt(x, series));
             }
@@ -174,20 +188,21 @@ function Chart(elementId) {
         }
     };
 
-    var updateCompareSaleGraph = function (dimen, maxmin, avg, mark) {
+    var updateCompareSaleGraph = function (dimen, maxmin, avg, mark, popmod) {
         var timeline = dimen ? graphData.month : graphData.year,
             data = dimen ? graphData.monthData : graphData.yearData,
             xData = dimen ? graphData.year : graphData.month,
-            options = [], series, x, i, timeFormatter = function (s) {
+            options = [], series, x, i, d, timeFormatter = function (s) {
                 return s + (dimen ? "月" : "年");
-            };
+            }, populationAvg;
 
         for (i in timeline) {
             series = newSeries(maxmin, avg, mark);
             x = [];
-            for (var d in xData) {
+            populationAvg = populationAvgs(graphData)[popmod];
+            for (d in xData) {
                 x.push(xData[d] + (dimen ? "年" : "月"));
-                pushSeries(series, data[i][d] == undefined ? {} : data[i][d]);
+                pushSeries(series, data[i][d] == undefined ? {} : data[i][d], populationAvg);
             }
             options.push(seriesOpt(x, series));
         }
@@ -210,15 +225,15 @@ function Chart(elementId) {
         if (graphData == null) return;
 
         chart.clear();
-        var dimen;
+        var dimen, population = +$("input[name=population]:checked", "#funcbar-population").val();
         if (isArray(graphData)) {
             if (graphData.length > 0) {
                 dimen = +$("input[name=time]:checked", "#funcbar-time").val();
-                updateSaleGraph(dimen, maxmin, avg, mark);
+                updateSaleGraph(dimen, maxmin, avg, mark, population);
             }
         } else {
             dimen = +$("input[name=compare]:checked", "#funcbar-compare").val();
-            updateCompareSaleGraph(dimen, maxmin, avg, mark);
+            updateCompareSaleGraph(dimen, maxmin, avg, mark, population);
         }
     };
 
