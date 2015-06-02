@@ -59,7 +59,7 @@ function Chart(elementId) {
         };
     };
 
-    var seriesOpt = function (x, series) {
+    var seriesOpt = function (x, series, tooltipOption) {
         return {
             calculable: calculable,
             title: {
@@ -77,7 +77,18 @@ function Chart(elementId) {
             grid: {y: 50, y2: 150},
             xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
             yAxis: [{name: '销量', show: true, type: 'value'}],
-            tooltip: {trigger: 'axis'},
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    var res = tooltipOption.title + '(' + params[0].name + '):<table>';
+                    for (var i = 0, l = params.length; i < l; i++) {
+                        var val = params[i].value;
+                        val = typeof(val) == 'string' ? val : tooltipOption.format(val);
+                        res += '<tr><td>' + params[i].seriesName + '</td><td>:</td><td>' + val + '</td></tr>';
+                    }
+                    return res + "</table>";
+                }
+            },
             toolbox: {
                 show: true,
                 orient: 'vertical',
@@ -103,10 +114,10 @@ function Chart(elementId) {
         var correct = function (i) {
             return i < 0 ? undefined : i;
         };
-        series[0].data.push(correct(populationAvg(d.s1)));
-        series[1].data.push(correct(populationAvg(d.s2)));
-        series[2].data.push(correct(populationAvg(d.s3)));
-        series[3].data.push(correct(populationAvg(d.stotal)));
+        series[0].data.push(correct(populationAvg.data(d.s1)));
+        series[1].data.push(correct(populationAvg.data(d.s2)));
+        series[2].data.push(correct(populationAvg.data(d.s3)));
+        series[3].data.push(correct(populationAvg.data(d.stotal)));
     };
 
     var formatter = [
@@ -134,13 +145,31 @@ function Chart(elementId) {
     };
 
     var populationAvgs = function (data) {
+        var avgFormatter = function (d) {
+            d *= 1000;
+            return d.toFixed(2) + "元/千人";
+        };
         return [
-            function (d) {
+            {
+                data: function (d) {
                     return d;
-            }, function (d) {
-                return data.population1 > 0 ? d / data.population1 : -1;
-            }, function (d) {
-                return data.population2 > 0 ? d / data.population2 : -1;
+                },
+                title: '彩票销量（非人均）',
+                format: function (d) {
+                    return d + "元";
+                }
+            }, {
+                data: function (d) {
+                    return data.population1 > 0 ? d / data.population1 : -1;
+                },
+                title: '户籍人口人均彩票销量',
+                format: avgFormatter
+            }, {
+                data: function (d) {
+                    return data.population2 > 0 ? d / data.population2 : -1;
+                },
+                title: '来沪人口人均彩票销量',
+                format: avgFormatter
             }
         ];
     };
@@ -159,7 +188,7 @@ function Chart(elementId) {
                 pushSeries(series, d, populationAvg);
                 times.push(timeFormat(d.time));
             }
-            setOption(seriesOpt(times, series));
+            setOption(seriesOpt(times, series, populationAvg));
         } else {
             var x = [];
             for (i in graphData) {
@@ -182,7 +211,7 @@ function Chart(elementId) {
                     data = [data.yearData, data.quarterData, data.monthData][dimen];
                     pushSeries(series, data[times[time]], populationAvg);
                 }
-                options.push(seriesOpt(x, series));
+                options.push(seriesOpt(x, series, populationAvg));
             }
             setOption(timelineOpt(options, timeline, timeFormat));
         }
@@ -204,7 +233,7 @@ function Chart(elementId) {
                 x.push(xData[d] + (dimen ? "年" : "月"));
                 pushSeries(series, data[i][d] == undefined ? {} : data[i][d], populationAvg);
             }
-            options.push(seriesOpt(x, series));
+            options.push(seriesOpt(x, series, populationAvg));
         }
         setOption(timelineOpt(options, timeline, timeFormatter));
     };
