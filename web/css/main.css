@@ -22,6 +22,10 @@
     width: 30%;
 }
 
+.left-side label {
+    white-space: nowrap;
+}
+
 .right-side {
     float: right;
     width: 70%;
@@ -40,6 +44,7 @@
     font-size: 150%;
     line-height: 30px;
     text-align: center;
+    position: relative;
 }
 
 .unit-content {
@@ -47,6 +52,11 @@
     background-color: white;
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+#unit-deselect {
+    position: absolute;
+    right: 20px;
 }
 
 /* left-bottom */

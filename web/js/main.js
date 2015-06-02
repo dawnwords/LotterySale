@@ -3,7 +3,8 @@
  */
 
 $(document).ready(function () {
-    $(".unit-content").height((document.body.scrollHeight - 236) / 2);
+    $(".unit-content:first").height((document.body.scrollHeight - 285) * 0.6);
+    $(".unit-content:last").height((document.body.scrollHeight - 285) * 0.4);
     $("#chart").height(document.body.scrollHeight - 262);
 
     var mode = 0,

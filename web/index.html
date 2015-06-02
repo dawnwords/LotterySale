@@ -26,15 +26,19 @@
             <div class="unit-title">选择节点</div>
             <div class="unit-content" id="unit-tree"></div>
         </div>
-        <div class="unit-wrapper">
-            <div class="unit-title">已选节点</div>
-            <div class="unit-content">
-                <from class="form-inline">
-                    <input class="form-control" id="unit-keyword" type="text" placeholder="关键字"/>
-                    <button class="btn btn-danger" id="unit-deselect" type="submit">清空</button>
-                </from>
-                <div id="unit-selected"></div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="unit-keyword">快速检索:</label>
+                <div class="col-sm-9">
+                    <input class="form-control" id="unit-keyword" type="text" placeholder="请输入节点名称"/>
+                </div>
             </div>
+        </form>
+        <div class="unit-wrapper">
+            <div class="unit-title">已选节点
+                <button class="btn btn-xs btn-danger" id="unit-deselect" type="submit">清空</button>
+            </div>
+            <div class="unit-content" id="unit-selected"></div>
         </div>
     </div>
     <div class="right-side">
