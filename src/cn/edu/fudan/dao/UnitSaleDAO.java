@@ -22,7 +22,8 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
         super(servlet);
         this.unitids = unitids;
         sql = "select tab_sales.unitid, tab_sales.saleyear, tab_sales.salequarter, tab_sales.salemonth, " +
-                "sum(tab_sales.s1), sum(tab_sales.s2), sum(tab_sales.s3), sum(tab_sales.stotal), tab_unit.name " +
+                "sum(tab_sales.s1), sum(tab_sales.s2), sum(tab_sales.s3), sum(tab_sales.stotal), " +
+                "tab_unit.name, tab_unit.population1, tab_unit.population2 " +
                 "from tab_sales inner join tab_unit on tab_sales.unitid = tab_unit.id where ";
         for (int ignored : unitids) {
             sql += "tab_unit.id = ? or ";
@@ -42,7 +43,8 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
             NameSaleData year = yearData.get(unitid);
             NameSaleData quarter = quarterData.get(unitid);
             NameSaleData month = monthData.get(unitid);
-            result.add(new UnitSale(unitid, year.name, year.data, quarter.data, month.data));
+            result.add(new UnitSale(unitid, year.name, year.population1, year.population2,
+                    year.data, quarter.data, month.data));
         }
         return result;
     }
@@ -67,7 +69,9 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
 
             if (!result.containsKey(unitid)) {
                 String unitName = rs.getString(9);
-                result.put(unitid, new NameSaleData(unitName));
+                int population1 = rs.getInt(10);
+                int population2 = rs.getInt(11);
+                result.put(unitid, new NameSaleData(unitName, population1, population2));
             }
             String time = dimen.formatter.format(year, quarter, month);
             result.get(unitid).data.add(new SaleData(time, s1, s2, s3, stotal));
@@ -77,10 +81,13 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
 
     private class NameSaleData {
         String name;
+        int population1, population2;
         List<SaleData> data;
 
-        public NameSaleData(String name) {
+        public NameSaleData(String name, int population1, int population2) {
             this.name = name;
+            this.population1 = population1;
+            this.population2 = population2;
             this.data = new ArrayList<>();
         }
     }

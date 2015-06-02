@@ -10,18 +10,22 @@ import java.util.List;
 public class UnitSale {
     private int unitid;
     private String unitName;
+    private int population1, population2;
     private List<SaleData> yearData, quarterData, monthData;
 
 
     public UnitSale() {
     }
 
-    public UnitSale(int unitid, String unitName, List<SaleData> yearData, List<SaleData> quarterData, List<SaleData> monthData) {
+    public UnitSale(int unitid, String unitName, int population1, int population2,
+                    List<SaleData> yearData, List<SaleData> quarterData, List<SaleData> monthData) {
         this.unitid = unitid;
+        this.unitName = unitName;
+        this.population1 = population1;
+        this.population2 = population2;
         this.yearData = yearData;
         this.quarterData = quarterData;
         this.monthData = monthData;
-        this.unitName = unitName;
     }
 
     @Override

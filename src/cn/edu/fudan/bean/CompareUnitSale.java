@@ -11,14 +11,17 @@ import java.util.List;
 public class CompareUnitSale {
     private int unitid;
     private String unitName;
+    private int population1, population2;
     private List<String> year;
     private List<String> month;
     private List<List<SaleData>> yearData;
     private List<List<SaleData>> monthData;
 
-    public CompareUnitSale(int unitid, String unitName) {
+    public CompareUnitSale(int unitid, String unitName, int population1, int population2) {
         this.unitid = unitid;
         this.unitName = unitName;
+        this.population1 = population1;
+        this.population2 = population2;
         this.year = new ArrayList<>();
         this.month = new ArrayList<>();
         this.yearData = new ArrayList<>();
