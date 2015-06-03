@@ -76,14 +76,14 @@ function Chart(elementId) {
             dataZoom: {show: true},
             grid: {y: 50, y2: 150},
             xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
-            yAxis: [{name: '销量', show: true, type: 'value'}],
+            yAxis: [{name: tooltipOption.unit, show: true, type: 'value'}],
             tooltip: {
                 trigger: 'axis',
                 formatter: function (params) {
                     var res = tooltipOption.title + '(' + params[0].name + '):<table>';
                     for (var i = 0, l = params.length; i < l; i++) {
                         var val = params[i].value;
-                        val = typeof(val) == 'string' ? val : tooltipOption.format(val);
+                        val = typeof(val) == 'string' ? val : (val.toFixed(2) + tooltipOption.unit);
                         res += '<tr><td>' + params[i].seriesName + '</td><td>:</td><td>' + val + '</td></tr>';
                     }
                     return res + "</table>";
@@ -145,31 +145,25 @@ function Chart(elementId) {
     };
 
     var populationAvgs = function (data) {
-        var avgFormatter = function (d) {
-            d *= 1000;
-            return d.toFixed(2) + "元/千人";
-        };
         return [
             {
                 data: function (d) {
                     return d;
                 },
-                title: '彩票销量（非人均）',
-                format: function (d) {
-                    return d + "元";
-                }
+                title: '彩票销量(非人均)',
+                unit: '元'
             }, {
                 data: function (d) {
-                    return data.population1 > 0 ? d / data.population1 : -1;
+                    return data.population1 > 0 ? d / data.population1 * 1000 : -1;
                 },
                 title: '户籍人口人均彩票销量',
-                format: avgFormatter
+                unit: '元/千人'
             }, {
                 data: function (d) {
                     return data.population2 > 0 ? d / data.population2 : -1;
                 },
                 title: '来沪人口人均彩票销量',
-                format: avgFormatter
+                unit: '元/千人'
             }
         ];
     };
