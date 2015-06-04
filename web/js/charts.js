@@ -73,6 +73,7 @@ function Chart(elementId) {
                     color: 'rgba(204, 204, 204, 0.37)'
                 }
             },
+            backgroundColor: 'rgba(255, 255, 255, 1)',
             dataZoom: {show: true},
             grid: {y: 50, y2: 150},
             xAxis: [{type: 'category', 'axisLabel': {'interval': 0}, data: x}],
@@ -102,7 +103,7 @@ function Chart(elementId) {
                 }
             },
             legend: {
-                x: 'left',
+                x: 'right',
                 selected: {'电脑': false, '即开': false, '中福在线': false, '总量': true},
                 data: ['电脑', '即开', '中福在线', '总量']
             },

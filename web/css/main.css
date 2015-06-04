@@ -39,6 +39,10 @@
     border-radius: 15px 15px 4px 4px;
 }
 
+.left-side form{
+    margin: 0 5px;
+}
+
 .unit-title {
     color: white;
     font-size: 150%;
@@ -103,8 +107,8 @@
     margin-top: 12px;
 }
 
-.funcbar.left {
-    padding-top: 8px;
+.funcbar.left div{
+    padding-top: 10px;
 }
 
 .funcbar.right {
@@ -115,5 +119,7 @@
 /* right-bottom */
 
 #chart {
-    height: 464px;
+    background-color: white;
+    margin: 0 2px;
+    padding: 5px;
 }
