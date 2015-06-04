@@ -52,7 +52,6 @@
 }
 
 .unit-content {
-    min-height: 240px;
     background-color: white;
     overflow-y: scroll;
     overflow-x: hidden;

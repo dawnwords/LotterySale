@@ -3,9 +3,10 @@
  */
 
 $(document).ready(function () {
-    $(".unit-content:first").height((document.body.scrollHeight - 285) * 0.6);
-    $(".unit-content:last").height((document.body.scrollHeight - 285) * 0.4);
-    $("#chart").height(document.body.scrollHeight - 262);
+    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    $(".unit-content:first").height((viewHeight - 285) * 0.6);
+    $(".unit-content:last").height((viewHeight - 285) * 0.4);
+    $("#chart").height(viewHeight - 272);
 
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected", "#unit-keyword"),
