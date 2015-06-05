@@ -23,7 +23,7 @@ function Chart(elementId) {
                 unit: '元/千人'
             }, {
                 data: function (d) {
-                    return data.population2 > 0 ? d / data.population2 : -1;
+                    return data.population2 > 0 ? d / data.population2 * 1000: -1;
                 },
                 title: '来沪人口人均彩票销量',
                 unit: '元/千人'
