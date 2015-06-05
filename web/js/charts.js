@@ -7,7 +7,52 @@ function Chart(elementId) {
     var calculable = true;
     var currentOpt;
 
+    var populationAvgs = function (data) {
+        return [
+            {
+                data: function (d) {
+                    return d;
+                },
+                title: '彩票销量(非人均)',
+                unit: '元'
+            }, {
+                data: function (d) {
+                    return data.population1 > 0 ? d / data.population1 * 1000 : -1;
+                },
+                title: '户籍人口人均彩票销量',
+                unit: '元/千人'
+            }, {
+                data: function (d) {
+                    return data.population2 > 0 ? d / data.population2 : -1;
+                },
+                title: '来沪人口人均彩票销量',
+                unit: '元/千人'
+            }
+        ];
+    };
+
     var newSeries = function (chartOpt) {
+        var formatter = function (param) {
+            var value = param.value;
+            value = chartOpt.population > 0 ? value.toFixed(2) : value;
+            return value + populationAvgs()[chartOpt.population].unit;
+        };
+        var itemStyle = {
+            normal: {
+                label: {
+                    show: chartOpt.mark,
+                    formatter: formatter
+                }
+            }
+        };
+        var markerItemStyle = {
+            normal: {
+                label: {
+                    show: true,
+                    formatter: formatter
+                }
+            }
+        };
         var markPoint = {
             data: chartOpt.maxmin ? [{
                 type: 'max',
@@ -15,20 +60,15 @@ function Chart(elementId) {
             }, {
                 type: 'min',
                 name: '最小值'
-            }] : []
+            }] : [],
+            itemStyle: markerItemStyle
         };
         var markLine = {
             data: chartOpt.avg ? [{
                 type: 'average',
                 name: '平均值'
-            }] : []
-        };
-        var itemStyle = {
-            normal: {
-                label: {
-                    show: chartOpt.mark
-                }
-            }
+            }] : [],
+            itemStyle: markerItemStyle
         };
         return [
             {name: "电脑", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
@@ -139,30 +179,6 @@ function Chart(elementId) {
     var setOption = function (opt) {
         currentOpt = opt;
         chart.setOption(opt);
-    };
-
-    var populationAvgs = function (data) {
-        return [
-            {
-                data: function (d) {
-                    return d;
-                },
-                title: '彩票销量(非人均)',
-                unit: '元'
-            }, {
-                data: function (d) {
-                    return data.population1 > 0 ? d / data.population1 * 1000 : -1;
-                },
-                title: '户籍人口人均彩票销量',
-                unit: '元/千人'
-            }, {
-                data: function (d) {
-                    return data.population2 > 0 ? d / data.population2 : -1;
-                },
-                title: '来沪人口人均彩票销量',
-                unit: '元/千人'
-            }
-        ];
     };
 
     chart.on(echarts.config.EVENT.MAGIC_TYPE_CHANGED, function (param) {

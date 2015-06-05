@@ -22,6 +22,17 @@ $(document).ready(function () {
         mark = $("#funcbar-view-mark"),
         deselect = $("#unit-deselect");
 
+    function updateGraph() {
+        var dimen = $("#nav-bar").find(".active").data("dimen");
+        chart[dimen + "SaleGraphUpdate"]({
+            maxmin: maxmin.is(":checked"),
+            avg: avg.is(":checked"),
+            mark: mark.is(":checked"),
+            dimen: +$("input[name=" + dimen + "]:checked", "#funcbar-" + dimen).val(),
+            population: population = +$("input[name=population]:checked", "#funcbar-population").val()
+        });
+    }
+
     function postAjax(url, data) {
         $.ajax({
             url: url,
@@ -30,15 +41,8 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(data),
             success: function (data) {
-                var dimen = $("#nav-bar").find(".active").data("dimen");
                 chart.setGraphData(data);
-                chart[dimen + "SaleGraphUpdate"]({
-                    maxmin: maxmin.is(":checked"),
-                    avg: avg.is(":checked"),
-                    mark: mark.is(":checked"),
-                    dimen: +$("input[name=" + dimen + "]:checked", "#funcbar-" + dimen).val(),
-                    population: population = +$("input[name=population]:checked", "#funcbar-population").val()
-                });
+                updateGraph();
             }
         });
     }
