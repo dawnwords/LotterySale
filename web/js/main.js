@@ -30,13 +30,17 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(data),
             success: function (data) {
+                var dimen = $("#nav-bar").find(".active").data("dimen");
                 chart.setGraphData(data);
+                chart[dimen + "SaleGraphUpdate"]({
+                    maxmin: maxmin.is(":checked"),
+                    avg: avg.is(":checked"),
+                    mark: mark.is(":checked"),
+                    dimen: +$("input[name=" + dimen + "]:checked", "#funcbar-" + dimen).val(),
+                    population: population = +$("input[name=population]:checked", "#funcbar-population").val()
+                });
             }
         });
-    }
-
-    function updateGraph() {
-        chart.updateGraph(maxmin.is(":checked"), avg.is(":checked"), mark.is(":checked"));
     }
 
     function clickTab() {

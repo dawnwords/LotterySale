@@ -7,9 +7,9 @@ function Chart(elementId) {
     var calculable = true;
     var currentOpt;
 
-    var newSeries = function (maxmin, avg, mark) {
+    var newSeries = function (chartOpt) {
         var markPoint = {
-            data: maxmin ? [{
+            data: chartOpt.maxmin ? [{
                 type: 'max',
                 name: '最大值'
             }, {
@@ -18,7 +18,7 @@ function Chart(elementId) {
             }] : []
         };
         var markLine = {
-            data: avg ? [{
+            data: chartOpt.avg ? [{
                 type: 'average',
                 name: '平均值'
             }] : []
@@ -26,7 +26,7 @@ function Chart(elementId) {
         var itemStyle = {
             normal: {
                 label: {
-                    show: mark
+                    show: chartOpt.mark
                 }
             }
         };
@@ -136,10 +136,6 @@ function Chart(elementId) {
         }
     ];
 
-    var isArray = function (o) {
-        return Object.prototype.toString.call(o) === '[object Array]';
-    };
-
     var setOption = function (opt) {
         currentOpt = opt;
         chart.setOption(opt);
@@ -169,70 +165,6 @@ function Chart(elementId) {
         ];
     };
 
-    var updateSaleGraph = function (dimen, maxmin, avg, mark, popmod) {
-        var data, d, i, times = [], series, populationAvg, timeFormat = function (s) {
-            return formatter[dimen](s);
-        };
-        if (graphData.length == 1) {
-            series = newSeries(maxmin, avg, mark);
-            data = graphData[0];
-            populationAvg = populationAvgs(data)[popmod];
-            data = [data.yearData, data.quarterData, data.monthData][dimen];
-            for (i in data) {
-                d = data[i];
-                pushSeries(series, d, populationAvg);
-                times.push(timeFormat(d.time));
-            }
-            setOption(seriesOpt(times, series, populationAvg));
-        } else {
-            var x = [];
-            for (i in graphData) {
-                data = graphData[i];
-                x.push(data.unitName);
-
-                data = [data.yearData, data.quarterData, data.monthData][dimen];
-                for (d in data) {
-                    times[data[d].time] = d;
-                }
-            }
-            var timeline = [];
-            var options = [];
-            for (var time in times) {
-                timeline.push(time);
-                series = newSeries(maxmin, avg, mark);
-                for (i in graphData) {
-                    data = graphData[i];
-                    populationAvg = populationAvgs(data)[popmod];
-                    data = [data.yearData, data.quarterData, data.monthData][dimen];
-                    pushSeries(series, data[times[time]], populationAvg);
-                }
-                options.push(seriesOpt(x, series, populationAvg));
-            }
-            setOption(timelineOpt(options, timeline, timeFormat));
-        }
-    };
-
-    var updateCompareSaleGraph = function (dimen, maxmin, avg, mark, popmod) {
-        var timeline = dimen ? graphData.month : graphData.year,
-            data = dimen ? graphData.monthData : graphData.yearData,
-            xData = dimen ? graphData.year : graphData.month,
-            options = [], series, x, i, d, timeFormatter = function (s) {
-                return s + (dimen ? "月" : "年");
-            }, populationAvg;
-
-        for (i in timeline) {
-            series = newSeries(maxmin, avg, mark);
-            x = [];
-            populationAvg = populationAvgs(graphData)[popmod];
-            for (d in xData) {
-                x.push(xData[d] + (dimen ? "年" : "月"));
-                pushSeries(series, data[i][d] == undefined ? {} : data[i][d], populationAvg);
-            }
-            options.push(seriesOpt(x, series, populationAvg));
-        }
-        setOption(timelineOpt(options, timeline, timeFormatter));
-    };
-
     chart.on(echarts.config.EVENT.MAGIC_TYPE_CHANGED, function (param) {
         calculable = param.magicType.bar;
         if (currentOpt.options === undefined) {
@@ -245,24 +177,74 @@ function Chart(elementId) {
         chart.setOption(currentOpt);
     });
 
-    this.updateGraph = function (maxmin, avg, mark) {
-        if (graphData == null) return;
 
-        chart.clear();
-        var dimen, population = +$("input[name=population]:checked", "#funcbar-population").val();
-        if (isArray(graphData)) {
-            if (graphData.length > 0) {
-                dimen = +$("input[name=time]:checked", "#funcbar-time").val();
-                updateSaleGraph(dimen, maxmin, avg, mark, population);
+    this.timeSaleGraphUpdate = function (chartOpt, popmod) {
+        if (graphData == null || graphData.length <= 0) return;
+
+        var data, d, i, times = [], series, populationAvg, timeFormat = function (s) {
+            return formatter[chartOpt.dimen](s);
+        };
+        if (graphData.length == 1) {
+            series = newSeries(chartOpt);
+            data = graphData[0];
+            populationAvg = populationAvgs(data)[chartOpt.population];
+            data = [data.yearData, data.quarterData, data.monthData][chartOpt.dimen];
+            for (i in data) {
+                d = data[i];
+                pushSeries(series, d, populationAvg);
+                times.push(timeFormat(d.time));
             }
+            setOption(seriesOpt(times, series, populationAvg));
         } else {
-            dimen = +$("input[name=compare]:checked", "#funcbar-compare").val();
-            updateCompareSaleGraph(dimen, maxmin, avg, mark, population);
+            var x = [];
+            for (i in graphData) {
+                data = graphData[i];
+                x.push(data.unitName);
+
+                data = [data.yearData, data.quarterData, data.monthData][chartOpt.dimen];
+                for (d in data) {
+                    times[data[d].time] = d;
+                }
+            }
+            var timeline = [];
+            var options = [];
+            for (var time in times) {
+                timeline.push(time);
+                series = newSeries(chartOpt);
+                for (i in graphData) {
+                    data = graphData[i];
+                    populationAvg = populationAvgs(data)[chartOpt.population];
+                    data = [data.yearData, data.quarterData, data.monthData][chartOpt.dimen];
+                    pushSeries(series, data[times[time]], populationAvg);
+                }
+                options.push(seriesOpt(x, series, populationAvg));
+            }
+            setOption(timelineOpt(options, timeline, timeFormat));
         }
+    };
+
+    this.compareSaleGraphUpdate = function (chartOpt) {
+        var timeline = chartOpt.dimen ? graphData.month : graphData.year,
+            data = chartOpt.dimen ? graphData.monthData : graphData.yearData,
+            xData = chartOpt.dimen ? graphData.year : graphData.month,
+            options = [], series, x, i, d, timeFormatter = function (s) {
+                return s + ( chartOpt.dimen ? "月" : "年");
+            }, populationAvg;
+
+        for (i in timeline) {
+            series = newSeries(chartOpt);
+            x = [];
+            populationAvg = populationAvgs(graphData)[chartOpt.population];
+            for (d in xData) {
+                x.push(xData[d] + ( chartOpt.dimen ? "年" : "月"));
+                pushSeries(series, data[i][d] == undefined ? {} : data[i][d], populationAvg);
+            }
+            options.push(seriesOpt(x, series, populationAvg));
+        }
+        setOption(timelineOpt(options, timeline, timeFormatter));
     };
 
     this.setGraphData = function (d) {
         graphData = d;
-        this.updateGraph();
     }
 }
