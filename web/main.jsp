@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head lang="zh-CN">
+<html lang="zh-CN">
+<head>
     <meta charset="UTF-8">
     <title>浦东新区民政彩票管理系统</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -29,6 +29,7 @@
         <form class="form-horizontal">
             <div class="form-group">
                 <label class="col-xs-3 control-label" for="unit-keyword">快速检索:</label>
+
                 <div class="col-xs-9">
                     <input class="form-control" id="unit-keyword" type="text" placeholder="请输入节点名称"/>
                 </div>
