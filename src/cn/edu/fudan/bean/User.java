@@ -5,20 +5,19 @@ package cn.edu.fudan.bean;
  */
 public class User {
     public final String name;
-    public final String password;
-    private final int authority;
+    private final Authority authority;
 
-    public User(String name, String password, int authority) {
+    public User(String name, String authority) {
         this.name = name;
-        this.password = password;
-        this.authority = authority;
+        this.authority = Authority.valueOf(authority);
     }
 
     public boolean isAdmin() {
-        return authority == 1;
+        return authority == Authority.Admin;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+
+    private enum Authority {
+        Admin, Normal
     }
 }
