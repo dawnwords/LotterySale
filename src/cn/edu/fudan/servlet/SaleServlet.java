@@ -3,6 +3,7 @@ package cn.edu.fudan.servlet;
 import cn.edu.fudan.bean.UnitSale;
 import cn.edu.fudan.dao.UnitSaleDAO;
 import cn.edu.fudan.request.MultiUnitRequest;
+import cn.edu.fudan.util.Session;
 
 import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class SaleServlet extends BaseServlet<MultiUnitRequest, List<UnitSale>> {
     }
 
     @Override
-    protected List<UnitSale> processRequest(MultiUnitRequest request) throws Exception {
+    protected List<UnitSale> processRequest(MultiUnitRequest request, Session session) throws Exception {
         int[] unitids = request.unitId;
         log(Arrays.toString(unitids));
         return unitids.length == 0 ? new ArrayList<UnitSale>() : new UnitSaleDAO(this, unitids).getResult();

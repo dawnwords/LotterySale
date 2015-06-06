@@ -1,6 +1,6 @@
 package cn.edu.fudan.filter;
 
-import cn.edu.fudan.util.SessionUtil;
+import cn.edu.fudan.util.Session;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 @WebFilter(filterName = "LoginFilter", urlPatterns = {"/*"})
 public class LoginFilter implements Filter {
-    private static final String[] WHITE_LIST = {"index", "/imgs"};
+    private static final String[] WHITE_LIST = {"index", "/imgs", "/login"};
 
     public void destroy() {
     }
@@ -22,7 +22,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        if (!whiteList(request.getRequestURI()) && SessionUtil.getUser(request) == null) {
+        if (!whiteList(request.getRequestURI()) && new Session(request).getUser() == null) {
             response.sendRedirect("/index.jsp ");
         } else {
             chain.doFilter(req, resp);

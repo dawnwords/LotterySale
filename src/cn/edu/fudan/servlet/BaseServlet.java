@@ -1,5 +1,6 @@
 package cn.edu.fudan.servlet;
 
+import cn.edu.fudan.util.Session;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
@@ -44,7 +45,7 @@ public abstract class BaseServlet<RequestType, ResponseType> extends HttpServlet
             try {
                 RequestType req = gson.fromJson(new InputStreamReader(request.getInputStream(), "utf-8"), requestType);
                 log("receive request:" + req);
-                result = gson.toJson(processRequest(req));
+                result = gson.toJson(processRequest(req, new Session(request)));
             } catch (Exception e) {
                 result = String.format("{error: '%s:%s'}", e.getClass().getSimpleName(), e.getMessage());
             }
@@ -58,5 +59,5 @@ public abstract class BaseServlet<RequestType, ResponseType> extends HttpServlet
         }
     }
 
-    protected abstract ResponseType processRequest(RequestType request) throws Exception;
+    protected abstract ResponseType processRequest(RequestType request, Session session) throws Exception;
 }

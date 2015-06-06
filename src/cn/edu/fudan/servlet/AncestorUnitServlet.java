@@ -2,6 +2,7 @@ package cn.edu.fudan.servlet;
 
 import cn.edu.fudan.dao.AncestorUnitsDAO;
 import cn.edu.fudan.request.SingleUnitRequest;
+import cn.edu.fudan.util.Session;
 
 import javax.servlet.annotation.WebServlet;
 import java.util.List;
@@ -16,7 +17,7 @@ public class AncestorUnitServlet extends BaseServlet<SingleUnitRequest, List<Int
     }
 
     @Override
-    protected List<Integer> processRequest(SingleUnitRequest request) throws Exception {
+    protected List<Integer> processRequest(SingleUnitRequest request, Session session) throws Exception {
         return new AncestorUnitsDAO(this, request.unitId).getResult();
     }
 }

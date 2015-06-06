@@ -3,6 +3,7 @@ package cn.edu.fudan.servlet;
 import cn.edu.fudan.bean.Unit;
 import cn.edu.fudan.dao.ChildUnitDAO;
 import cn.edu.fudan.request.SingleUnitRequest;
+import cn.edu.fudan.util.Session;
 
 import javax.servlet.annotation.WebServlet;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ChildUnitServlet extends BaseServlet<SingleUnitRequest, List<Unit>>
     }
 
     @Override
-    protected List<Unit> processRequest(SingleUnitRequest request) throws Exception {
+    protected List<Unit> processRequest(SingleUnitRequest request, Session session) throws Exception {
         return new ChildUnitDAO(this, request == null ? 0 : request.unitId).getResult();
     }
 

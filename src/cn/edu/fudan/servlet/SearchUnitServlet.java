@@ -3,6 +3,7 @@ package cn.edu.fudan.servlet;
 import cn.edu.fudan.bean.UnitSearch;
 import cn.edu.fudan.dao.SearchUnitDAO;
 import cn.edu.fudan.request.SearchUnitRequest;
+import cn.edu.fudan.util.Session;
 
 import javax.servlet.annotation.WebServlet;
 import java.util.List;
@@ -17,7 +18,7 @@ public class SearchUnitServlet extends BaseServlet<SearchUnitRequest, List<UnitS
     }
 
     @Override
-    protected List<UnitSearch> processRequest(SearchUnitRequest request) throws Exception {
+    protected List<UnitSearch> processRequest(SearchUnitRequest request, Session session) throws Exception {
         return new SearchUnitDAO(this, request).getResult();
     }
 }

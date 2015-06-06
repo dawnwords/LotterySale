@@ -7,14 +7,19 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Created by Dawnwords on 2015/6/5.
  */
-public class SessionUtil {
+public class Session {
     private static final String USER = "user";
+    private HttpServletRequest request;
 
-    public static User getUser(HttpServletRequest request) {
+    public Session(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    public User getUser() {
         return (User) request.getSession().getAttribute(USER);
     }
 
-    public static void setUser(HttpServletRequest request, User user) {
+    public void setUser(User user) {
         request.getSession().setAttribute(USER, user);
     }
 }
