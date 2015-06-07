@@ -23,7 +23,7 @@ function Chart(elementId) {
                 unit: '元/千人'
             }, {
                 data: function (d) {
-                    return data.population2 > 0 ? d / data.population2 * 1000: -1;
+                    return data.population2 > 0 ? d / data.population2 * 1000 : -1;
                 },
                 title: '来沪人口人均彩票销量',
                 unit: '元/千人'
@@ -37,38 +37,14 @@ function Chart(elementId) {
             value = chartOpt.population > 0 ? value.toFixed(2) : value;
             return value + populationAvgs()[chartOpt.population].unit;
         };
-        var itemStyle = {
-            normal: {
-                label: {
-                    show: chartOpt.mark,
-                    formatter: formatter
-                }
-            }
-        };
-        var markerItemStyle = {
-            normal: {
-                label: {
-                    show: true,
-                    formatter: formatter
-                }
-            }
-        };
+        var itemStyle = {normal: {label: {show: chartOpt.mark, formatter: formatter}}};
         var markPoint = {
-            data: chartOpt.maxmin ? [{
-                type: 'max',
-                name: '最大值'
-            }, {
-                type: 'min',
-                name: '最小值'
-            }] : [],
-            itemStyle: markerItemStyle
+            data: chartOpt.maxmin ? [{type: 'max', name: '最大值'}, {type: 'min', name: '最小值'}] : [],
+            itemStyle: {normal: {label: {show: chartOpt.maxmin, formatter: formatter}}}
         };
         var markLine = {
-            data: chartOpt.avg ? [{
-                type: 'average',
-                name: '平均值'
-            }] : [],
-            itemStyle: markerItemStyle
+            data: chartOpt.avg ? [{type: 'average', name: '平均值'}] : [],
+            itemStyle: {normal: {label: {show: chartOpt.avg, formatter: formatter}}}
         };
         return [
             {name: "电脑", type: "bar", data: [], markPoint: markPoint, markLine: markLine, itemStyle: itemStyle},
@@ -178,6 +154,7 @@ function Chart(elementId) {
 
     var setOption = function (opt) {
         currentOpt = opt;
+        chart.clear();
         chart.setOption(opt);
     };
 
