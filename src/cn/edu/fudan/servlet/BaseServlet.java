@@ -45,7 +45,7 @@ public abstract class BaseServlet<RequestType, ResponseType> extends HttpServlet
             try {
                 RequestType req = gson.fromJson(new InputStreamReader(request.getInputStream(), "utf-8"), requestType);
                 log("receive request:" + req);
-                result = gson.toJson(processRequest(req, new Session(request)));
+                result = gson.toJson(processRequest(req, new Session(request, response)));
             } catch (Exception e) {
                 result = String.format("{error: '%s:%s'}", e.getClass().getSimpleName(), e.getMessage());
             }

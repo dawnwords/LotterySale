@@ -19,7 +19,7 @@ public class LoginServlet extends BaseServlet<LoginRequest, String> {
     @Override
     protected String processRequest(LoginRequest request, Session session) throws Exception {
         User user = new LoginDAO(this, request).getResult();
-        session.setUser(user);
+        session.user(user);
         return user == null ? "fail" : "success";
     }
 }
