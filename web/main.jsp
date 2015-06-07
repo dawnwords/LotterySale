@@ -18,7 +18,8 @@
 </head>
 <body>
 <div class="header">
-    <h1>浦东新区民政彩票管理系统</h1>
+    <h1 class="col-xs-7">浦东新区民政彩票管理系统</h1>
+    <a href="logout" class="col-xs-1 right btn btn-primary" id="logout">注销</a>
 </div>
 <div class="content">
     <div class="left-side" id="unit">
