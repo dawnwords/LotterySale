@@ -5,9 +5,12 @@ import cn.edu.fudan.dao.ChangePassDAO;
 import cn.edu.fudan.request.ChangePassRequest;
 import cn.edu.fudan.util.Session;
 
+import javax.servlet.annotation.WebServlet;
+
 /**
  * Created by Dawnwords on 2015/6/8.
  */
+@WebServlet(name = "ChangePassServlet", urlPatterns = {"/changepass"})
 public class ChangePassServlet extends BaseServlet<ChangePassRequest, String> {
     public ChangePassServlet() {
         super(POST, ChangePassRequest.class);

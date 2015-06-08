@@ -10,11 +10,23 @@
 .header h1 {
     margin: 0 0 0 120px;
     line-height: 100px;
+    width: 550px;
     font-family: '微软雅黑', '黑体', arial, sans-serif;
+    float: left;
 }
 
 .header a {
     margin: 66px 0 0 20px;
+    width: 100px;
+    float: right;
+}
+
+.change-pass.success{
+    color: #3c763d;
+}
+
+.change-pass.fail{
+    color: #a94442;
 }
 
 .content {

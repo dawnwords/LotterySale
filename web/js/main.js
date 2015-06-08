@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected", "#unit-keyword"),
-        hint = new Hint("#unit", 2400),
+        unitHint = new Hint("#unit", 2400),
         chart = new Chart('chart'),
         tab = $("#nav-bar").find("a"),
         time = $("#funcbar-time"),
@@ -20,7 +20,9 @@ $(document).ready(function () {
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
         mark = $("#funcbar-view-mark"),
-        deselect = $("#unit-deselect");
+        deselect = $("#unit-deselect"),
+        changePass = $("#change-password-submit"),
+        changePassHint = $(".change-pass");
 
     function updateGraph() {
         var dimen = $("#nav-bar").find(".active").data("dimen");
@@ -63,17 +65,73 @@ $(document).ready(function () {
     function clickRefresh() {
         var unitid = tree.getSelectedIds();
         if (unitid.length == 0) {
-            hint.show("请至少选中一个单位");
+            unitHint.show("请至少选中一个单位");
         } else if (mode) {
             if (unitid.length == 1) {
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
-                hint.show("同环比只支持选中一个单位");
+                unitHint.show("同环比只支持选中一个单位");
             }
         } else {
             postAjax("../sale", {unitId: unitid});
         }
     }
+
+    function passDisplayMsg(msg, success) {
+        changePassHint.html(msg);
+        changePassHint.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
+        changePassHint.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
+        changePassHint.fadeIn("fast", function () {
+            $(this).delay(1000).fadeOut("slow");
+        });
+    }
+
+    function changePassword() {
+        var oldPass = $("#change-password-old").val() || "",
+            newPass = $("#change-password-new").val() || "",
+            confirmPass = $("#change-password-confirm").val() || "";
+
+        if (oldPass.length == 0) {
+            passDisplayMsg("请输入原始密码", false);
+            return;
+        }
+
+        if (newPass.length == 0) {
+            passDisplayMsg("请输入新密码", false);
+            return;
+        }
+
+        if (confirmPass.length == 0) {
+            passDisplayMsg("请确认新密码", false);
+            return;
+        }
+
+        if (confirmPass != newPass) {
+            passDisplayMsg("两次密码输入不一致", false);
+            return;
+        }
+
+        $.ajax({
+            url: "../changepass",
+            dataType: "json",
+            type: "post",
+            contentType: "application/json",
+            data: JSON.stringify({
+                oldPass: oldPass,
+                newPass: newPass
+            }),
+            success: function (data) {
+                if (data == 'success') {
+                    passDisplayMsg("密码修改成功", true);
+                } else {
+                    passDisplayMsg('原始密码错误', false);
+                }
+            }
+        });
+    }
+
+    changePassHint.css('display', 'none');
+    changePass.click(changePassword);
 
     tab.click(clickTab);
 
@@ -87,5 +145,8 @@ $(document).ready(function () {
     population.find("input[name=population]").change(updateGraph);
 
     deselect.click(tree.deselectAll);
+
+
+
 });
 

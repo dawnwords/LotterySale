@@ -21,14 +21,45 @@
 </head>
 <body>
 <div class="header">
-    <h1 class="col-xs-7">浦东新区民政彩票管理系统</h1>
+    <h1>浦东新区民政彩票管理系统</h1>
     <% if (user!=null) { %>
-    <a class="col-xs-1 btn btn-default text-center" data-toggle="modal" data-target="#change_password">账号管理</a>
+    <a class="btn btn-danger text-center" href="logout">注销</a>
+    <a class="btn btn-default text-center" data-toggle="modal" data-target="#change_password">账号管理</a>
     <% if(user.isAdmin()){%>
-    <a class="col-xs-1 btn btn-default text-center" href="admin.jsp">数据管理</a>
+    <a class="btn btn-default text-center" href="admin.jsp">数据管理</a>
     <% } %>
-    <a class="col-xs-1 btn btn-danger text-center" href="logout">注销</a>
     <% } %>
+</div>
+<div class="modal fade" id="change_password" tabindex="-1" role="dialog" aria-labelledby="change-password-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="change-password-title">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="change-password-old" class="control-label">原始密码：</label>
+                        <input type="password" class="form-control" id="change-password-old" placeholder="请输入原始密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="change-password-new" class="control-label">新密码：</label>
+                        <input type="password" class="form-control" id="change-password-new" placeholder="请输入新密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="change-password-confirm" class="control-label">确认新密码:</label>
+                        <input type="password" class="form-control" id="change-password-confirm" placeholder="请再次输入新密码">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span class="glyphicon change-pass"></span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="change-password-submit">提交</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="content">
     <div class="left-side" id="unit">
