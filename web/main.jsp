@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿<%@ page import="cn.edu.fudan.bean.User" %>
+<%@ page import="cn.edu.fudan.util.Session" %>
+<% User user = new Session(request, response).user(); %>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +22,13 @@
 <body>
 <div class="header">
     <h1 class="col-xs-7">浦东新区民政彩票管理系统</h1>
-    <a href="logout" class="col-xs-1 right btn btn-primary" id="logout">注销</a>
+    <% if (user!=null) { %>
+    <a class="col-xs-1 btn btn-default text-center" data-toggle="modal" data-target="#change_password">账号管理</a>
+    <% if(user.isAdmin()){%>
+    <a class="col-xs-1 btn btn-default text-center" href="admin.jsp">数据管理</a>
+    <% } %>
+    <a class="col-xs-1 btn btn-danger text-center" href="logout">注销</a>
+    <% } %>
 </div>
 <div class="content">
     <div class="left-side" id="unit">

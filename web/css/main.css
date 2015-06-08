@@ -13,12 +13,8 @@
     font-family: '微软雅黑', '黑体', arial, sans-serif;
 }
 
-#logout {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    height: 34px;
-    margin-top: -17px;
+.header a {
+    margin: 66px 0 0 20px;
 }
 
 .content {
