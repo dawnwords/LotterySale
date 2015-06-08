@@ -21,16 +21,17 @@ public class LoginDAO extends BaseDAO<User> {
 
     @Override
     protected User processData(Connection connection) throws Exception {
-        String sql = "SELECT name,authority FROM tab_user WHERE name=? AND password=password(?)";
+        String sql = "SELECT id,name,authority FROM tab_user WHERE name=? AND password=password(?)";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, request.name);
         ps.setString(2, request.password);
         ResultSet rs = ps.executeQuery();
         User user = null;
         if (rs.next()) {
-            String name = rs.getString(1);
-            String authority = rs.getString(2);
-            user = new User(name, authority);
+            int id = rs.getInt(1);
+            String name = rs.getString(2);
+            String authority = rs.getString(3);
+            user = new User(id, authority, name);
         }
         return user;
     }
