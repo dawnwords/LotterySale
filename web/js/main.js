@@ -62,12 +62,13 @@ $(document).ready(function () {
 
     function clickRefresh() {
         var unitid = tree.getSelectedIds();
-        if (mode) {
+        if (unitid.length == 0) {
+            hint.show("请至少选中一个单位");
+        } else if (mode) {
             if (unitid.length == 1) {
-                console.log(tree.getNodeById(unitid[0]));
                 postAjax("../comparesale", {unitId: unitid[0]});
             } else {
-                hint.show(unitid.length == 0 ? "请至少选中一个单位" : "同环比只支持选中一个单位");
+                hint.show("同环比只支持选中一个单位");
             }
         } else {
             postAjax("../sale", {unitId: unitid});
