@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebFilter;
 /**
  * Created by Dawnwords on 2015/6/9.
  */
-@WebFilter(filterName = "AdminFilter", urlPatterns = {"/admin*"})
+@WebFilter(filterName = "AdminFilter", urlPatterns = {"/admin.jsp", "/js/admin.js", "/css/admin.css", "/admin/*"})
 public class AdminFilter extends BaseFilter {
     public AdminFilter() {
         super(new String[0]);
