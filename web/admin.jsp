@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>浦东新区民政彩票管理系统 - 数据管理</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="js/admin.js"></script>
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css"/>
     <link rel="stylesheet" href="css/admin.css"/>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="js/admin.js"></script>
 </head>
 <body>
 <div class="header">
@@ -28,7 +30,22 @@
             </li>
         </ul>
         <div class="data-view active" id="unit">
-            节点数据编辑
+            <table id="table-unit" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>unitcode</th>
+                        <th>address</th>
+                        <th>manager</th>
+                        <th>mobile</th>
+                        <th>unitnum</th>
+                        <th>area</th>
+                        <th>population1</th>
+                        <th>population2</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
         <div class="data-view" id="sale">
             销量数据编辑

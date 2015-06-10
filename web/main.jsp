@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="js/jstree/themes/default/style.min.css"/>
-    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="js/echarts/echarts.js"></script>
     <script src="js/jstree/jstree.min.js"></script>
     <script src="js/typeahead/bootstrap3-typeahead.min.js"></script>
