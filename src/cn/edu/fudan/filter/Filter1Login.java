@@ -7,10 +7,10 @@ import javax.servlet.annotation.WebFilter;
 /**
  * Created by Dawnwords on 2015/6/5.
  */
-@WebFilter(filterName = "LoginFilter", urlPatterns = {"/*"})
-public class LoginFilter extends BaseFilter {
+@WebFilter(filterName = "Filter1Login", urlPatterns = {"/*"})
+public class Filter1Login extends BaseFilter {
 
-    public LoginFilter() {
+    public Filter1Login() {
         super(new String[]{"index", "/imgs", "/login"});
     }
 
