@@ -5,13 +5,16 @@ $(document).ready(function () {
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     $(".data-view").height(viewHeight - 200);
 
-    var tab = $("#nav-bar").find("a");
+    var tab = $("#nav-bar").find("a"), tableUnit, tableSale, tableUser;
 
     function clickTab() {
-        var tabId = ['unit', 'sale', 'user'][$(this).data("tab")];
+        var tabIndex = $(this).data("tab");
+        var tabId = ['unit', 'sale', 'user'][tabIndex];
+        var table = [tableUnit, tableSale, tableUser][tabIndex];
+
         $('.data-view').removeClass('active');
         $("#" + tabId).addClass('active');
-        $("#table-" + tabId).draw();
+        table.draw();
     }
 
     function dataTableOpt(table) {
@@ -56,7 +59,7 @@ $(document).ready(function () {
     }
 
     tab.click(clickTab);
-    $("#table-unit").DataTable(dataTableOpt('UNIT'));
-    $("#table-sale").DataTable(dataTableOpt('SALE'));
-    $("#table-user").DataTable(dataTableOpt('USER'));
+    tableUnit = $("#table-unit").DataTable(dataTableOpt('UNIT'));
+    tableSale = $("#table-sale").DataTable(dataTableOpt('SALE'));
+    tableUser = $("#table-user").DataTable(dataTableOpt('USER'));
 });
