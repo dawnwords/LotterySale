@@ -57,18 +57,4 @@ public class TabUnitRequest {
         return new Gson().toJson(this);
     }
 
-    public static TabUnitRequest newRequest() {
-        TabUnitRequest result = new TabUnitRequest();
-        result.draw = 1;
-        result.start = 0;
-        result.length = 10;
-        result.order = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Order order = new Order();
-            order.column = i;
-            order.dir = i % 2 == 0 ? "asc" : "desc";
-            result.order.add(order);
-        }
-        return result;
-    }
 }

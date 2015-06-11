@@ -16,6 +16,8 @@ $(document).ready(function () {
 
     tab.click(clickTab);
     tableUnit.DataTable({
+        scrollY: viewHeight - 315,
+        scrollCollapse: true,
         serverSide: true,
         ajax: {
             url: '../admin/tabunit',
