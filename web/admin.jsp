@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <title>浦东新区民政彩票管理系统 - 数据管理</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://datatables.net/download/build/nightly/jquery.dataTables.css"/>
-    <link rel="stylesheet" href="http://cdn.datatables.net/plug-ins/9dcbecd42ad/features/searchHighlight/dataTables.searchHighlight.css"/>
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css"/>
     <link rel="stylesheet" href="css/admin.css"/>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
-    <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
-    <script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/features/searchHighlight/dataTables.searchHighlight.js"></script>
+    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.7/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
     <script src="js/admin.js"></script>
 </head>
 <body>
@@ -51,10 +50,32 @@
             </table>
         </div>
         <div class="data-view" id="sale">
-            销量数据编辑
+            <table id="table-sale" class="display" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>unitid</th>
+                    <th>saleyear</th>
+                    <th>salequarter</th>
+                    <th>salemonth</th>
+                    <th>s1</th>
+                    <th>s2</th>
+                    <th>s3</th>
+                    <th>stotal</th>
+                </tr>
+                </thead>
+            </table>
         </div>
         <div class="data-view" id="user">
-            用户数据编辑
+            <table id="table-user" class="display" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>authority</th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
