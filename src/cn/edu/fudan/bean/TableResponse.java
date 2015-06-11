@@ -6,13 +6,13 @@ import java.util.List;
 /**
  * Created by Dawnwords on 2015/6/10.
  */
-public class TabUnit {
+public class TableResponse {
     private int draw;
     private int recordsTotal;
     private int recordsFiltered;
     private List<List> data;
 
-    public TabUnit() {
+    public TableResponse() {
         this.data = new ArrayList<>();
     }
 
