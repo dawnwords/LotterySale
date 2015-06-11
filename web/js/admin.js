@@ -5,8 +5,7 @@ $(document).ready(function () {
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     $(".data-view").height(viewHeight - 200);
 
-    var tab = $("#nav-bar").find("a"),
-        tableUnit = $("#table-unit");
+    var tab = $("#nav-bar").find("a");
 
     function clickTab() {
         var tabId = ['unit', 'sale', 'user'][$(this).data("tab")];
@@ -15,15 +14,17 @@ $(document).ready(function () {
     }
 
     tab.click(clickTab);
-    tableUnit.DataTable({
+    $("#table-unit").DataTable({
         scrollY: viewHeight - 315,
         scrollCollapse: true,
         serverSide: true,
+        searchHighlight: true,
         ajax: {
-            url: '../admin/tabunit',
+            url: '../admin/table',
             type: 'POST',
             contentType: 'application/json',
             data: function (o) {
+                o.table = 'UNIT';
                 return JSON.stringify(o);
             }
         },

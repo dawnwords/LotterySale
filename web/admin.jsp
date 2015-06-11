@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <title>浦东新区民政彩票管理系统 - 数据管理</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" href="http://datatables.net/download/build/nightly/jquery.dataTables.css"/>
+    <link rel="stylesheet" href="http://cdn.datatables.net/plug-ins/9dcbecd42ad/features/searchHighlight/dataTables.searchHighlight.css"/>
     <link rel="stylesheet" href="css/admin.css"/>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
+    <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/features/searchHighlight/dataTables.searchHighlight.js"></script>
     <script src="js/admin.js"></script>
 </head>
 <body>
@@ -32,18 +35,18 @@
         <div class="data-view active" id="unit">
             <table id="table-unit" class="display" cellspacing="0" width="100%">
                 <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>name</th>
-                        <th>unitcode</th>
-                        <th>address</th>
-                        <th>manager</th>
-                        <th>mobile</th>
-                        <th>unitnum</th>
-                        <th>area</th>
-                        <th>population1</th>
-                        <th>population2</th>
-                    </tr>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>unitcode</th>
+                    <th>address</th>
+                    <th>manager</th>
+                    <th>mobile</th>
+                    <th>unitnum</th>
+                    <th>area</th>
+                    <th>population1</th>
+                    <th>population2</th>
+                </tr>
                 </thead>
             </table>
         </div>
