@@ -5,20 +5,11 @@ $(document).ready(function () {
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     $(".data-view").height(viewHeight - 200);
 
-    var tab = $("#nav-bar").find("a"), tableUnit, tableSale, tableUser;
+    var tab = $("#nav-bar").find("a"), tables;
 
-    function clickTab() {
-        var tabIndex = $(this).data("tab");
-        var tabId = ['unit', 'sale', 'user'][tabIndex];
-        var table = [tableUnit, tableSale, tableUser][tabIndex];
-
-        $('.data-view').removeClass('active');
-        $("#" + tabId).addClass('active');
-        table.draw();
-    }
-
-    function dataTableOpt(table) {
-        return {
+    function Table(tableName){
+        this.name = tableName;
+        this.table = $("#table-"+tableName).DataTable({
             scrollY: viewHeight - 315,
             scrollCollapse: true,
             serverSide: true,
@@ -28,7 +19,7 @@ $(document).ready(function () {
                 type: 'POST',
                 contentType: 'application/json',
                 data: function (o) {
-                    o.table = table;
+                    o.table = tableName;
                     return JSON.stringify(o);
                 }
             },
@@ -55,11 +46,16 @@ $(document).ready(function () {
                     sortDescending: ": 降序"
                 }
             }
-        };
+        });
+    }
+
+    function clickTab() {
+        var table = tables[$(this).data("tab")];
+        $('.data-view').removeClass('active');
+        $("#" + table.name).addClass('active');
+        table.table.draw();
     }
 
     tab.click(clickTab);
-    tableUnit = $("#table-unit").DataTable(dataTableOpt('UNIT'));
-    tableSale = $("#table-sale").DataTable(dataTableOpt('SALE'));
-    tableUser = $("#table-user").DataTable(dataTableOpt('USER'));
+    tables = [new Table('unit'), new Table('sale'), new Table('user')];
 });

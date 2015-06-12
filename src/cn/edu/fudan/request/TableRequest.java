@@ -21,7 +21,7 @@ public class TableRequest {
 
     public Table table() {
         try {
-            return Table.valueOf(table);
+            return Table.valueOf(table.toUpperCase());
         } catch (IllegalArgumentException e) {
             return Table.DEFAULT;
         }
