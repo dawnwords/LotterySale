@@ -60,7 +60,7 @@ public class TableRequest {
         }
     }
 
-    public static enum Table {
+    public enum Table {
         UNIT(new String[]{"id", "name", "unitcode", "address", "manager", "mobile", "unitnum", "area", "population1", "population2"},
                 new String[]{"Int", "String", "String", "String", "String", "String", "Int", "Double", "Int", "Int"},
                 new int[]{1, 3, 4}, "tab_unit"),
