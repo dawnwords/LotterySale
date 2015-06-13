@@ -1,8 +1,8 @@
 package cn.edu.fudan.dao;
 
-import cn.edu.fudan.request.UpdateTableReqeust;
-import cn.edu.fudan.request.UpdateTableReqeust.Table;
-import cn.edu.fudan.request.UpdateTableReqeust.Update;
+import cn.edu.fudan.request.UpdateTableRequest;
+import cn.edu.fudan.request.UpdateTableRequest.Table;
+import cn.edu.fudan.request.UpdateTableRequest.Update;
 
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
@@ -13,17 +13,17 @@ import java.util.List;
  * Created by Dawnwords on 2015/6/12.
  */
 public class UpdateTableDAO extends BaseDAO<String> {
-    private UpdateTableReqeust reqeust;
+    private UpdateTableRequest request;
 
-    public UpdateTableDAO(HttpServlet servlet, UpdateTableReqeust reqeust) {
+    public UpdateTableDAO(HttpServlet servlet, UpdateTableRequest request) {
         super(servlet);
-        this.reqeust = reqeust;
+        this.request = request;
     }
 
     @Override
     protected String processData(Connection connection) throws Exception {
-        List<Update> updates = reqeust.updates();
-        Table table = reqeust.table();
+        List<Update> updates = request.updates();
+        Table table = request.table();
         if (updates.size() > 0) {
             String sql = "UPDATE " + table.table + " SET ";
             for (Update update : updates) {
@@ -39,7 +39,7 @@ public class UpdateTableDAO extends BaseDAO<String> {
                 PreparedStatement.class.getDeclaredMethod("set" + type, getClassBytype(type)).invoke(ps, update.update);
                 i++;
             }
-            ps.setInt(i, reqeust.id());
+            ps.setInt(i, request.id());
             if (ps.executeUpdate() == 1) {
                 return "修改成功";
             }

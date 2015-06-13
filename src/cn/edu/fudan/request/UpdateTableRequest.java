@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Dawnwords on 2015/6/12.
  */
-public class UpdateTableReqeust {
+public class UpdateTableRequest {
     private int id;
     private String table;
     private List<Update> updates;
@@ -46,7 +46,7 @@ public class UpdateTableReqeust {
         }
 
         private boolean shouldUpdate() {
-            return !origin.equals(update);
+            return !(update == null || update.equals(origin));
         }
     }
 
