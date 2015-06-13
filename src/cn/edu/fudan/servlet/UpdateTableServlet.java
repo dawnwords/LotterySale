@@ -17,6 +17,6 @@ public class UpdateTableServlet extends BaseServlet<UpdateTableRequest, String> 
 
     @Override
     protected String processRequest(UpdateTableRequest request, Session session) throws Exception {
-        return new UpdateTableDAO(this, request).getResult();
+        return new UpdateTableDAO(this, request).getResult() ? "success" : "fail";
     }
 }

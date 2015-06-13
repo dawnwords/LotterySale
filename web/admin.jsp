@@ -27,8 +27,8 @@
             </div>
             <div class="modal-body"><form class="form-horizontal"></form></div>
             <div class="modal-footer">
-                <span class="glyphicon change-pass"></span>
                 <button type="button" class="btn btn-danger pull-left" id="modify-delete">删除</button>
+                <span class="glyphicon modify-result"></span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="modify-submit">提交</button>
             </div>
@@ -51,8 +51,8 @@
         <div class="data-view active" id="unit">
             <table id="table-unit" class="display" cellspacing="0" width="100%"></table>
         </div>
-        <div class="data-view" id="sale">
-            <table id="table-sale" class="display" cellspacing="0" width="100%"></table>
+        <div class="data-view" id="sales">
+            <table id="table-sales" class="display" cellspacing="0" width="100%"></table>
         </div>
         <div class="data-view" id="user">
             <table id="table-user" class="display" cellspacing="0" width="100%"></table>

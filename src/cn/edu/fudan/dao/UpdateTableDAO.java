@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Dawnwords on 2015/6/12.
  */
-public class UpdateTableDAO extends BaseDAO<String> {
+public class UpdateTableDAO extends BaseDAO<Boolean> {
     private UpdateTableRequest request;
 
     public UpdateTableDAO(HttpServlet servlet, UpdateTableRequest request) {
@@ -21,7 +21,7 @@ public class UpdateTableDAO extends BaseDAO<String> {
     }
 
     @Override
-    protected String processData(Connection connection) throws Exception {
+    protected Boolean processData(Connection connection) throws Exception {
         List<Update> updates = request.updates();
         Table table = request.table();
         if (updates.size() > 0) {
@@ -36,15 +36,15 @@ public class UpdateTableDAO extends BaseDAO<String> {
             int i = 1;
             for (Update update : updates) {
                 String type = table.colTypes[i - 1];
-                PreparedStatement.class.getDeclaredMethod("set" + type, getClassBytype(type)).invoke(ps, update.update);
-                i++;
+                PreparedStatement.class.getDeclaredMethod("set" + type, int.class, getClassBytype(type))
+                        .invoke(ps, i++, update.update);
             }
             ps.setInt(i, request.id());
             if (ps.executeUpdate() == 1) {
-                return "修改成功";
+                return true;
             }
         }
-        return "数据未修改";
+        return false;
     }
 
     private Class getClassBytype(String type) {

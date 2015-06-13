@@ -9,6 +9,7 @@ $(document).ready(function () {
         popup = $("#modify"),
         updateBtn = $("#modify-submit"),
         modifyTitle = $("#modify-title"),
+        modifyResult = $(".modify-result"),
         tables;
 
     function Table(tableName, titleName, fields) {
@@ -102,8 +103,23 @@ $(document).ready(function () {
         table.table.draw();
     }
 
+    function updateDisplayMsg(msg, success) {
+        modifyResult.html(msg);
+        modifyResult.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
+        modifyResult.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
+        modifyResult.fadeIn("fast", function () {
+            $(this).delay(1000).fadeOut("slow", function(){
+                if(success){
+                    popup.modal('hide');
+                }
+            });
+        });
+    }
+
     function submitUpdate() {
-        var updates = [];
+        var updates = [],
+            id = modifyTitle.data('id'),
+            table = modifyTitle.data('table');
         $(".form-group").each(function () {
             var update = $(this).find("div").children().first().val();
             if (update == undefined || update == "null") {
@@ -115,14 +131,24 @@ $(document).ready(function () {
                 update: update
             });
         });
-
-        var result = {
-            id: modifyTitle.data('id'),
-            table: modifyTitle.data('table'),
-            updates: updates
-        };
-
-        console.log(result);
+        $.ajax({
+            url: '../admin/updatetable',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: id,
+                table: table,
+                updates: updates
+            }),
+            success: function (data) {
+                if (data == 'success') {
+                    updateDisplayMsg("修改成功", true);
+                    tables[{unit: 0, sales: 1, user: 2}[table]].table.ajax.reload();
+                } else {
+                    updateDisplayMsg('修改失败', false);
+                }
+            }
+        });
     }
 
     tab.click(clickTab);
@@ -134,11 +160,12 @@ $(document).ready(function () {
             {name: "address", type: "input"},
             {name: "manager", type: "input"},
             {name: "mobile", type: "input"},
-            {name: "unitnum", type: "disabled"},
+            {name: "unitnum", type: "input"},
+            {name: "area", type: "input"},
             {name: "population1", type: "input"},
             {name: "population2", type: "input"}
         ]),
-        new Table('sale', "销量", [
+        new Table('sales', "销量", [
             {name: "unitid", type: "disabled"},
             {name: "saleyear", type: "disabled"},
             {name: "salequarter", type: "disabled"},

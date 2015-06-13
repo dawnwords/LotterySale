@@ -64,7 +64,7 @@ public class TableRequest {
         UNIT(new String[]{"id", "name", "unitcode", "address", "manager", "mobile", "unitnum", "area", "population1", "population2"},
                 new String[]{"Int", "String", "String", "String", "String", "String", "Int", "Double", "Int", "Int"},
                 new int[]{1, 3, 4}, "tab_unit"),
-        SALE(new String[]{"id", "unitid", "saleyear", "salequarter", "salemonth", "s1", "s2", "s3", "stotal"},
+        SALES(new String[]{"id", "unitid", "saleyear", "salequarter", "salemonth", "s1", "s2", "s3", "stotal"},
                 new String[]{"Int", "Int", "String", "String", "String", "Double", "Double", "Double", "Double"},
                 new int[]{1, 2, 3, 4}, "tab_sales"),
         USER(new String[]{"id", "name", "authority"},

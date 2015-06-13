@@ -53,3 +53,11 @@
 table.dataTable span.highlight {
     background-color: #FFFF88;
 }
+
+.modify-result.success{
+    color: #3c763d;
+}
+
+.modify-result.fail{
+    color: #a94442;
+}
