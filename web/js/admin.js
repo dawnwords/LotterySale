@@ -5,15 +5,46 @@ $(document).ready(function () {
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     $(".data-view").height(viewHeight - 200);
 
-    var tab = $("#nav-bar").find("a"), tables;
+    var tab = $("#nav-bar").find("a"),
+        popup = $("#modify"),
+        tables;
 
-    function Table(tableName){
-        this.name = tableName;
-        this.table = $("#table-"+tableName).DataTable({
+    function Table(tableName, titleName, fields) {
+        var columns = [{title: "id"}];
+        for (var i = 0; i < fields.length; i++) {
+            columns.push({title: fields[i].name});
+        }
+
+        var buildSelectHtml = function (field, origin) {
+            var html = '<div class="form-group">' +
+                '    <label for="field-' + field.name + '" class="col-xs-2 control-label">' + field.name + ':</label>' +
+                '    <div class="col-xs-10">' +
+                '        <select class="form-control" id="field-' + field.name + '">';
+            for (var i in field.options) {
+                var option = field.options[i];
+                html += '<option' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
+            }
+            html += '        </select>' +
+                '    </div>' +
+                '</div>';
+            return html;
+        };
+
+        var buildInputHtml = function (field, origin, disabled) {
+            return '<div class="form-group">' +
+                '    <label for="field-' + field.name + '" class="col-xs-2 control-label">' + field.name + ':</label>' +
+                '    <div class="col-xs-10">' +
+                '        <input type="text" class="form-control" id="field-' + field.name + '" placeholder="' + origin + '"' + (disabled ? " readonly" : "") + '>' +
+                '    </div>' +
+                '</div>';
+        };
+
+        var table = $("#table-" + tableName).DataTable({
             scrollY: viewHeight - 315,
             scrollCollapse: true,
             serverSide: true,
             searchHighlight: true,
+            columns: columns,
             ajax: {
                 url: '../admin/table',
                 type: 'POST',
@@ -47,6 +78,28 @@ $(document).ready(function () {
                 }
             }
         });
+        table.on("click", "tr", function () {
+            $("#modify-title").html("修改" + titleName + "数据");
+            var tempFields = fields.slice(),
+                form = popup.find("form"),
+                html = "",
+                rowData = table.rows($(this)).data()[0];
+            tempFields.unshift({name: "id", type: "disabled"});
+            for (var i in tempFields) {
+                var field = tempFields[i];
+                var origin = rowData[i];
+                if (field.type == "select") {
+                    html += buildSelectHtml(field, origin);
+                } else {
+                    html += buildInputHtml(field, origin, field.type == "disabled");
+                }
+            }
+            form.html(html);
+            popup.modal('show');
+        });
+
+        this.name = tableName;
+        this.table = table;
     }
 
     function clickTab() {
@@ -57,5 +110,29 @@ $(document).ready(function () {
     }
 
     tab.click(clickTab);
-    tables = [new Table('unit'), new Table('sale'), new Table('user')];
+    tables = [
+        new Table('unit', "节点", [
+            {name: "name", type: "input"},
+            {name: "unitcode", type: "input"},
+            {name: "address", type: "input"},
+            {name: "manager", type: "input"},
+            {name: "mobile", type: "input"},
+            {name: "unitnum", type: "disabled"},
+            {name: "population1", type: "input"},
+            {name: "population2", type: "input"}
+        ]),
+        new Table('sale', "销量", [
+            {name: "unitid", type: "disabled"},
+            {name: "saleyear", type: "disabled"},
+            {name: "salequarter", type: "disabled"},
+            {name: "salemonth", type: "disabled"},
+            {name: "s1", type: "input"},
+            {name: "s2", type: "input"},
+            {name: "s3", type: "input"},
+            {name: "stotal", type: "input"}
+        ]),
+        new Table('user', "用户", [
+            {name: "name", type: "disabled"},
+            {name: "authority", type: "select", options: ["Admin", "Normal"]}
+        ])];
 });

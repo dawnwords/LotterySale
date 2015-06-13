@@ -7,7 +7,6 @@ import cn.edu.fudan.request.UpdateTableReqeust.Update;
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public class UpdateTableDAO extends BaseDAO<String> {
                 i++;
             }
             ps.setInt(i, reqeust.id());
-            if(ps.executeUpdate() ==1){
+            if (ps.executeUpdate() == 1) {
                 return "修改成功";
             }
         }
