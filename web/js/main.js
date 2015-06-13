@@ -82,7 +82,11 @@ $(document).ready(function () {
         changePassHint.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
         changePassHint.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
         changePassHint.fadeIn("fast", function () {
-            $(this).delay(1000).fadeOut("slow");
+            $(this).delay(1000).fadeOut("slow", function () {
+                if (success) {
+                    $("#change-password").modal('hide');
+                }
+            });
         });
     }
 
@@ -145,7 +149,6 @@ $(document).ready(function () {
     population.find("input[name=population]").change(updateGraph);
 
     deselect.click(tree.deselectAll);
-
 
 
 });

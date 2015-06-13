@@ -24,13 +24,13 @@
     <h1>浦东新区民政彩票管理系统</h1>
     <% if (user!=null) { %>
     <a class="btn btn-danger text-center" href="logout">注销</a>
-    <a class="btn btn-default text-center" data-toggle="modal" data-target="#change_password">账号管理</a>
+    <a class="btn btn-default text-center" data-toggle="modal" data-target="#change-password">账号管理</a>
     <% if(user.isAdmin()){%>
     <a class="btn btn-default text-center" href="admin.jsp">数据管理</a>
     <% } %>
     <% } %>
 </div>
-<div class="modal fade" id="change_password" tabindex="-1" role="dialog" aria-labelledby="change-password-title" aria-hidden="true">
+<div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-labelledby="change-password-title" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
