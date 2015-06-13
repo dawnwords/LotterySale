@@ -25,31 +25,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="modify-title"></h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="field-id" class="col-xs-2 control-label">id:</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control" id="field-id" placeholder="123" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="field-name" class="col-xs-2 control-label">name:</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control" id="field-name" placeholder="xiao">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="field-authority" class="col-xs-2 control-label">authority:</label>
-                        <div class="col-xs-10">
-                            <select class="form-control" id="field-authority">
-                                <option value="Admin">Admin</option>
-                                <option value="Normal">Normal</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <div class="modal-body"><form class="form-horizontal"></form></div>
             <div class="modal-footer">
                 <span class="glyphicon change-pass"></span>
                 <button type="button" class="btn btn-danger pull-left" id="modify-delete">删除</button>

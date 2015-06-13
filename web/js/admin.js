@@ -7,6 +7,8 @@ $(document).ready(function () {
 
     var tab = $("#nav-bar").find("a"),
         popup = $("#modify"),
+        updateBtn = $("#modify-submit"),
+        modifyTitle = $("#modify-title"),
         tables;
 
     function Table(tableName, titleName, fields) {
@@ -14,30 +16,6 @@ $(document).ready(function () {
         for (var i = 0; i < fields.length; i++) {
             columns.push({title: fields[i].name});
         }
-
-        var buildSelectHtml = function (field, origin) {
-            var html = '<div class="form-group">' +
-                '    <label for="field-' + field.name + '" class="col-xs-2 control-label">' + field.name + ':</label>' +
-                '    <div class="col-xs-10">' +
-                '        <select class="form-control" id="field-' + field.name + '">';
-            for (var i in field.options) {
-                var option = field.options[i];
-                html += '<option' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
-            }
-            html += '        </select>' +
-                '    </div>' +
-                '</div>';
-            return html;
-        };
-
-        var buildInputHtml = function (field, origin, disabled) {
-            return '<div class="form-group">' +
-                '    <label for="field-' + field.name + '" class="col-xs-2 control-label">' + field.name + ':</label>' +
-                '    <div class="col-xs-10">' +
-                '        <input type="text" class="form-control" id="field-' + field.name + '" placeholder="' + origin + '"' + (disabled ? " readonly" : "") + '>' +
-                '    </div>' +
-                '</div>';
-        };
 
         var table = $("#table-" + tableName).DataTable({
             scrollY: viewHeight - 315,
@@ -79,20 +57,35 @@ $(document).ready(function () {
             }
         });
         table.on("click", "tr", function () {
-            $("#modify-title").html("修改" + titleName + "数据");
             var tempFields = fields.slice(),
                 form = popup.find("form"),
                 html = "",
                 rowData = table.rows($(this)).data()[0];
+
+            modifyTitle.html("修改" + titleName + "数据");
+            modifyTitle.data('id', rowData[0]);
+            modifyTitle.data('table', tableName);
             tempFields.unshift({name: "id", type: "disabled"});
             for (var i in tempFields) {
                 var field = tempFields[i];
                 var origin = rowData[i];
+                html += '<div class="form-group" data-field="' + field.name + '" data-origin="' + origin + '">' +
+                    '    <label for="field-' + field.name + '" class="col-xs-2 control-label">' + field.name + ':</label>' +
+                    '    <div class="col-xs-10">';
                 if (field.type == "select") {
-                    html += buildSelectHtml(field, origin);
+                    html += '        <select class="form-control" id="field-' + field.name + '">';
+                    for (var j in field.options) {
+                        var option = field.options[j];
+                        html += '<option value=' + option + ' "' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
+                    }
+                    html += '        </select>'
                 } else {
-                    html += buildInputHtml(field, origin, field.type == "disabled");
+                    html += '<input type="text" class="form-control" id="field-' + field.name + '" value="' + origin + '"'
+                        + (field.type == "disabled" ? " readonly" : "") + '>';
                 }
+
+                html += '    </div>' +
+                    '</div>';
             }
             form.html(html);
             popup.modal('show');
@@ -109,7 +102,31 @@ $(document).ready(function () {
         table.table.draw();
     }
 
+    function submitUpdate() {
+        var updates = [];
+        $(".form-group").each(function () {
+            var update = $(this).find("div").children().first().val();
+            if (update == undefined || update == "null") {
+                update = null;
+            }
+            updates.push({
+                field: $(this).data('field'),
+                origin: $(this).data('origin'),
+                update: update
+            });
+        });
+
+        var result = {
+            id: modifyTitle.data('id'),
+            table: modifyTitle.data('table'),
+            updates: updates
+        };
+
+        console.log(result);
+    }
+
     tab.click(clickTab);
+    updateBtn.click(submitUpdate);
     tables = [
         new Table('unit', "节点", [
             {name: "name", type: "input"},
