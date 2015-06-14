@@ -3,6 +3,7 @@ package cn.edu.fudan.dao;
 import cn.edu.fudan.request.UpdateTableRequest;
 import cn.edu.fudan.request.UpdateTableRequest.Table;
 import cn.edu.fudan.request.UpdateTableRequest.Update;
+import cn.edu.fudan.util.Log;
 
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
@@ -41,6 +42,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             }
             ps.setInt(i, request.id());
             if (ps.executeUpdate() == 1) {
+                Log.update(new Log.Parameter(connection, table.table, request.id()), updates);
                 return true;
             }
         }
