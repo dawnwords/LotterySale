@@ -26,23 +26,43 @@ public class UpdateTableRequest {
 
     public List<Update> updates() {
         List<Update> result = new ArrayList<>();
-        List<String> illegalFields = Arrays.asList(table().cols);
+        List<String> legalFields = Arrays.asList(table().cols);
         for (Update update : updates) {
-            if (update.shouldUpdate() && illegalFields.contains(update.field)) {
-                result.add(update);
+            int index = legalFields.indexOf(update.field);
+            if (index >= 0) {
+                Parser parser = table().parser(index);
+                if (parser != null) {
+                    update.origin = parser.parse(update.origin);
+                    update.update = parser.parse(update.update);
+                    if (update.shouldUpdate()) {
+                        result.add(update);
+                    }
+                }
             }
         }
         return result;
     }
 
     public static class Update {
-        public final String field;
-        public final Object origin, update;
+        private String field;
+        private Object origin, update;
 
         public Update(String field, Object origin, Object update) {
             this.field = field;
             this.origin = origin;
             this.update = update;
+        }
+
+        public String field() {
+            return field;
+        }
+
+        public Object origin() {
+            return origin;
+        }
+
+        public Object update() {
+            return update;
         }
 
         private boolean shouldUpdate() {
@@ -54,8 +74,8 @@ public class UpdateTableRequest {
         UNIT(new String[]{"name", "unitcode", "address", "manager", "mobile", "area", "population1", "population2"},
                 new String[]{"String", "String", "String", "String", "String", "Double", "Int", "Int"},
                 "tab_unit"),
-        SALE(new String[]{"s1", "s2", "s3", "stotal"},
-                new String[]{"Double", "Double", "Double"},
+        SALES(new String[]{"s1", "s2", "s3", "stotal"},
+                new String[]{"Double", "Double", "Double", "Double"},
                 "tab_sales"),
         USER(new String[]{"authority"},
                 new String[]{"String"},
@@ -70,5 +90,43 @@ public class UpdateTableRequest {
             this.colTypes = colTypes;
             this.table = table;
         }
+
+        public Class colClass(int i) {
+            String type = colTypes[i];
+            if ("String".equals(type)) return String.class;
+            if ("Int".equals(type)) return int.class;
+            if ("Double".equals(type)) return double.class;
+            return null;
+        }
+
+        private Parser parser(int i) {
+            String type = colTypes[i];
+            if ("String".equals(type)) return Parser.StringParser;
+            if ("Int".equals(type)) return Parser.IntParser;
+            if ("Double".equals(type)) return Parser.DoubleParser;
+            return null;
+        }
+    }
+
+    private interface Parser {
+        Object parse(Object o);
+
+        Parser StringParser = new Parser() {
+            @Override
+            public Object parse(Object o) {
+                return o.toString();
+            }
+        }, IntParser = new Parser() {
+            @Override
+            public Object parse(Object o) {
+                return Integer.parseInt(o.toString());
+            }
+        }, DoubleParser = new Parser() {
+            @Override
+            public Object parse(Object o) {
+                return Double.parseDouble(o.toString());
+            }
+        };
+
     }
 }

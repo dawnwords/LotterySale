@@ -21,7 +21,7 @@ public class UpdateTableServlet extends BaseServlet<UpdateTableRequest, String> 
     protected String processRequest(UpdateTableRequest request, Session session) throws Exception {
         if (new UpdateTableDAO(this, request).getResult()) {
             switch (request.table()) {
-                case SALE:
+                case SALES:
                     new UpdateAncestorSalesDAO(this, request.id()).getResult();
                     break;
                 case UNIT:

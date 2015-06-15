@@ -14,7 +14,7 @@ public class Log {
     public static void update(Parameter p, List<Update> updates) throws SQLException {
         String content = "";
         for (Update update : updates) {
-            content += String.format("%s:%s->%s,", update.field, update.origin, update.update);
+            content += String.format("%s:%s->%s,", update.field(), update.origin(), update.update());
         }
         log(p, Operation.MODIFY, content.substring(0, content.length() - 1));
     }

@@ -28,7 +28,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
         if (updates.size() > 0) {
             String sql = "UPDATE " + table.table + " SET ";
             for (Update update : updates) {
-                sql += update.field + "=?,";
+                sql += update.field() + "=?,";
             }
             sql = sql.substring(0, sql.length() - 1) + " WHERE id = ?";
             System.out.println(sql);
@@ -37,8 +37,8 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             int i = 1;
             for (Update update : updates) {
                 String type = table.colTypes[i - 1];
-                PreparedStatement.class.getDeclaredMethod("set" + type, int.class, getClassBytype(type))
-                        .invoke(ps, i++, update.update);
+                PreparedStatement.class.getDeclaredMethod("set" + type, int.class, table.colClass(i - 1))
+                        .invoke(ps, i++, update.update());
             }
             ps.setInt(i, request.id());
             if (ps.executeUpdate() == 1) {
@@ -47,12 +47,5 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             }
         }
         return false;
-    }
-
-    private Class getClassBytype(String type) {
-        if ("String".equals(type)) return String.class;
-        if ("Int".equals(type)) return int.class;
-        if ("Double".equals(type)) return double.class;
-        return null;
     }
 }
