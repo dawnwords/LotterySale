@@ -3,19 +3,16 @@ package cn.edu.fudan.dao;
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Created by Dawnwords on 2015/6/15.
  */
 public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
-    private String saleYear;
-    private String saleMonth;
 
-    public UpdateAncestorSalesDAO(HttpServlet servlet, int unitId, String saleYear, String saleMonth) {
-        super(servlet, unitId);
-        this.saleYear = saleYear;
-        this.saleMonth = saleMonth;
+    public UpdateAncestorSalesDAO(HttpServlet servlet, int saleId) {
+        super(servlet, saleId);
     }
 
     @Override
@@ -23,9 +20,19 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
         return level == 3;
     }
 
+
     @Override
-    protected void doFather(Connection connection, int level, int fatherId) throws SQLException {
-        String sql = "UPDATE tab_sales AS A CROSS JOIN (" +
+    protected int unitId(Connection connection, int saleId) throws SQLException {
+        String sql = "SELECT unitid FROM tab_sales WHERE id = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, saleId);
+        ResultSet rs = ps.executeQuery();
+        return rs.next() ? rs.getInt(1) : 0;
+    }
+
+    @Override
+    protected PreparedStatement prepareStatement(Connection connection, int level) throws SQLException {
+        return connection.prepareStatement("UPDATE tab_sales AS A CROSS JOIN (" +
                 "SELECT sum(B.s1) AS sumS1," +
                 "       sum(B.s2) AS sumS2," +
                 "       sum(B.s3) AS sumS3, " +
@@ -40,11 +47,6 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                 "    A.s2 = C.sumS2," +
                 "    A.s3 = C.sumS3," +
                 "    A.stotal = C.sumStotal " +
-                "WHERE A.id = ? AND A.saleyear = ? AND A.salemonth = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, fatherId);
-        ps.setString(2, saleYear);
-        ps.setString(3, saleMonth);
-        ps.executeUpdate();
+                "WHERE A.id = ?");
     }
 }

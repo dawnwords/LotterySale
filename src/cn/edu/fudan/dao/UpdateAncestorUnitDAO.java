@@ -9,6 +9,7 @@ import java.sql.SQLException;
  * Created by Dawnwords on 2015/6/15.
  */
 public class UpdateAncestorUnitDAO extends UpdateAncestorDAO {
+
     public UpdateAncestorUnitDAO(HttpServlet servlet, int unitId) {
         super(servlet, unitId);
     }
@@ -18,9 +19,15 @@ public class UpdateAncestorUnitDAO extends UpdateAncestorDAO {
         return level == 2 || level == 3;
     }
 
+
     @Override
-    protected void doFather(Connection connection, int level, int fatherId) throws SQLException {
-        String sql = level == 3 ?
+    protected int unitId(Connection connection, int unitId) throws SQLException {
+        return unitId;
+    }
+
+    @Override
+    protected PreparedStatement prepareStatement(Connection connection, int level) throws SQLException {
+        return connection.prepareStatement(level == 3 ?
                 "UPDATE tab_unit AS A CROSS JOIN (" +
                         "SELECT sum(B.unitnum) AS sumUnitnum," +
                         "       sum(B.population1) AS sumPopulation1," +
@@ -38,9 +45,6 @@ public class UpdateAncestorUnitDAO extends UpdateAncestorDAO {
                         "WHERE B.fatherid = A.id" +
                         ") AS C " +
                         "SET A.area = C.sumArea " +
-                        "WHERE A.id = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, fatherId);
-        ps.executeUpdate();
+                        "WHERE A.id = ?");
     }
 }

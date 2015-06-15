@@ -10,15 +10,17 @@ import java.sql.SQLException;
  * Created by Dawnwords on 2015/6/15.
  */
 public abstract class UpdateAncestorDAO extends BaseDAO<Boolean> {
-    private int unitId;
 
-    protected UpdateAncestorDAO(HttpServlet servlet, int unitId) {
+    private int id;
+
+    protected UpdateAncestorDAO(HttpServlet servlet, int id) {
         super(servlet);
-        this.unitId = unitId;
+        this.id = id;
     }
 
     @Override
     protected Boolean processData(Connection connection) throws Exception {
+        int unitId = unitId(connection, id);
         int level = level(connection, unitId);
         if (!assertLevel(level)) return false;
 
@@ -26,12 +28,16 @@ public abstract class UpdateAncestorDAO extends BaseDAO<Boolean> {
         while (true) {
             fatherId = fatherId(connection, fatherId);
             if (fatherId == 0) break;
-            doFather(connection, level, fatherId);
+            PreparedStatement ps = prepareStatement(connection, level);
+            ps.setInt(1, id);
+            ps.executeUpdate();
         }
         return true;
     }
 
-    protected abstract void doFather(Connection connection, int level, int fatherId) throws SQLException;
+    protected abstract int unitId(Connection connection, int id) throws SQLException;
+
+    protected abstract PreparedStatement prepareStatement(Connection connection, int level) throws SQLException;
 
     protected abstract boolean assertLevel(int level);
 
