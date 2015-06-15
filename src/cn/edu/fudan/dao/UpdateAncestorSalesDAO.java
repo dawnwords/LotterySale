@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by Dawnwords on 2015/6/15.
@@ -43,7 +42,7 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                     "       sum(B.s3) AS sumS3, " +
                     "       sum(B.stotal) AS sumStotal " +
                     "FROM tab_sales AS B INNER JOIN tab_unit ON B.unitid = tab_unit.id " +
-                    "WHERE tab_unit.fatherid = tab_sales.unitid" +
+                    "WHERE tab_unit.fatherid = ?" +
                     "       AND B.saleyear = ?" +
                     "       AND B.salemonth = ?" +
                     ") AS A " +
@@ -52,10 +51,12 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                     "    s3 = A.sumS3," +
                     "    stotal = A.sumStotal " +
                     "WHERE unitid = ?";
+
             ps = connection.prepareStatement(sql);
-            ps.setString(1, saleYear);
-            ps.setString(2, saleMonth);
-            ps.setInt(3, fatherId);
+            ps.setInt(1, fatherId);
+            ps.setString(2, saleYear);
+            ps.setString(3, saleMonth);
+            ps.setInt(4, fatherId);
             ps.executeUpdate();
         }
         return true;
