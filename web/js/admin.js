@@ -12,18 +12,44 @@ $(document).ready(function () {
         modifyResult = $(".modify-result"),
         tables;
 
-    function Table(tableName, titleName, fields) {
-        var columns = [{title: "id"}];
-        for (var i = 0; i < fields.length; i++) {
-            columns.push({title: fields[i].name});
+    function showPopup(fields, rowData) {
+        var form = popup.find("form"),
+            html = "";
+        for (var i in fields) {
+            var field = fields[i];
+            var origin = rowData[i];
+            html += '<div class="form-group" data-field="' + field.title + '" data-origin="' + origin + '">' +
+                '    <label for="field-' + field.title + '" class="col-xs-2 control-label">' + field.title + ':</label>' +
+                '    <div class="col-xs-10">';
+            if (field.ftype == "select") {
+                html += '        <select class="form-control" id="field-' + field.title + '">';
+                for (var j in field.options) {
+                    var option = field.options[j];
+                    html += '<option value=' + option + ' "' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
+                }
+                html += '        </select>'
+            } else {
+                html += '<input type="text" class="form-control" id="field-' + field.title + '" value="' + origin + '"'
+                    + (field.ftype == "disabled" ? " readonly" : "") + '>';
+            }
+
+            html += '    </div>' +
+                '</div>';
         }
+        form.html(html);
+        popup.modal('show');
+    }
+
+    function Table(tableName, titleName, fields, unitid) {
+        var tempFields = fields.slice();
+        tempFields.unshift({title: "id", ftype: "disabled"});
 
         var table = $("#table-" + tableName).DataTable({
             scrollY: viewHeight - 315,
             scrollCollapse: true,
             serverSide: true,
             searchHighlight: true,
-            columns: columns,
+            columns: tempFields,
             ajax: {
                 url: '../admin/table',
                 type: 'POST',
@@ -58,38 +84,28 @@ $(document).ready(function () {
             }
         });
         table.on("click", "tr", function () {
-            var tempFields = fields.slice(),
-                form = popup.find("form"),
-                html = "",
-                rowData = table.rows($(this)).data()[0];
+            var rowData = table.rows($(this)).data()[0];
 
             modifyTitle.html("修改" + titleName + "数据");
             modifyTitle.data('id', rowData[0]);
             modifyTitle.data('table', tableName);
-            tempFields.unshift({name: "id", type: "disabled"});
-            for (var i in tempFields) {
-                var field = tempFields[i];
-                var origin = rowData[i];
-                html += '<div class="form-group" data-field="' + field.name + '" data-origin="' + origin + '">' +
-                    '    <label for="field-' + field.name + '" class="col-xs-2 control-label">' + field.name + ':</label>' +
-                    '    <div class="col-xs-10">';
-                if (field.type == "select") {
-                    html += '        <select class="form-control" id="field-' + field.name + '">';
-                    for (var j in field.options) {
-                        var option = field.options[j];
-                        html += '<option value=' + option + ' "' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
-                    }
-                    html += '        </select>'
-                } else {
-                    html += '<input type="text" class="form-control" id="field-' + field.name + '" value="' + origin + '"'
-                        + (field.type == "disabled" ? " readonly" : "") + '>';
-                }
 
-                html += '    </div>' +
-                    '</div>';
+            if (unitid) {
+                $.ajax({
+                    url: '../admin/tablefield',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        unitid: rowData[unitid.unitid],
+                        table: tableName
+                    }),
+                    success: function (data) {
+                        showPopup(data, rowData);
+                    }
+                })
+            } else {
+                showPopup(fields, rowData);
             }
-            form.html(html);
-            popup.modal('show');
         });
 
         this.name = tableName;
@@ -108,8 +124,8 @@ $(document).ready(function () {
         modifyResult.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
         modifyResult.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
         modifyResult.fadeIn("fast", function () {
-            $(this).delay(1000).fadeOut("slow", function(){
-                if(success){
+            $(this).delay(1000).fadeOut("slow", function () {
+                if (success) {
                     popup.modal('hide');
                 }
             });
@@ -155,28 +171,28 @@ $(document).ready(function () {
     updateBtn.click(submitUpdate);
     tables = [
         new Table('unit', "节点", [
-            {name: "name", type: "input"},
-            {name: "unitcode", type: "input"},
-            {name: "address", type: "input"},
-            {name: "manager", type: "input"},
-            {name: "mobile", type: "input"},
-            {name: "unitnum", type: "input"},
-            {name: "area", type: "input"},
-            {name: "population1", type: "input"},
-            {name: "population2", type: "input"}
-        ]),
+            {title: "name"},
+            {title: "unitcode"},
+            {title: "address"},
+            {title: "manager"},
+            {title: "mobile"},
+            {title: "unitnum"},
+            {title: "area"},
+            {title: "population1"},
+            {title: "population2"}
+        ], {unitid: 0}),
         new Table('sales', "销量", [
-            {name: "unitid", type: "disabled"},
-            {name: "saleyear", type: "disabled"},
-            {name: "salequarter", type: "disabled"},
-            {name: "salemonth", type: "disabled"},
-            {name: "s1", type: "input"},
-            {name: "s2", type: "input"},
-            {name: "s3", type: "input"},
-            {name: "stotal", type: "input"}
-        ]),
+            {title: "unitid"},
+            {title: "saleyear"},
+            {title: "salequarter"},
+            {title: "salemonth"},
+            {title: "s1"},
+            {title: "s2"},
+            {title: "s3"},
+            {title: "stotal"}
+        ], {unitid: 1}),
         new Table('user', "用户", [
-            {name: "name", type: "disabled"},
-            {name: "authority", type: "select", options: ["Admin", "Normal"]}
-        ])];
+            {title: "name", ftype: "disabled"},
+            {title: "authority", ftype: "select", options: ["Admin", "Normal"]}
+        ], false)];
 });
