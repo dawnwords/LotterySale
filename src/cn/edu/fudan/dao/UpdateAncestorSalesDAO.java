@@ -43,20 +43,24 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                     "       sum(B.stotal) AS sumStotal " +
                     "FROM tab_sales AS B INNER JOIN tab_unit ON B.unitid = tab_unit.id " +
                     "WHERE tab_unit.fatherid = ?" +
-                    "       AND B.saleyear = ?" +
-                    "       AND B.salemonth = ?" +
+                    "   AND B.saleyear = ?" +
+                    "   AND B.salemonth = ?" +
                     ") AS A " +
                     "SET s1 = A.sumS1," +
                     "    s2 = A.sumS2," +
                     "    s3 = A.sumS3," +
                     "    stotal = A.sumStotal " +
-                    "WHERE unitid = ?";
+                    "WHERE unitid = ?" +
+                    "   AND saleyear = ?" +
+                    "   AND salemonth = ?";
 
             ps = connection.prepareStatement(sql);
             ps.setInt(1, fatherId);
             ps.setString(2, saleYear);
             ps.setString(3, saleMonth);
             ps.setInt(4, fatherId);
+            ps.setString(5, saleYear);
+            ps.setString(6, saleMonth);
             ps.executeUpdate();
         }
         return true;
