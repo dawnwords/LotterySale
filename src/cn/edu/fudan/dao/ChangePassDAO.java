@@ -21,7 +21,7 @@ public class ChangePassDAO extends BaseDAO<Boolean> {
 
     @Override
     protected Boolean processData(Connection connection) throws Exception {
-        String sql = "UPDATE tab_user SET password=password(?) WHERE id=? AND password=password(?)";
+        String sql = "UPDATE tab_user SET password=password(?) WHERE id=? AND password=password(?) AND valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, reqeust.newPass);
         ps.setInt(2, userId);

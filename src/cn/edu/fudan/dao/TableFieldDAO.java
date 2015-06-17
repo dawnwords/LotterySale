@@ -49,7 +49,7 @@ public class TableFieldDAO extends BaseDAO<TableField[]> {
     }
 
     private int level(Connection connection) throws SQLException {
-        String sql = "SELECT level FROM tab_unit WHERE id = ?";
+        String sql = "SELECT level FROM tab_unit WHERE id = ? AND valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, request.unitid);
         ResultSet rs = ps.executeQuery();

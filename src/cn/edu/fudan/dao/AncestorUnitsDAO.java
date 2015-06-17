@@ -22,7 +22,7 @@ public class AncestorUnitsDAO extends BaseDAO<List<Integer>> {
     protected List<Integer> processData(Connection connection) throws Exception {
         int fatherId = unitId;
         LinkedList<Integer> result = new LinkedList<>();
-        String sql = "SELECT fatherid FROM tab_unit WHERE id = ?";
+        String sql = "SELECT fatherid FROM tab_unit WHERE id = ? AND valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
         while (fatherId != 0) {
             ps.setInt(1, fatherId);

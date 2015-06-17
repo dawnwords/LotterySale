@@ -34,7 +34,7 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
         int fatherId = unitId;
         while (true) {
             fatherId = fatherId(connection, fatherId);
-            if (fatherId == 0) break;
+            if (fatherId <= 0) break;
 
             sql = "UPDATE tab_sales CROSS JOIN (" +
                     "SELECT sum(B.s1) AS sumS1," +
@@ -42,7 +42,9 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                     "       sum(B.s3) AS sumS3, " +
                     "       sum(B.stotal) AS sumStotal " +
                     "FROM tab_sales AS B INNER JOIN tab_unit ON B.unitid = tab_unit.id " +
-                    "WHERE tab_unit.fatherid = ?" +
+                    "WHERE tab_unit.valid = 1" +
+                    "   AND tab_sales.valid = 1" +
+                    "   AND tab_unit.fatherid = ?" +
                     "   AND B.saleyear = ?" +
                     "   AND B.salemonth = ?" +
                     ") AS A " +
@@ -50,7 +52,8 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                     "    s2 = A.sumS2," +
                     "    s3 = A.sumS3," +
                     "    stotal = A.sumStotal " +
-                    "WHERE unitid = ?" +
+                    "WHERE valid = 1" +
+                    "   AND unitid = ?" +
                     "   AND saleyear = ?" +
                     "   AND salemonth = ?";
 

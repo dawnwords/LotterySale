@@ -30,7 +30,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             for (Update update : updates) {
                 sql += update.field() + "=?,";
             }
-            sql = sql.substring(0, sql.length() - 1) + " WHERE id = ?";
+            sql = sql.substring(0, sql.length() - 1) + " WHERE valid = 1 AND id = ?";
             System.out.println(sql);
 
             PreparedStatement ps = connection.prepareStatement(sql);

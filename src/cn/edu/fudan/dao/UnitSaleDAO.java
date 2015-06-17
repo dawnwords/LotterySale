@@ -24,11 +24,12 @@ public class UnitSaleDAO extends BaseDAO<List<UnitSale>> {
         sql = "select tab_sales.unitid, tab_sales.saleyear, tab_sales.salequarter, tab_sales.salemonth, " +
                 "sum(tab_sales.s1), sum(tab_sales.s2), sum(tab_sales.s3), sum(tab_sales.stotal), " +
                 "tab_unit.name, tab_unit.population1, tab_unit.population2 " +
-                "from tab_sales inner join tab_unit on tab_sales.unitid = tab_unit.id where ";
+                "from tab_sales inner join tab_unit on tab_sales.unitid = tab_unit.id where " +
+                "tab_unit.valid = 1 and tab_sales.valid = 1 and (";
         for (int ignored : unitids) {
             sql += "tab_unit.id = ? or ";
         }
-        sql = sql.substring(0, sql.length() - 4) + " group by tab_sales.unitid, tab_sales.saleyear";
+        sql +=  "false) group by tab_sales.unitid, tab_sales.saleyear";
 
     }
 

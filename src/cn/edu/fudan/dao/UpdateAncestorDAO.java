@@ -23,7 +23,7 @@ public abstract class UpdateAncestorDAO extends BaseDAO<Boolean> {
     }
 
     private int intQueryFormTabUnitById(Connection connection, String field, int unitId) throws SQLException {
-        String sql = "SELECT " + field + " FROM tab_unit WHERE id = ?";
+        String sql = "SELECT " + field + " FROM tab_unit WHERE valid = 1 and id = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, unitId);
         ResultSet rs = ps.executeQuery();

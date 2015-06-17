@@ -24,26 +24,30 @@ public class UpdateAncestorUnitDAO extends UpdateAncestorDAO {
         int fatherId = unitId;
         while (true) {
             fatherId = fatherId(connection, fatherId);
-            if (fatherId == 0) break;
+            if (fatherId <= 0) break;
             String sql = level == 2 ?
                     "UPDATE tab_unit CROSS JOIN (" +
                             "SELECT sum(A.area) AS sumArea," +
                             "       sum(A.population1) AS sumPopulation1," +
                             "       sum(A.population2) AS sumPopulation2 " +
                             "FROM tab_unit AS A " +
-                            "WHERE A.fatherid = ?" +
+                            "WHERE A.valid = 1" +
+                            "   AND A.fatherid = ?" +
                             ") AS B " +
                             "SET area = B.sumArea," +
                             "    population1 = B.sumPopulation1," +
                             "    population2 = B.sumPopulation2 " +
-                            "WHERE id = ?" :
+                            "WHERE valid = 1" +
+                            "   AND id = ?" :
                     "UPDATE tab_unit CROSS JOIN (" +
                             "SELECT sum(A.unitnum) AS sumUnitNum " +
                             "FROM tab_unit AS A " +
-                            "WHERE A.fatherid = ?" +
+                            "WHERE A.valid = 1" +
+                            "   AND A.fatherid = ?" +
                             ") AS B " +
                             "SET unitNum = B.sumUnitNum " +
-                            "WHERE id = ?";
+                            "WHERE valid = 1" +
+                            "   AND id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, fatherId);
             ps.setInt(2, fatherId);

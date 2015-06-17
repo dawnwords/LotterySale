@@ -21,7 +21,7 @@ public class LoginDAO extends BaseDAO<User> {
 
     @Override
     protected User processData(Connection connection) throws Exception {
-        String sql = "SELECT id,name,authority FROM tab_user WHERE name=? AND password=password(?)";
+        String sql = "SELECT id,name,authority FROM tab_user WHERE name=? AND password=password(?) AND valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, request.name);
         ps.setString(2, request.password);

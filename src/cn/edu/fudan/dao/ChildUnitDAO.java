@@ -23,7 +23,7 @@ public class ChildUnitDAO extends BaseDAO<List<Unit>> {
     @Override
     protected List<Unit> processData(Connection connection) throws Exception {
         List<Unit> result = new ArrayList<>();
-        String sql = "select id,name,level from tab_unit where fatherid =?";
+        String sql = "select id,name,level from tab_unit where fatherid =? AND valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, unitId);
         ResultSet rs = ps.executeQuery();

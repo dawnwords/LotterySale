@@ -63,11 +63,11 @@ public class TableDAO extends BaseDAO<TableResponse> {
         }
         sql = removeComma(sql) + " FROM " + table.table + " ";
         if (request.search() != null && table.searchCols.length > 0) {
-            sql += "where ";
+            sql += "where valid = 1 AND (";
             for (int col : table.searchCols) {
                 sql += table.cols[col] + " like ? or ";
             }
-            sql += "false ";
+            sql += "false) ";
         }
         if (request.order().size() > 0) {
             sql += "order by ";
@@ -90,11 +90,11 @@ public class TableDAO extends BaseDAO<TableResponse> {
         int filtered = 0;
         String sql = "SELECT COUNT(id) FROM " + table.table + " ";
         if (request.search() != null && table.searchCols.length > 0) {
-            sql += "where ";
+            sql += "where valid = 1 AND (";
             for (int col : table.searchCols) {
                 sql += table.cols[col] + " like ? or ";
             }
-            sql += "false";
+            sql += "false)";
         }
         PreparedStatement ps = connection.prepareStatement(sql);
         if (request.search() != null) {
@@ -111,7 +111,7 @@ public class TableDAO extends BaseDAO<TableResponse> {
 
     private int getTotal(Connection connection) throws SQLException {
         int total = 0;
-        String sql = "SELECT count(id) FROM " + table.table;
+        String sql = "SELECT count(id) FROM " + table.table + " WHERE valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
