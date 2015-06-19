@@ -31,31 +31,31 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
 
         if (level(connection, unitId) != 3) return false;
 
+        sql = "UPDATE tab_sales CROSS JOIN (" +
+                "SELECT sum(B.s1) AS sumS1," +
+                "       sum(B.s2) AS sumS2," +
+                "       sum(B.s3) AS sumS3, " +
+                "       sum(B.stotal) AS sumStotal " +
+                "FROM tab_sales AS B INNER JOIN tab_unit ON B.unitid = tab_unit.id " +
+                "WHERE tab_unit.valid = 1" +
+                "   AND B.valid = 1" +
+                "   AND tab_unit.fatherid = ?" +
+                "   AND B.saleyear = ?" +
+                "   AND B.salemonth = ?" +
+                ") AS A " +
+                "SET s1 = A.sumS1," +
+                "    s2 = A.sumS2," +
+                "    s3 = A.sumS3," +
+                "    stotal = A.sumStotal " +
+                "WHERE valid = 1" +
+                "   AND unitid = ?" +
+                "   AND saleyear = ?" +
+                "   AND salemonth = ?";
+
         int fatherId = unitId;
         while (true) {
             fatherId = fatherId(connection, fatherId);
             if (fatherId <= 0) break;
-
-            sql = "UPDATE tab_sales CROSS JOIN (" +
-                    "SELECT sum(B.s1) AS sumS1," +
-                    "       sum(B.s2) AS sumS2," +
-                    "       sum(B.s3) AS sumS3, " +
-                    "       sum(B.stotal) AS sumStotal " +
-                    "FROM tab_sales AS B INNER JOIN tab_unit ON B.unitid = tab_unit.id " +
-                    "WHERE tab_unit.valid = 1" +
-                    "   AND tab_sales.valid = 1" +
-                    "   AND tab_unit.fatherid = ?" +
-                    "   AND B.saleyear = ?" +
-                    "   AND B.salemonth = ?" +
-                    ") AS A " +
-                    "SET s1 = A.sumS1," +
-                    "    s2 = A.sumS2," +
-                    "    s3 = A.sumS3," +
-                    "    stotal = A.sumStotal " +
-                    "WHERE valid = 1" +
-                    "   AND unitid = ?" +
-                    "   AND saleyear = ?" +
-                    "   AND salemonth = ?";
 
             ps = connection.prepareStatement(sql);
             ps.setInt(1, fatherId);
