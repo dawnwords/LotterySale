@@ -11,6 +11,7 @@ $(document).ready(function () {
         deleteBtn = $("#modify-delete"),
         modifyTitle = $("#modify-title"),
         modifyResult = $(".modify-result"),
+        refreshNonLeafBtn = $("#function-refresh"),
         tables = [
             new Table('unit', "节点", [
                 {title: "name"},
@@ -145,6 +146,12 @@ $(document).ready(function () {
         table.table.draw();
     }
 
+    function reloadTable(table) {
+        if (table) {
+            tables[{unit: 0, sales: 1, user: 2}[table]].table.ajax.reload(null, false);
+        }
+    }
+
     function updateDisplayMsg(msg, table) {
         modifyResult.html(msg);
         modifyResult.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
@@ -156,9 +163,7 @@ $(document).ready(function () {
                 }
             });
         });
-        if (table) {
-            tables[{unit: 0, sales: 1, user: 2}[table]].table.ajax.reload(null, false);
-        }
+        reloadTable(table);
     }
 
     function submitUpdate() {
@@ -217,7 +222,23 @@ $(document).ready(function () {
         })
     }
 
+    function submitRefresh() {
+        var table = tables[$("#nav-bar").find(".active a").data("tab")].name;
+        refreshNonLeafBtn.button('loading');
+        $.ajax({
+            url: '../admin/refreshtable',
+            type: 'POST',
+            contentType: 'application/json',
+            data: table,
+            success: function () {
+                refreshNonLeafBtn.button('reset');
+                reloadTable(table);
+            }
+        })
+    }
+
     tab.click(clickTab);
     updateBtn.click(submitUpdate);
     deleteBtn.click(submitDelete);
+    refreshNonLeafBtn.click(submitRefresh);
 });

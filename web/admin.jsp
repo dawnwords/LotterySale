@@ -22,10 +22,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="modify-title"></h4>
             </div>
-            <div class="modal-body"><form class="form-horizontal"></form></div>
+            <div class="modal-body">
+                <form class="form-horizontal"></form>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger pull-left" id="modify-delete">删除</button>
                 <span class="glyphicon modify-result"></span>
@@ -48,6 +51,15 @@
                 <a href="" data-toggle="tab" data-tab="2">用户数据编辑</a>
             </li>
         </ul>
+        <div id="function">
+            <button type="button" class="btn btn-default btn-sm" id="function-refresh"
+                    data-loading-text="正在刷新...">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>刷新非叶节点数据
+            </button>
+            <button type="button" class="btn btn-success btn-sm" id="function-add">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增数据
+            </button>
+        </div>
         <div class="data-view active" id="unit">
             <table id="table-unit" class="display" cellspacing="0" width="100%"></table>
         </div>

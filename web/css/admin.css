@@ -13,6 +13,7 @@
     font-family: '微软雅黑', '黑体', arial, sans-serif;
     float: left;
 }
+
 .header a {
     margin: 66px 0 0 20px;
     width: 100px;
@@ -29,6 +30,7 @@
     padding: 20px 0 2px;
     border-radius: 15px 15px 2px 2px;
     margin-top: 12px;
+    position: relative;
 }
 
 .wrapper .nav {
@@ -46,7 +48,7 @@
     display: none;
 }
 
-.data-view.active{
+.data-view.active {
     display: block;
 }
 
@@ -54,10 +56,16 @@ table.dataTable span.highlight {
     background-color: #FFFF88;
 }
 
-.modify-result.success{
+.modify-result.success {
     color: #3c763d;
 }
 
-.modify-result.fail{
+.modify-result.fail {
     color: #a94442;
+}
+
+#function {
+    position: absolute;
+    top: 15px;
+    right: 20px;
 }
