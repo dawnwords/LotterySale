@@ -4,6 +4,7 @@ import cn.edu.fudan.request.UpdateTableRequest;
 import cn.edu.fudan.request.UpdateTableRequest.Table;
 import cn.edu.fudan.request.UpdateTableRequest.Update;
 import cn.edu.fudan.util.Log;
+import cn.edu.fudan.util.TypeUtil;
 
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
@@ -37,7 +38,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             int i = 1;
             for (Update update : updates) {
                 String type = table.colTypes[i - 1];
-                PreparedStatement.class.getDeclaredMethod("set" + type, int.class, table.colClass(i - 1))
+                PreparedStatement.class.getDeclaredMethod("set" + type, int.class, TypeUtil.string2Class(type))
                         .invoke(ps, i++, update.update());
             }
             ps.setInt(i, request.id());
