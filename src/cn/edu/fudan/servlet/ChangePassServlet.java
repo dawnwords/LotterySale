@@ -19,7 +19,8 @@ public class ChangePassServlet extends BaseServlet<ChangePassRequest, String> {
     @Override
     protected String processRequest(ChangePassRequest request, Session session) throws Exception {
         User user = session.user();
-        boolean success = user != null && new ChangePassDAO(this, request, user.id).getResult();
-        return success ? "success" : "fail";
+        if (user == null) return "fail";
+        Boolean result = new ChangePassDAO(this, request, user.id).getResult();
+        return (result != null && result) ? "success" : "fail";
     }
 }

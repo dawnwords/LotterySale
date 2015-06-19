@@ -19,7 +19,9 @@ public class UpdateTableServlet extends BaseServlet<UpdateTableRequest, String> 
 
     @Override
     protected String processRequest(UpdateTableRequest request, Session session) throws Exception {
-        if (new UpdateTableDAO(this, request).getResult()) {
+        if (request == null) return "fail";
+        Boolean result = new UpdateTableDAO(this, request).getResult();
+        if (result != null && result) {
             switch (request.table()) {
                 case SALES:
                     new UpdateAncestorSalesDAO(this, request.id()).getResult();
