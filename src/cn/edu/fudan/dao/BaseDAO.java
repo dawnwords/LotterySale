@@ -23,7 +23,9 @@ public abstract class BaseDAO<T> {
     private ServletContext context;
 
     public BaseDAO(HttpServlet servlet) {
-        this.context = servlet.getServletContext();
+        if(servlet!=null) {
+            this.context = servlet.getServletContext();
+        }
     }
 
     private Connection connect() throws SQLException {
