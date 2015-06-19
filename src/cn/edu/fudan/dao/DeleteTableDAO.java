@@ -1,6 +1,7 @@
 package cn.edu.fudan.dao;
 
 import cn.edu.fudan.request.DeleteTableRequest;
+import cn.edu.fudan.util.Log;
 
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
@@ -22,15 +23,20 @@ public class DeleteTableDAO extends BaseDAO<String> {
         String sql;
         switch (request.table()) {
             case UNIT:
-                sql = "UPDATE tab_unit SET valid = 0 WHERE id = ? AND (SELECT count(id) FROM tab_unit WHERE fatherid = ?) = 0";
+                sql = "UPDATE tab_unit CROSS JOIN (" +
+                        "SELECT count(id) AS childnum FROM tab_unit WHERE valid = 1 AND fatherid = ?) AS T " +
+                        "SET valid = 0 " +
+                        "WHERE id = ? AND T.childnum = 0";
                 break;
             case SALES:
-                sql = "UPDATE tab_sales SET valid = 0 WHERE id = ? AND (SELECT count(tab_sales.id) FROM tab_sales " +
-                        "INNER JOIN tab_unit ON tab_sales.unitid = tab_unit.id " +
-                        "INNER JOIN tab_sales AS T ON T.unitid = tab_unit.fatherid " +
-                        "AND T.salemonth = tab_sales.salemonth " +
-                        "AND T.saleyear = tab_sales.saleyear " +
-                        "WHERE T.id = ?) = 0";
+                sql = "UPDATE tab_sales CROSS JOIN(" +
+                        "(SELECT count(tab_sales.id) as childnum FROM tab_sales " +
+                        "   INNER JOIN tab_unit ON tab_sales.unitid = tab_unit.id" +
+                        "   INNER JOIN tab_sales AS T ON T.unitid = tab_unit.fatherid" +
+                        "   AND T.salemonth = tab_sales.salemonth" +
+                        "   AND T.saleyear = tab_sales.saleyear" +
+                        "   WHERE tab_sales.valid = 1 AND T.id = ?)) AS P " +
+                        "SET valid = 0 WHERE id = ? AND P.childnum = 0";
                 break;
             case USER:
                 sql = "UPDATE tab_user SET valid = 0 WHERE id = ? OR id = ?";
@@ -41,7 +47,11 @@ public class DeleteTableDAO extends BaseDAO<String> {
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, request.id());
         ps.setInt(2, request.id());
-        return ps.executeUpdate() == 1 ? "success" : "fail";
+        if (ps.executeUpdate() == 1) {
+            Log.delete(new Log.Parameter(connection, request.table().table, request.id()));
+            return "success";
+        }
+        return "fail";
 
     }
 }

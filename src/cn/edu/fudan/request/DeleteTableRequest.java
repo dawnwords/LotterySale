@@ -27,7 +27,12 @@ public class DeleteTableRequest {
     }
 
     public enum Table {
-        UNIT, SALES, USER, DEFAULT
+        UNIT("tab_unit"), SALES("tab_sales"), USER("tab_user"), DEFAULT("");
+        public String table;
+
+        Table(String table) {
+            this.table = table;
+        }
     }
 
     @Override

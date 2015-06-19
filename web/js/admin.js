@@ -8,9 +8,35 @@ $(document).ready(function () {
     var tab = $("#nav-bar").find("a"),
         popup = $("#modify"),
         updateBtn = $("#modify-submit"),
+        deleteBtn = $("#modify-delete"),
         modifyTitle = $("#modify-title"),
         modifyResult = $(".modify-result"),
-        tables;
+        tables = [
+            new Table('unit', "节点", [
+                {title: "name"},
+                {title: "unitcode"},
+                {title: "address"},
+                {title: "manager"},
+                {title: "mobile"},
+                {title: "unitnum"},
+                {title: "area"},
+                {title: "population1"},
+                {title: "population2"}
+            ], {unitid: 0}),
+            new Table('sales', "销量", [
+                {title: "unitid"},
+                {title: "saleyear"},
+                {title: "salequarter"},
+                {title: "salemonth"},
+                {title: "s1"},
+                {title: "s2"},
+                {title: "s3"},
+                {title: "stotal"}
+            ], {unitid: 1}),
+            new Table('user', "用户", [
+                {title: "name", ftype: "disabled"},
+                {title: "authority", ftype: "select", options: ["Admin", "Normal"]}
+            ], false)];
 
     function showPopup(fields, rowData) {
         var form = popup.find("form"),
@@ -119,17 +145,20 @@ $(document).ready(function () {
         table.table.draw();
     }
 
-    function updateDisplayMsg(msg, success) {
+    function updateDisplayMsg(msg, table) {
         modifyResult.html(msg);
         modifyResult.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
-        modifyResult.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
+        modifyResult.addClass(table ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
         modifyResult.fadeIn("fast", function () {
             $(this).delay(1000).fadeOut("slow", function () {
-                if (success) {
+                if (table) {
                     popup.modal('hide');
                 }
             });
         });
+        if (table) {
+            tables[{unit: 0, sales: 1, user: 2}[table]].table.ajax.reload(null, false);
+        }
     }
 
     function submitUpdate() {
@@ -158,8 +187,7 @@ $(document).ready(function () {
             }),
             success: function (data) {
                 if (data == 'success') {
-                    updateDisplayMsg("修改成功", true);
-                    tables[{unit: 0, sales: 1, user: 2}[table]].table.ajax.reload();
+                    updateDisplayMsg("修改成功", table);
                 } else {
                     updateDisplayMsg('修改失败', false);
                 }
@@ -167,32 +195,29 @@ $(document).ready(function () {
         });
     }
 
+    function submitDelete() {
+        var id = modifyTitle.data('id'),
+            table = modifyTitle.data('table');
+        $.ajax({
+            url: '../admin/deletetable',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: id,
+                table: table
+            }),
+            success: function (data) {
+                if (data == 'success') {
+                    updateDisplayMsg("删除成功", table);
+                } else {
+                    updateDisplayMsg('删除失败' + (data == 'fail' ? '：删除对象包含子节点' : ''), false);
+                }
+
+            }
+        })
+    }
+
     tab.click(clickTab);
     updateBtn.click(submitUpdate);
-    tables = [
-        new Table('unit', "节点", [
-            {title: "name"},
-            {title: "unitcode"},
-            {title: "address"},
-            {title: "manager"},
-            {title: "mobile"},
-            {title: "unitnum"},
-            {title: "area"},
-            {title: "population1"},
-            {title: "population2"}
-        ], {unitid: 0}),
-        new Table('sales', "销量", [
-            {title: "unitid"},
-            {title: "saleyear"},
-            {title: "salequarter"},
-            {title: "salemonth"},
-            {title: "s1"},
-            {title: "s2"},
-            {title: "s3"},
-            {title: "stotal"}
-        ], {unitid: 1}),
-        new Table('user', "用户", [
-            {title: "name", ftype: "disabled"},
-            {title: "authority", ftype: "select", options: ["Admin", "Normal"]}
-        ], false)];
+    deleteBtn.click(submitDelete);
 });
