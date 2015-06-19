@@ -61,9 +61,9 @@ public class TableDAO extends BaseDAO<TableResponse> {
         for (String col : table.cols) {
             sql += col + ",";
         }
-        sql = removeComma(sql) + " FROM " + table.table + " ";
+        sql = removeComma(sql) + " FROM " + table.table + " where valid = 1 ";
         if (request.search() != null && table.searchCols.length > 0) {
-            sql += "where valid = 1 AND (";
+            sql += "AND (";
             for (int col : table.searchCols) {
                 sql += table.cols[col] + " like ? or ";
             }
@@ -88,9 +88,9 @@ public class TableDAO extends BaseDAO<TableResponse> {
 
     private int getFiltered(Connection connection) throws SQLException {
         int filtered = 0;
-        String sql = "SELECT COUNT(id) FROM " + table.table + " ";
+        String sql = "SELECT COUNT(id) FROM " + table.table + " where valid = 1";
         if (request.search() != null && table.searchCols.length > 0) {
-            sql += "where valid = 1 AND (";
+            sql += "AND (";
             for (int col : table.searchCols) {
                 sql += table.cols[col] + " like ? or ";
             }
