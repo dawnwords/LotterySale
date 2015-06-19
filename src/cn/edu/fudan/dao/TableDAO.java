@@ -77,8 +77,6 @@ public class TableDAO extends BaseDAO<TableResponse> {
             sql = removeComma(sql);
         }
         sql += " LIMIT ?,?";
-
-        System.out.println(sql);
         return sql;
     }
 
@@ -88,7 +86,7 @@ public class TableDAO extends BaseDAO<TableResponse> {
 
     private int getFiltered(Connection connection) throws SQLException {
         int filtered = 0;
-        String sql = "SELECT COUNT(id) FROM " + table.table + " where valid = 1";
+        String sql = "SELECT COUNT(id) FROM " + table.table + " where valid = 1 ";
         if (request.search() != null && table.searchCols.length > 0) {
             sql += "AND (";
             for (int col : table.searchCols) {
