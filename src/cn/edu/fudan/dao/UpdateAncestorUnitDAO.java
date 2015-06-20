@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 /**
  * Created by Dawnwords on 2015/6/15.
  */
-public class UpdateAncestorUnitDAO extends UpdateAncestorDAO {
+public class UpdateAncestorUnitDAO extends BaseDAO<Boolean> {
 
     private int unitId;
 
@@ -18,12 +18,12 @@ public class UpdateAncestorUnitDAO extends UpdateAncestorDAO {
 
     @Override
     protected Boolean processData(Connection connection) throws Exception {
-        int level = level(connection, unitId);
+        int level = UnitFieldDAO.level(connection, unitId);
         if (level != 2 && level != 3) return false;
 
         for (int fatherId = unitId; ; level--) {
-            fatherId = fatherId(connection, fatherId);
-            if (fatherId <= 0) break;
+            fatherId = UnitFieldDAO.fatherId(connection, fatherId);
+            if (fatherId == 0) break;
 
             String sql = level == 3 ?
                     "UPDATE tab_unit CROSS JOIN (" +

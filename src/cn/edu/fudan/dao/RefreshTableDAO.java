@@ -41,9 +41,9 @@ public class RefreshTableDAO extends BaseDAO<Boolean> {
                 "GROUP BY tab_unit.fatherid, tab_sales.saleyear, tab_sales.salemonth", UpdateAncestorSalesDAO.class);
 
         private String sql;
-        private Class<? extends UpdateAncestorDAO> updateDAOClass;
+        private Class<? extends BaseDAO> updateDAOClass;
 
-        Table(String sql, Class<? extends UpdateAncestorDAO> updateDAOClass) {
+        Table(String sql, Class<? extends BaseDAO> updateDAOClass) {
             this.sql = sql;
             this.updateDAOClass = updateDAOClass;
         }

@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 /**
  * Created by Dawnwords on 2015/6/15.
  */
-public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
+public class UpdateAncestorSalesDAO extends BaseDAO<Boolean> {
 
     private int saleId;
 
@@ -29,7 +29,7 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
         String saleYear = rs.getString(2);
         String saleMonth = rs.getString(3);
 
-        if (level(connection, unitId) != 3) return false;
+        if (UnitFieldDAO.level(connection, unitId) != 3) return false;
 
         sql = "UPDATE tab_sales CROSS JOIN (" +
                 "SELECT sum(B.s1) AS sumS1," +
@@ -52,10 +52,9 @@ public class UpdateAncestorSalesDAO extends UpdateAncestorDAO {
                 "   AND saleyear = ?" +
                 "   AND salemonth = ?";
 
-        int fatherId = unitId;
-        while (true) {
-            fatherId = fatherId(connection, fatherId);
-            if (fatherId <= 0) break;
+        for (int fatherId = unitId; ; ) {
+            fatherId = UnitFieldDAO.fatherId(connection, fatherId);
+            if (fatherId == 0) break;
 
             ps = connection.prepareStatement(sql);
             ps.setInt(1, fatherId);

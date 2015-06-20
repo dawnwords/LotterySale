@@ -5,9 +5,6 @@ import cn.edu.fudan.request.TableFieldRequest;
 
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by Dawnwords on 2015/6/16.
@@ -37,8 +34,7 @@ public class TableFieldDAO extends BaseDAO<TableField[]> {
 
     @Override
     protected TableField[] processData(Connection connection) throws Exception {
-        int level = level(connection);
-        if (level < 0) return null;
+        int level = UnitFieldDAO.level(connection, request.unitid);
         if ("sales".equals(request.table)) {
             return level == 3 ? SALES_LV3 : SALES_OTHER;
         }
@@ -46,13 +42,5 @@ public class TableFieldDAO extends BaseDAO<TableField[]> {
             return level == 2 ? UNIT_LV2 : UNIT_OTHER;
         }
         return null;
-    }
-
-    private int level(Connection connection) throws SQLException {
-        String sql = "SELECT level FROM tab_unit WHERE id = ? AND valid = 1";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, request.unitid);
-        ResultSet rs = ps.executeQuery();
-        return rs.next() ? rs.getInt(1) : -1;
     }
 }

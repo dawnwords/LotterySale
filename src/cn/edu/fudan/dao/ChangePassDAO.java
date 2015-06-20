@@ -10,12 +10,12 @@ import java.sql.PreparedStatement;
  * Created by Dawnwords on 2015/6/8.
  */
 public class ChangePassDAO extends BaseDAO<Boolean> {
-    private ChangePassRequest reqeust;
+    private ChangePassRequest request;
     private int userId;
 
-    public ChangePassDAO(HttpServlet servlet, ChangePassRequest reqeust, int userId) {
+    public ChangePassDAO(HttpServlet servlet, ChangePassRequest request, int userId) {
         super(servlet);
-        this.reqeust = reqeust;
+        this.request = request;
         this.userId = userId;
     }
 
@@ -23,9 +23,9 @@ public class ChangePassDAO extends BaseDAO<Boolean> {
     protected Boolean processData(Connection connection) throws Exception {
         String sql = "UPDATE tab_user SET password=password(?) WHERE id=? AND password=password(?) AND valid = 1";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, reqeust.newPass);
+        ps.setString(1, request.newPass);
         ps.setInt(2, userId);
-        ps.setString(3, reqeust.oldPass);
+        ps.setString(3, request.oldPass);
         return ps.executeUpdate() == 1;
     }
 }

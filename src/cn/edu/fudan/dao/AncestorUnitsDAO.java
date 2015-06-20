@@ -2,8 +2,6 @@ package cn.edu.fudan.dao;
 
 import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,15 +18,11 @@ public class AncestorUnitsDAO extends BaseDAO<List<Integer>> {
 
     @Override
     protected List<Integer> processData(Connection connection) throws Exception {
-        int fatherId = unitId;
         LinkedList<Integer> result = new LinkedList<>();
-        String sql = "SELECT fatherid FROM tab_unit WHERE id = ? AND valid = 1";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        while (fatherId != 0) {
-            ps.setInt(1, fatherId);
-            ResultSet rs = ps.executeQuery();
-            fatherId = rs.next() ? rs.getInt(1) : 0;
-            if (fatherId != 0) result.addFirst(fatherId);
+        for (int fatherId = unitId; ; ) {
+            fatherId = UnitFieldDAO.fatherId(connection, fatherId);
+            if (fatherId == 0) break;
+            result.addFirst(fatherId);
         }
         return result;
     }
