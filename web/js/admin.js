@@ -8,35 +8,74 @@ $(document).ready(function () {
     var tab = $("#nav-bar").find("a"),
         modifyPopup = $("#modify"),
         modifySubmitBtn = $("#modify-submit"),
-        deleteBtn = $("#modify-delete"),
         modifyTitle = $("#modify-title"),
         modifyResult = $(".modify-result"),
+        addPopup = $("#add"),
+        addSubmitBtn = $("#add-submit"),
+        addTitle = $("#add-title"),
+        addResult = $(".add-result"),
+        deleteBtn = $("#modify-delete"),
         refreshNonLeafBtn = $("#function-refresh"),
+        addBtn = $("#function-add"),
         tables = [
             new Table('unit', "节点", [
-                {title: "name"},
-                {title: "unitcode"},
-                {title: "address"},
-                {title: "manager"},
-                {title: "mobile"},
-                {title: "unitnum"},
-                {title: "area"},
-                {title: "population1"},
-                {title: "population2"}
+                {
+                    title: "fatherid",
+                    addType: "select",
+                    options: {
+                        url: "../admin/fatheroption",
+                        type: 'GET',
+                        success: function (data) {
+                            var options = "",
+                                prefix = ["", "┗", "&nbsp;&nbsp;┗"],
+                                select = $("#add-field-fatherid");
+                            for (var i in data) {
+                                var option = data[i];
+                                options += "<option value='" + option.id + "' data-level=" + option.level + ">"
+                                    + prefix[option.level] + option.name + "</option>";
+                            }
+                            select.html(options);
+                            select.change(function () {
+                                var level = select.find("option:selected").data("level");
+                                $("#add-field-population1").prop('readonly', level != 2);
+                                $("#add-field-population2").prop('readonly', level != 2);
+                                $("#add-field-area").prop('readonly', level != 2);
+                            });
+                        }
+                    }
+                },
+                {title: "name", addType: "input"},
+                {title: "unitcode", addType: "input"},
+                {title: "address", addType: "input"},
+                {title: "manager", addType: "input"},
+                {title: "mobile", addType: "input"},
+                {title: "unitnum", addType: false},
+                {title: "area", addType: "input"},
+                {title: "population1", addType: "input"},
+                {title: "population2", addType: "input"}
             ], {unitid: 0}),
             new Table('sales', "销量", [
-                {title: "unitid"},
-                {title: "saleyear"},
-                {title: "salequarter"},
-                {title: "salemonth"},
-                {title: "s1"},
-                {title: "s2"},
-                {title: "s3"},
-                {title: "stotal"}
+                {title: "unitid", addType: "input"},
+                {
+                    title: "saleyear",
+                    addType: "select",
+                    options: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+                },
+                {title: "salequarter", addType: false},
+                {title: "salemonth", addType: "select", options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},
+                {title: "s1", addType: "input"},
+                {title: "s2", addType: "input"},
+                {title: "s3", addType: "input"},
+                {title: "stotal", addType: "input"}
             ], {unitid: 1}),
             new Table('user', "用户", [
-                {title: "name", ftype: "disabled"},
-                {title: "authority", ftype: "select", options: ["Admin", "Normal"]}
+                {title: "name", ftype: "disabled", addType: "input"},
+                {
+                    title: "authority",
+                    ftype: "select",
+                    addType: "select",
+                    options: ["Admin", "Normal"]
+                }
             ], false)];
 
     function showModifyPopup(fields, rowData) {
@@ -52,9 +91,9 @@ $(document).ready(function () {
                 html += '        <select class="form-control" id="field-' + field.title + '">';
                 for (var j in field.options) {
                     var option = field.options[j];
-                    html += '<option value=' + option + ' "' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
+                    html += '<option value="' + option + '"' + (option == origin ? ' selected' : '') + '>' + option + '</option>';
                 }
-                html += '        </select>'
+                html += '        </select>';
             } else {
                 html += '<input type="text" class="form-control" id="field-' + field.title + '" value="' + origin + '"'
                     + (field.ftype == "disabled" ? " readonly" : "") + '>';
@@ -67,8 +106,43 @@ $(document).ready(function () {
         modifyPopup.modal('show');
     }
 
+    function showAddPopup() {
+        var form = addPopup.find("form"),
+            table = currentTable(),
+            fields = table.fields,
+            html = "";
+
+        addTitle.html("新增" + table.titleName + "数据");
+        for (var i in fields) {
+            var field = fields[i];
+            if (field.addType) {
+                html += '<div class="form-group" data-field="' + field.title + '">' +
+                    '    <label for="add-field-' + field.title + '" class="col-xs-2 control-label">' + field.title + ':</label>' +
+                    '    <div class="col-xs-10">';
+                if (field.addType == "select") {
+                    html += '        <select class="form-control" id="add-field-' + field.title + '">';
+                    if ($.isArray(field.options)) {
+                        for (var j in field.options) {
+                            var option = field.options[j];
+                            html += '<option value="' + option + '">' + option + '</option>';
+                        }
+                    } else {
+                        $.ajax(field.options);
+                    }
+                    html += '        </select>';
+                } else if (field.addType == "input") {
+                    html += '<input type="text" class="form-control" id="add-field-' + field.title + '">';
+                }
+                html += '    </div>' +
+                    '</div>';
+            }
+        }
+        form.html(html);
+        addPopup.modal('show');
+    }
+
     function currentTable() {
-        return tables[$("#nav-bar").find(".active a").data("tab")].name;
+        return tables[$("#nav-bar").find(".active a").data("tab")];
     }
 
     function Table(tableName, titleName, fields, unitid) {
@@ -141,6 +215,8 @@ $(document).ready(function () {
 
         this.name = tableName;
         this.table = table;
+        this.titleName = titleName;
+        this.fields = fields;
     }
 
     function clickTab() {
@@ -225,13 +301,12 @@ $(document).ready(function () {
     }
 
     function submitRefresh() {
-        var table = currentTable();
         refreshNonLeafBtn.button('loading');
         $.ajax({
             url: '../admin/refreshtable',
             type: 'POST',
             contentType: 'application/json',
-            data: table,
+            data: currentTable().name,
             success: function () {
                 refreshNonLeafBtn.button('reset');
                 reloadTable();
@@ -243,4 +318,5 @@ $(document).ready(function () {
     modifySubmitBtn.click(submitUpdate);
     deleteBtn.click(submitDelete);
     refreshNonLeafBtn.click(submitRefresh);
+    addBtn.click(showAddPopup);
 });

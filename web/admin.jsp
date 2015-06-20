@@ -38,6 +38,25 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="add-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="add-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal"></form>
+            </div>
+            <div class="modal-footer">
+                <span class="glyphicon add-result"></span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="add-submit">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="content">
     <div class="wrapper">
         <ul id="nav-bar" class="nav nav-tabs">
