@@ -8,10 +8,20 @@ import com.google.gson.Gson;
 public class UnitSearch {
     private int id;
     private String name;
+    private int level;
 
-    public UnitSearch(int id, String name) {
+    public UnitSearch(int id, String name, int level) {
         this.id = id;
         this.name = name;
+        this.level = level;
+    }
+
+    public int id() {
+        return id;
+    }
+
+    public int level() {
+        return level;
     }
 
     @Override

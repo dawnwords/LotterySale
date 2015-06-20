@@ -25,7 +25,7 @@ public class SearchUnitDAO extends BaseDAO<List<UnitSearch>> {
     protected List<UnitSearch> processData(Connection connection) throws Exception {
         ArrayList<UnitSearch> result = new ArrayList<>();
         if (request != null) {
-            String sql = "SELECT id,name FROM tab_unit WHERE valid = 1 AND name LIKE ? LIMIT ?";
+            String sql = "SELECT id,name,level FROM tab_unit WHERE valid = 1 AND name LIKE ? LIMIT ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, "%" + request.keyword + "%");
             ps.setInt(2, request.count);
@@ -33,7 +33,8 @@ public class SearchUnitDAO extends BaseDAO<List<UnitSearch>> {
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String name = rs.getString(2);
-                result.add(new UnitSearch(id, name));
+                int level = rs.getInt(3);
+                result.add(new UnitSearch(id, name, level));
             }
         }
         return result;
