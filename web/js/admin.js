@@ -6,8 +6,8 @@ $(document).ready(function () {
     $(".data-view").height(viewHeight - 200);
 
     var tab = $("#nav-bar").find("a"),
-        popup = $("#modify"),
-        updateBtn = $("#modify-submit"),
+        modifyPopup = $("#modify"),
+        modifySubmitBtn = $("#modify-submit"),
         deleteBtn = $("#modify-delete"),
         modifyTitle = $("#modify-title"),
         modifyResult = $(".modify-result"),
@@ -39,8 +39,8 @@ $(document).ready(function () {
                 {title: "authority", ftype: "select", options: ["Admin", "Normal"]}
             ], false)];
 
-    function showPopup(fields, rowData) {
-        var form = popup.find("form"),
+    function showModifyPopup(fields, rowData) {
+        var form = modifyPopup.find("form"),
             html = "";
         for (var i in fields) {
             var field = fields[i];
@@ -64,7 +64,11 @@ $(document).ready(function () {
                 '</div>';
         }
         form.html(html);
-        popup.modal('show');
+        modifyPopup.modal('show');
+    }
+
+    function currentTable() {
+        return tables[$("#nav-bar").find(".active a").data("tab")].name;
     }
 
     function Table(tableName, titleName, fields, unitid) {
@@ -127,11 +131,11 @@ $(document).ready(function () {
                         table: tableName
                     }),
                     success: function (data) {
-                        showPopup(data, rowData);
+                        showModifyPopup(data, rowData);
                     }
                 })
             } else {
-                showPopup(fields, rowData);
+                showModifyPopup(fields, rowData);
             }
         });
 
@@ -146,31 +150,29 @@ $(document).ready(function () {
         table.table.draw();
     }
 
-    function reloadTable(table) {
-        if (table) {
-            tables[{unit: 0, sales: 1, user: 2}[table]].table.ajax.reload(null, false);
-        }
+    function reloadTable() {
+        currentTable().table.ajax.reload(null, false);
     }
 
-    function updateDisplayMsg(msg, table) {
+    function updateDisplayMsg(msg, success) {
         modifyResult.html(msg);
         modifyResult.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
-        modifyResult.addClass(table ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
+        modifyResult.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
         modifyResult.fadeIn("fast", function () {
             $(this).delay(1000).fadeOut("slow", function () {
-                if (table) {
-                    popup.modal('hide');
+                if (success) {
+                    modifyPopup.modal('hide');
+                    reloadTable();
                 }
             });
         });
-        reloadTable(table);
     }
 
     function submitUpdate() {
         var updates = [],
             id = modifyTitle.data('id'),
             table = modifyTitle.data('table');
-        $(".form-group").each(function () {
+        modifyPopup.find(".form-group").each(function () {
             var update = $(this).find("div").children().first().val();
             if (update == undefined || update == "null") {
                 update = null;
@@ -213,7 +215,7 @@ $(document).ready(function () {
             }),
             success: function (data) {
                 if (data == 'success') {
-                    updateDisplayMsg("删除成功", table);
+                    updateDisplayMsg("删除成功", true);
                 } else {
                     updateDisplayMsg('删除失败' + (data == 'fail' ? '：删除对象包含子节点' : ''), false);
                 }
@@ -223,7 +225,7 @@ $(document).ready(function () {
     }
 
     function submitRefresh() {
-        var table = tables[$("#nav-bar").find(".active a").data("tab")].name;
+        var table = currentTable();
         refreshNonLeafBtn.button('loading');
         $.ajax({
             url: '../admin/refreshtable',
@@ -232,13 +234,13 @@ $(document).ready(function () {
             data: table,
             success: function () {
                 refreshNonLeafBtn.button('reset');
-                reloadTable(table);
+                reloadTable();
             }
         })
     }
 
     tab.click(clickTab);
-    updateBtn.click(submitUpdate);
+    modifySubmitBtn.click(submitUpdate);
     deleteBtn.click(submitDelete);
     refreshNonLeafBtn.click(submitRefresh);
 });
