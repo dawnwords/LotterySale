@@ -37,7 +37,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             PreparedStatement ps = connection.prepareStatement(sql);
             int i = 1;
             for (Update update : updates) {
-                String type = table.colTypes[i - 1];
+                String type = update.type();
                 PreparedStatement.class.getDeclaredMethod("set" + type, int.class, TypeUtil.string2Class(type))
                         .invoke(ps, i++, update.update());
             }

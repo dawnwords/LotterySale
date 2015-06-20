@@ -33,7 +33,8 @@ public class UpdateTableRequest {
         for (Update update : updates) {
             int index = legalFields.indexOf(update.field);
             if (index >= 0) {
-                Parser parser = TypeUtil.string2Parser(table().colTypes[index]);
+                update.type = table().colTypes[index];
+                Parser parser = TypeUtil.string2Parser(update.type);
                 if (parser != null) {
                     update.origin = parser.parse(update.origin);
                     update.update = parser.parse(update.update);
@@ -49,6 +50,11 @@ public class UpdateTableRequest {
     public static class Update {
         private String field;
         private Object origin, update;
+        private String type;
+
+        public String type() {
+            return type;
+        }
 
         public String field() {
             return field;
@@ -78,8 +84,8 @@ public class UpdateTableRequest {
                 new String[]{"String"},
                 "tab_user"),
         DEFAULT(new String[0], new String[0], "");
-        public final String[] cols;
-        public final String[] colTypes;
+        private final String[] cols;
+        private final String[] colTypes;
         public final String table;
 
         Table(String[] cols, String[] colTypes, String table) {
