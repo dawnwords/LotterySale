@@ -61,9 +61,9 @@ public class TableRequest {
     }
 
     public enum Table {
-        UNIT(new String[]{"id", "name", "unitcode", "address", "manager", "mobile", "unitnum", "area", "population1", "population2"},
-                new String[]{"Int", "String", "String", "String", "String", "String", "Int", "Double", "Int", "Int"},
-                new int[]{1, 3, 4}, "tab_unit"),
+        UNIT(new String[]{"id", "fatherid", "name", "unitcode", "address", "manager", "mobile", "unitnum", "area", "population1", "population2"},
+                new String[]{"Int", "Int", "String", "String", "String", "String", "String", "Int", "Double", "Int", "Int"},
+                new int[]{2, 4, 5}, "tab_unit"),
         SALES(new String[]{"id", "unitid", "saleyear", "salequarter", "salemonth", "s1", "s2", "s3", "stotal"},
                 new String[]{"Int", "Int", "String", "String", "String", "Double", "Double", "Double", "Double"},
                 new int[]{1, 2, 3, 4}, "tab_sales"),
