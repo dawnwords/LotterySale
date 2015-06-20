@@ -6,13 +6,13 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="js/index.js"></script>
+    <script src="/js/index.js"></script>
     <style type="text/css">
         .header {
             height: 100px;
             min-width: 1104px;
             margin: 5px 30px;
-            background: url('imgs/logo.png') no-repeat;
+            background: url('/imgs/logo.png') no-repeat;
         }
 
         .header h1 {
