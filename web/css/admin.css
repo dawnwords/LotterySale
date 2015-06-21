@@ -56,11 +56,11 @@ table.dataTable span.highlight {
     background-color: #FFFF88;
 }
 
-.modify-result.success {
+.result.success {
     color: #3c763d;
 }
 
-.modify-result.fail {
+.result.fail {
     color: #a94442;
 }
 
