@@ -31,7 +31,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger pull-left" id="modify-delete">删除</button>
-                <span class="glyphicon modify-result"></span>
+                <span class="glyphicon result modify"></span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="modify-submit">提交</button>
             </div>
@@ -50,7 +50,7 @@
                 <form class="form-horizontal"></form>
             </div>
             <div class="modal-footer">
-                <span class="glyphicon add-result"></span>
+                <span class="glyphicon result add"></span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="add-submit">提交</button>
             </div>

@@ -9,11 +9,9 @@ $(document).ready(function () {
         modifyPopup = $("#modify"),
         modifySubmitBtn = $("#modify-submit"),
         modifyTitle = $("#modify-title"),
-        modifyResult = $(".modify-result"),
         addPopup = $("#add"),
         addSubmitBtn = $("#add-submit"),
         addTitle = $("#add-title"),
-        addResult = $(".add-result"),
         deleteBtn = $("#modify-delete"),
         refreshNonLeafBtn = $("#function-refresh"),
         addBtn = $("#function-add"),
@@ -37,10 +35,11 @@ $(document).ready(function () {
                             select.html(options);
                             select.change(function () {
                                 var level = select.find("option:selected").data("level");
-                                $("#add-field-population1").prop('readonly', level != 2);
-                                $("#add-field-population2").prop('readonly', level != 2);
-                                $("#add-field-area").prop('readonly', level != 2);
+                                $("#add-field-population1").prop('readonly', level != 1);
+                                $("#add-field-population2").prop('readonly', level != 1);
+                                $("#add-field-area").prop('readonly', level != 1);
                             });
+                            select.change();
                         }
                     }
                 },
@@ -256,18 +255,26 @@ $(document).ready(function () {
         currentTable().table.ajax.reload(null, false);
     }
 
-    function updateDisplayMsg(msg, success) {
-        modifyResult.html(msg);
-        modifyResult.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
-        modifyResult.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
-        modifyResult.fadeIn("fast", function () {
+    function displayMsg(result, popup, msg, success) {
+        result.html(msg);
+        result.removeClass('success glyphicon-ok-sign fail glyphicon-remove-sign');
+        result.addClass(success ? 'success glyphicon-ok-sign' : 'fail glyphicon-remove-sign');
+        result.fadeIn("fast", function () {
             $(this).delay(1000).fadeOut("slow", function () {
                 if (success) {
-                    modifyPopup.modal('hide');
+                    popup.modal('hide');
                     reloadTable();
                 }
             });
         });
+    }
+
+    function updateDisplayMsg(msg, success) {
+        displayMsg($(".modify.result"), modifyPopup, msg, success);
+    }
+
+    function addDisplayMsg(msg, success) {
+        displayMsg($(".add.result"), addPopup, msg, success);
     }
 
     function submitUpdate() {
@@ -296,7 +303,7 @@ $(document).ready(function () {
             }),
             success: function (data) {
                 if (data == 'success') {
-                    updateDisplayMsg("修改成功", table);
+                    updateDisplayMsg("修改成功", true);
                 } else {
                     updateDisplayMsg('修改失败', false);
                 }
@@ -340,10 +347,42 @@ $(document).ready(function () {
         })
     }
 
+    function submitAdd() {
+        var adds = [],
+            table = currentTable().name;
+        addPopup.find(".form-group").each(function () {
+            var add = $(this).find("div").children().first().val();
+            if (add == undefined || add == "null") {
+                add = null;
+            }
+            adds.push({
+                field: $(this).data('field'),
+                value: add
+            });
+        });
+        $.ajax({
+            url: '../admin/addtable',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                table: table,
+                adds: adds
+            }),
+            success: function (data) {
+                if (data == 'success') {
+                    addDisplayMsg("修改成功", true);
+                } else {
+                    addDisplayMsg('修改失败', false);
+                }
+            }
+        });
+    }
+
     tab.click(clickTab);
-    modifySubmitBtn.click(submitUpdate);
-    deleteBtn.click(submitDelete);
-    refreshNonLeafBtn.click(submitRefresh);
     addBtn.click(showAddPopup);
+    addSubmitBtn.click(submitAdd);
+    deleteBtn.click(submitDelete);
+    modifySubmitBtn.click(submitUpdate);
+    refreshNonLeafBtn.click(submitRefresh);
 })
 ;
