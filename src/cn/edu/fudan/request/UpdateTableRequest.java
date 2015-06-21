@@ -2,6 +2,7 @@ package cn.edu.fudan.request;
 
 import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,4 +110,8 @@ public class UpdateTableRequest {
         }
     }
 
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
 }
