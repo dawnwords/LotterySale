@@ -22,7 +22,7 @@ $(document).ready(function () {
                 {
                     title: "fatherid",
                     addType: "select",
-                    options: {
+                    ajax: {
                         url: "../admin/fatheroption",
                         type: 'GET',
                         success: function (data) {
@@ -61,8 +61,16 @@ $(document).ready(function () {
                     addType: "select",
                     options: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
                 },
-                {title: "salequarter", addType: false},
-                {title: "salemonth", addType: "select", options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]},
+                {title: "salequarter", addType: "disabled"},
+                {
+                    title: "salemonth",
+                    addType: "select",
+                    options: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+                    associate: function () {
+                        var month = +$("#add-field-salemonth").val();
+                        $("#add-field-salequarter").val(Math.floor((month + 2) / 3));
+                    }
+                },
                 {title: "s1", addType: "input"},
                 {title: "s2", addType: "input"},
                 {title: "s3", addType: "input"},
@@ -110,7 +118,15 @@ $(document).ready(function () {
         var form = addPopup.find("form"),
             table = currentTable(),
             fields = table.fields,
-            html = "";
+            html = "",
+            later = [],
+            createLater = function (field) {
+                return function () {
+                    var select = $('#add-field-' + field.title);
+                    select.change(field.associate);
+                    select.change();
+                }
+            };
 
         addTitle.html("新增" + table.titleName + "数据");
         for (var i in fields) {
@@ -121,24 +137,34 @@ $(document).ready(function () {
                     '    <div class="col-xs-10">';
                 if (field.addType == "select") {
                     html += '        <select class="form-control" id="add-field-' + field.title + '">';
-                    if ($.isArray(field.options)) {
+                    if (field.options) {
                         for (var j in field.options) {
                             var option = field.options[j];
                             html += '<option value="' + option + '">' + option + '</option>';
                         }
-                    } else {
-                        $.ajax(field.options);
+                    }
+                    if (field.ajax) {
+                        $.ajax(field.ajax);
+                    }
+                    if (field.associate) {
+                        later[i] = createLater(field);
                     }
                     html += '        </select>';
-                } else if (field.addType == "input") {
-                    html += '<input type="text" class="form-control" id="add-field-' + field.title + '">';
+                } else {
+                    html += '<input type="text" class="form-control" id="add-field-' + field.title + '"'
+                        + (field.addType == "disabled" ? " readonly" : "") + '>';
                 }
                 html += '    </div>' +
                     '</div>';
             }
         }
+
         form.html(html);
         addPopup.modal('show');
+
+        for (var i in later) {
+            later[i]();
+        }
     }
 
     function currentTable() {
@@ -319,4 +345,5 @@ $(document).ready(function () {
     deleteBtn.click(submitDelete);
     refreshNonLeafBtn.click(submitRefresh);
     addBtn.click(showAddPopup);
-});
+})
+;
