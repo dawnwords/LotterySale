@@ -1,7 +1,6 @@
 package cn.edu.fudan.dao;
 
 import cn.edu.fudan.request.UpdateTableRequest;
-import cn.edu.fudan.request.UpdateTableRequest.Table;
 import cn.edu.fudan.request.UpdateTableRequest.Update;
 import cn.edu.fudan.util.Log;
 import cn.edu.fudan.util.TypeUtil;
@@ -25,9 +24,9 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
     @Override
     protected Boolean processData(Connection connection) throws Exception {
         List<Update> updates = request.updates();
-        Table table = request.table();
+        String table = request.table().table;
         if (updates.size() > 0) {
-            String sql = "UPDATE " + table.table + " SET ";
+            String sql = "UPDATE " + table + " SET ";
             for (Update update : updates) {
                 sql += update.field() + "=?,";
             }
@@ -43,7 +42,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             }
             ps.setInt(i, request.id());
             if (ps.executeUpdate() == 1) {
-                Log.update(new Log.Parameter(connection, table.table, request.id()), updates);
+                Log.update(new Log.Parameter(connection, table, request.id()), updates);
                 return true;
             }
         }

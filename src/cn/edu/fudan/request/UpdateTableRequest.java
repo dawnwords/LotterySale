@@ -4,7 +4,6 @@ import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,11 +28,11 @@ public class UpdateTableRequest {
 
     public List<Update> updates() {
         List<Update> result = new ArrayList<>();
-        List<String> legalFields = Arrays.asList(table().cols);
+        Table table = table();
         for (Update update : updates) {
-            int index = legalFields.indexOf(update.field);
-            if (index >= 0) {
-                update.type = table().colTypes[index];
+            Field field = table.getField(update.field);
+            if (field != null) {
+                update.type = field.type;
                 Parser parser = TypeUtil.string2Parser(update.type);
                 if (parser != null) {
                     update.origin = parser.parse(update.origin);
@@ -69,29 +68,44 @@ public class UpdateTableRequest {
         }
 
         private boolean shouldUpdate() {
-            return !(update == null || update.equals(origin));
+            return update != null && !update.equals(origin);
         }
     }
 
     public enum Table {
-        UNIT(new String[]{"name", "unitcode", "address", "manager", "mobile", "area", "population1", "population2"},
-                new String[]{"String", "String", "String", "String", "String", "Double", "Int", "Int"},
-                "tab_unit"),
-        SALES(new String[]{"s1", "s2", "s3", "stotal"},
-                new String[]{"Double", "Double", "Double", "Double"},
-                "tab_sales"),
-        USER(new String[]{"authority"},
-                new String[]{"String"},
-                "tab_user"),
-        DEFAULT(new String[0], new String[0], "");
-        private final String[] cols;
-        private final String[] colTypes;
+        UNIT(new Field[]{new Field("name", "String"), new Field("unitcode", "String"), new Field("address", "String"),
+                new Field("manager", "String"), new Field("mobile", "String"), new Field("area", "Double"),
+                new Field("population1", "Int"), new Field("population2", "Int")}, "tab_unit"),
+        SALES(new Field[]{new Field("s1", "Double"), new Field("s2", "Double"), new Field("s3", "Double"),
+                new Field("stotal", "Double")}, "tab_sales"),
+        USER(new Field[]{new Field("authority", "String")}, "tab_user"),
+        DEFAULT(new Field[0], "");
+
+        private final Field[] fields;
         public final String table;
 
-        Table(String[] cols, String[] colTypes, String table) {
-            this.cols = cols;
-            this.colTypes = colTypes;
+        Table(Field[] fields, String table) {
+            this.fields = fields;
             this.table = table;
+        }
+
+        private Field getField(String fieldName) {
+            for (Field field : fields) {
+                if (field.name.equals(fieldName)) {
+                    return field;
+                }
+            }
+            return null;
+        }
+    }
+
+    private static class Field {
+        private String name;
+        private String type;
+
+        public Field(String name, String type) {
+            this.name = name;
+            this.type = type;
         }
     }
 
