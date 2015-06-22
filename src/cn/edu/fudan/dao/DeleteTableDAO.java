@@ -30,7 +30,7 @@ public class DeleteTableDAO extends BaseDAO<String> {
                 break;
             case SALES:
                 sql = "UPDATE tab_sales CROSS JOIN(" +
-                        "(SELECT count(tab_sales.id) as childnum FROM tab_sales " +
+                        "(SELECT count(tab_sales.id) AS childnum FROM tab_sales " +
                         "   INNER JOIN tab_unit ON tab_sales.unitid = tab_unit.id" +
                         "   INNER JOIN tab_sales AS T ON T.unitid = tab_unit.fatherid" +
                         "   AND T.salemonth = tab_sales.salemonth" +
@@ -44,11 +44,14 @@ public class DeleteTableDAO extends BaseDAO<String> {
             default:
                 return "error";
         }
+        int id = request.id();
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, request.id());
-        ps.setInt(2, request.id());
+        ps.setInt(1, id);
+        ps.setInt(2, id);
         if (ps.executeUpdate() == 1) {
-            Log.delete(new Log.Parameter(connection, request.table().table, request.id()));
+            String table = request.table().table;
+            Log.delete(new Log.Parameter(connection, table, id));
+            UnitFieldDAO.updateAncestor(connection, table, id);
             return "success";
         }
         return "fail";

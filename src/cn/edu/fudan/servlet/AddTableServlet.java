@@ -1,8 +1,6 @@
 package cn.edu.fudan.servlet;
 
 import cn.edu.fudan.dao.AddTableDAO;
-import cn.edu.fudan.dao.UpdateAncestorSalesDAO;
-import cn.edu.fudan.dao.UpdateAncestorUnitDAO;
 import cn.edu.fudan.request.AddTableRequest;
 import cn.edu.fudan.util.Session;
 
@@ -19,20 +17,7 @@ public class AddTableServlet extends BaseServlet<AddTableRequest, String> {
 
     @Override
     protected String processRequest(AddTableRequest request, Session session) throws Exception {
-        if (request == null || request.table() == AddTableRequest.Table.DEFAULT) return "error";
-
-        int id = new AddTableDAO(this, request).getResult();
-        if (id > 0) {
-            switch (request.table()) {
-                case SALES:
-                    new UpdateAncestorSalesDAO(this, id).getResult();
-                    break;
-                case UNIT:
-                    new UpdateAncestorUnitDAO(this, id).getResult();
-                    break;
-            }
-            return "success";
-        }
-        return "fail";
+        return request == null || request.table() == AddTableRequest.Table.DEFAULT ? "error" :
+                new AddTableDAO(this, request).getResult() > 0 ? "success" : "fail";
     }
 }

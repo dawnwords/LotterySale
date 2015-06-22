@@ -2,7 +2,6 @@ package cn.edu.fudan.dao;
 
 import cn.edu.fudan.request.AddTableRequest;
 import cn.edu.fudan.request.AddTableRequest.Add;
-import cn.edu.fudan.request.AddTableRequest.Table;
 import cn.edu.fudan.util.Log;
 import cn.edu.fudan.util.TypeUtil;
 
@@ -26,12 +25,12 @@ public class AddTableDAO extends BaseDAO<Integer> {
 
     @Override
     protected Integer processData(Connection connection) throws Exception {
-        Table table = request.table();
+        String table = request.table().table;
         int level = UnitFieldDAO.level(connection, request.id());
         List<Add> adds = request.adds(level);
 
         if (adds.size() > 0) {
-            String sql = "INSERT INTO " + table.table + "(";
+            String sql = "INSERT INTO " + table + "(";
             String qm = "";
             for (Add add : adds) {
                 sql += add.field() + ",";
@@ -47,11 +46,12 @@ public class AddTableDAO extends BaseDAO<Integer> {
                 PreparedStatement.class.getDeclaredMethod("set" + type, int.class, TypeUtil.string2Class(type))
                         .invoke(ps, i++, add.value());
             }
-            if(ps.executeUpdate() == 1){
+            if (ps.executeUpdate() == 1) {
                 ResultSet rs = ps.getGeneratedKeys();
-                if(rs.next()) {
+                if (rs.next()) {
                     int autoId = rs.getInt(1);
-                    Log.add(new Log.Parameter(connection,table.table, autoId));
+                    Log.add(new Log.Parameter(connection, table, autoId));
+                    UnitFieldDAO.updateAncestor(connection, table, autoId);
                     return autoId;
                 }
             }

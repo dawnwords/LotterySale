@@ -43,6 +43,7 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
             ps.setInt(i, request.id());
             if (ps.executeUpdate() == 1) {
                 Log.update(new Log.Parameter(connection, table, request.id()), updates);
+                UnitFieldDAO.updateAncestor(connection, table, request.id());
                 return true;
             }
         }
