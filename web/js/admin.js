@@ -15,6 +15,10 @@ $(document).ready(function () {
         deleteBtn = $("#modify-delete"),
         refreshNonLeafBtn = $("#function-refresh"),
         addBtn = $("#function-add"),
+        uploadBtn = $("#upload-button"),
+        uploadResult = $("#upload-result"),
+        uploadFails = $("#upload-fails"),
+        uploadPopup = $("#upload"),
         tables = [
             new Table('unit', "节点", [
                 {
@@ -384,5 +388,32 @@ $(document).ready(function () {
     deleteBtn.click(submitDelete);
     modifySubmitBtn.click(submitUpdate);
     refreshNonLeafBtn.click(submitRefresh);
-})
-;
+    $("#upload-input").fileupload({
+        url: '../admin/upload',
+        submit: function () {
+            uploadResult.removeClass("show");
+            uploadResult.addClass("hidden");
+            uploadBtn.find("span:last").html("正在导入...");
+            uploadBtn.prop("disabled", true);
+        },
+        always: function (e, data) {
+            uploadResult.removeClass("hidden");
+            uploadResult.addClass("show");
+            data = data.result;
+            if (data.error) {
+                uploadResult.find(".fail").html("失败:" + data.error);
+            } else {
+                uploadResult.find(".success").html("成功:" + data.success);
+                uploadResult.find(".fail").html("失败:" + data.fails.length);
+                var fails = "";
+                for (var i in data.fails) {
+                    fails += "<p class='result fail'>" + (i + 1) + ":" + data.fails[i] + "</p>";
+                }
+            }
+            uploadFails.html(fails);
+            uploadBtn.find("span:last").html("选择文件");
+            uploadBtn.prop("disabled", false);
+            uploadPopup.modal('show');
+        }
+    });
+});
