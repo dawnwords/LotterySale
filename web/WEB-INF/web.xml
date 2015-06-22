@@ -23,6 +23,10 @@
         <param-name>DBName</param-name>
         <param-value>pdmzcp</param-value>
     </context-param>
+    <context-param>
+        <param-name>UploadBuffer</param-name>
+        <param-value>xlstmp</param-value>
+    </context-param>
 
     <error-page>
         <error-code>404</error-code>

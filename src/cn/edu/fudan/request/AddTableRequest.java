@@ -5,6 +5,7 @@ import cn.edu.fudan.util.TypeUtil.Parser;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,12 +15,33 @@ public class AddTableRequest {
     private String table;
     private List<Add> adds;
 
+    public AddTableRequest(String table) {
+        this.table = table;
+        this.adds = new ArrayList<>();
+    }
+
+    public void addAdd(String field, Object value) {
+        Add add = new Add();
+        add.field = field;
+        add.value = value;
+        adds.add(add);
+    }
+
     public Table table() {
         try {
             return Table.valueOf(table.toUpperCase());
         } catch (IllegalArgumentException e) {
             return Table.DEFAULT;
         }
+    }
+
+    public String addValue() {
+        String[] result = new String[adds.size()];
+        int i = 0;
+        for (Add add : adds) {
+            result[i++] = add.value.toString();
+        }
+        return Arrays.toString(result);
     }
 
     public List<Add> adds(int level) {
