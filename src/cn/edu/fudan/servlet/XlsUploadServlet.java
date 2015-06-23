@@ -35,7 +35,7 @@ public class XlsUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json");
-        String responseString;
+        Result result;
         if (request.getContentType().contains("multipart/form-data")) {
             try {
                 FileItem fileItem = prepareUploadFile().parseRequest(request).get(0);
@@ -43,7 +43,7 @@ public class XlsUploadServlet extends HttpServlet {
                 String table = sheet.getSheetName();
                 Iterator<Row> it = sheet.iterator();
                 List<String> fieldList = getFieldList(it);
-                Result result = new Result();
+                SuccessResult successResult = new SuccessResult();
                 while (it.hasNext()) {
                     Row row = it.next();
                     AddTableRequest addRequest = new AddTableRequest(table);
@@ -51,23 +51,25 @@ public class XlsUploadServlet extends HttpServlet {
                     for (String field : fieldList) {
                         addRequest.addAdd(field, row.getCell(i++).getStringCellValue());
                     }
-                    addResult(result, addRequest);
+                    addResult(successResult, addRequest);
                 }
-                responseString = BaseServlet.gson.toJson(result);
+                result = successResult;
             } catch (FileUploadException e) {
-                responseString = String.format("{error:'%s'}", "文件上传失败");
+                result = new ErrorResult("文件上传失败");
             } catch (InvalidFormatException e) {
-                responseString = String.format("{error:'%s'}", "xls文件格式不正确");
+                result = new ErrorResult("xls文件格式不正确");
+            } catch (Exception e) {
+                result = new ErrorResult("上传文件不是xls文件");
             }
         } else {
-            responseString = String.format("{error:'%s'}", "没有文件上传");
+            result = new ErrorResult("没有文件上传");
         }
         PrintWriter writer = response.getWriter();
-        writer.write(responseString);
+        writer.write(BaseServlet.gson.toJson(result));
         writer.flush();
     }
 
-    private void addResult(Result result, AddTableRequest addRequest) {
+    private void addResult(SuccessResult result, AddTableRequest addRequest) {
         int id = -1;
         try {
             id = new AddTableDAO(this, addRequest).getResult();
@@ -80,17 +82,22 @@ public class XlsUploadServlet extends HttpServlet {
         }
     }
 
-    private void sendSuccess(HttpServletResponse response, Result result) throws IOException {
-        PrintWriter writer = response.getWriter();
-        writer.write(BaseServlet.gson.toJson(result));
-        writer.flush();
+    private interface Result {
     }
 
-    private class Result {
+    private class ErrorResult implements Result {
+        private String error;
+
+        public ErrorResult(String error) {
+            this.error = error;
+        }
+    }
+
+    private class SuccessResult implements Result {
         private int success;
         private List<String> fails;
 
-        private Result() {
+        private SuccessResult() {
             this.fails = new ArrayList<>();
         }
 

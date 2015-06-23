@@ -98,7 +98,7 @@
             </button>
             <button class="btn btn-default btn-sm fileinput-button" id="upload-button">
                 <span class="glyphicon glyphicon-open-file"></span>
-                <span>选择文件</span>
+                <span>导入xls数据</span>
                 <input id="upload-input" type="file" name="file"/>
             </button>
             <button type="button" class="btn btn-success btn-sm" id="function-add">

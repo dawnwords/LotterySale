@@ -411,7 +411,7 @@ $(document).ready(function () {
                 }
             }
             uploadFails.html(fails);
-            uploadBtn.find("span:last").html("选择文件");
+            uploadBtn.find("span:last").html("导入xls数据");
             uploadBtn.prop("disabled", false);
             uploadPopup.modal('show');
         }
