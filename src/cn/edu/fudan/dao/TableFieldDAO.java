@@ -18,11 +18,11 @@ public class TableFieldDAO extends BaseDAO<TableField[]> {
     private static final TableField[] SALES_OTHER = {new TableField("id", false), new TableField("unitid", false),
             new TableField("saleyear", false), new TableField("salequater", false), new TableField("salemonth", false),
             new TableField("s1", false), new TableField("s2", false), new TableField("s3", false), new TableField("stotal", false)};
-    private static final TableField[] UNIT_LV2 = {new TableField("id", false), new TableField("name", true),
+    private static final TableField[] UNIT_LV2 = {new TableField("id", false), new TableField("fatherid", false), new TableField("name", true),
             new TableField("unicode", true), new TableField("address", true), new TableField("manager", true),
             new TableField("mobile", true), new TableField("unitnum", false), new TableField("area", true),
             new TableField("population1", true), new TableField("population2", true)};
-    private static final TableField[] UNIT_OTHER = {new TableField("id", false), new TableField("name", true),
+    private static final TableField[] UNIT_OTHER = {new TableField("id", false), new TableField("fatherid", false), new TableField("name", true),
             new TableField("unicode", true), new TableField("address", true), new TableField("manager", true),
             new TableField("mobile", true), new TableField("unitnum", false), new TableField("area", false),
             new TableField("population1", false), new TableField("population2", false)};
