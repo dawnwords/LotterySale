@@ -21,7 +21,8 @@ $(document).ready(function () {
         avg = $("#funcbar-view-avg"),
         mark = $("#funcbar-view-mark"),
         deselect = $("#unit-deselect"),
-        changePass = $("#change-password-submit"),
+        changePassPopup = $("#change-password"),
+        changePassBtn = $("#change-password-submit"),
         changePassHint = $(".change-pass");
 
     function updateGraph() {
@@ -84,7 +85,8 @@ $(document).ready(function () {
         changePassHint.fadeIn("fast", function () {
             $(this).delay(1000).fadeOut("slow", function () {
                 if (success) {
-                    $("#change-password").modal('hide');
+                    changePassPopup.modal('hide');
+                    changePassPopup.find('form')[0].reset();
                 }
             });
         });
@@ -135,7 +137,7 @@ $(document).ready(function () {
     }
 
     changePassHint.css('display', 'none');
-    changePass.click(changePassword);
+    changePassBtn.click(changePassword);
 
     tab.click(clickTab);
 
