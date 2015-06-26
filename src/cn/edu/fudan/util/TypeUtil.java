@@ -25,17 +25,17 @@ public class TypeUtil {
         Parser StringParser = new Parser() {
             @Override
             public Object parse(Object o) {
-                return o.toString();
+                return o == null ? null : o.toString();
             }
         }, IntParser = new Parser() {
             @Override
             public Object parse(Object o) {
-                return Integer.parseInt(o.toString());
+                return o == null ? 0 : (int) Double.parseDouble(o.toString());
             }
         }, DoubleParser = new Parser() {
             @Override
             public Object parse(Object o) {
-                return Double.parseDouble(o.toString());
+                return o == null ? 0 : Double.parseDouble(o.toString());
             }
         };
 
