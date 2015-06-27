@@ -29,6 +29,8 @@ public class CompareUnitSale {
     }
 
     public void pushData(String year, String month, double s1, double s2, double s3, double stotal) {
+        year = yearToDateString(year);
+        month = monthToDateString(month);
         if (!this.year.contains(year)) {
             this.year.add(year);
             this.yearData.add(new ArrayList<SaleData>());
@@ -37,8 +39,8 @@ public class CompareUnitSale {
             this.month.add(month);
             this.monthData.add(new ArrayList<SaleData>());
         }
-        this.yearData.get(this.year.indexOf(year)).add(new SaleData(monthToDateString(month), s1, s2, s3, stotal));
-        this.monthData.get(this.month.indexOf(month)).add(new SaleData(yearToDateString(year), s1, s2, s3, stotal));
+        this.yearData.get(this.year.indexOf(year)).add(new SaleData(month, s1, s2, s3, stotal));
+        this.monthData.get(this.month.indexOf(month)).add(new SaleData(year, s1, s2, s3, stotal));
     }
 
     private String monthToDateString(String month) {

@@ -217,24 +217,43 @@ function Chart(elementId) {
     };
 
     this.compareSaleGraphUpdate = function (chartOpt) {
-        var timeline = chartOpt.dimen ? graphData.month : graphData.year,
-            data = chartOpt.dimen ? graphData.monthData : graphData.yearData,
-            xData = chartOpt.dimen ? graphData.year : graphData.month,
-            options = [], series, x, i, d, timeFormatter = function (s) {
-                return s + ( chartOpt.dimen ? "月" : "年");
-            }, populationAvg;
+        if (graphData == null || graphData.length <= 0) return;
 
-        for (i in timeline) {
+        var options = [], series, x, i, d, populationAvg,
+            monthFormatter = function (s) {
+                return s.split("/")[1] + "月";
+            },
+            yearFormatter = function (s) {
+                return s.split("/")[0] + "年";
+            },
+            opt = [
+                {
+                    timeline: graphData.month,
+                    data: graphData.monthData,
+                    xData: graphData.year,
+                    timeFormatter: monthFormatter,
+                    xDataFormatter: yearFormatter
+                },
+                {
+                    timeline: graphData.year,
+                    data: graphData.yearData,
+                    xData: graphData.month,
+                    timeFormatter: yearFormatter,
+                    xDataFormatter: monthFormatter
+                }
+            ][+!!(chartOpt.dimen)];
+
+        for (i in opt.timeline) {
             series = newSeries(chartOpt);
             x = [];
             populationAvg = populationAvgs(graphData)[chartOpt.population];
-            for (d in xData) {
-                x.push(xData[d] + ( chartOpt.dimen ? "年" : "月"));
-                pushSeries(series, data[i][d] == undefined ? {} : data[i][d], populationAvg);
+            for (d in opt.xData) {
+                x.push(opt.xDataFormatter(opt.xData[d]));
+                pushSeries(series, opt.data[i][d] == undefined ? {} : opt.data[i][d], populationAvg);
             }
             options.push(seriesOpt(x, series, populationAvg));
         }
-        setOption(timelineOpt(options, timeline, timeFormatter));
+        setOption(timelineOpt(options, opt.timeline, opt.timeFormatter));
     };
 
     this.setGraphData = function (d) {
