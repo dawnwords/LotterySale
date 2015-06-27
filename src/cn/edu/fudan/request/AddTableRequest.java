@@ -111,8 +111,8 @@ public class AddTableRequest {
                 new Field("area", "Double", 1), new Field("population1", "Int", 1), new Field("population2", "Int", 1)},
                 new CalculateField[]{new CalculateField("level", "Int", -1, "? + 1"), new CalculateField("unitnum", "Int", -1, "? = 2")}, "tab_unit", 0),
         SALES(new Field[]{new Field("s1", "Double", 3), new Field("s2", "Double", 3), new Field("s3", "Double", 3),
-                new Field("stotal", "Double", 3), new Field("unitid", "Int", 3), new Field("saleyear", "String", 3),
-                new Field("salemonth", "String", 3), new Field("salequarter", "String", 3)}, new CalculateField[0], "tab_sales", 4),
+                new Field("stotal", "Double", 3), new Field("unitid", "Int", -1), new Field("saleyear", "String", -1),
+                new Field("salemonth", "String", -1), new Field("salequarter", "String", -1)}, new CalculateField[0], "tab_sales", 4),
         USER(new Field[]{new Field("name", "String", -1), new Field("authority", "String", -1)},
                 new CalculateField[]{new CalculateField("password", "String", -1, "password(?)", "123456")}, "tab_user", -1),
         DEFAULT(new Field[0], new CalculateField[0], "", -1);
