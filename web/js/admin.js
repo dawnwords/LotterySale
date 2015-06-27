@@ -407,8 +407,9 @@ $(document).ready(function () {
                 uploadResult.find(".fail").html("失败:" + data.fails.length);
                 var fails = "";
                 for (var i in data.fails) {
-                    fails += "<p class='result fail'>" + (i + 1) + ":" + data.fails[i] + "</p>";
+                    fails += "<p class='result fail'>" + (+i + 1) + ":" + data.fails[i] + "</p>";
                 }
+                reloadTable();
             }
             uploadFails.html(fails);
             uploadBtn.find("span:last").html("导入xls数据");
