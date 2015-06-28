@@ -1,6 +1,7 @@
 package cn.edu.fudan.servlet;
 
 import cn.edu.fudan.dao.AddTableDAO;
+import cn.edu.fudan.dao.BatchAddDAO;
 import cn.edu.fudan.request.AddTableRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -35,7 +36,7 @@ public class XlsUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json");
-        Result result;
+        Object result;
         if (request.getContentType().contains("multipart/form-data")) {
             try {
                 FileItem fileItem = prepareUploadFile().parseRequest(request).get(0);
@@ -43,17 +44,17 @@ public class XlsUploadServlet extends HttpServlet {
                 String table = sheet.getSheetName();
                 Iterator<Row> it = sheet.iterator();
                 List<String> fieldList = getFieldList(it);
-                SuccessResult successResult = new SuccessResult();
+                List<AddTableRequest> adds = new ArrayList<>();
                 while (it.hasNext()) {
                     Row row = it.next();
                     AddTableRequest addRequest = new AddTableRequest(table);
                     int i = 0;
                     for (String field : fieldList) {
-                        addRequest.addAdd(field, row.getCell(i++).getStringCellValue());
+                        addRequest.addAdd(field, getValueFromCell(row.getCell(i++)));
                     }
-                    addResult(successResult, addRequest);
+                    adds.add(addRequest);
                 }
-                result = successResult;
+                result = new BatchAddDAO(this, adds).getResult();
             } catch (FileUploadException e) {
                 result = new ErrorResult("文件上传失败");
             } catch (InvalidFormatException e) {
@@ -69,40 +70,27 @@ public class XlsUploadServlet extends HttpServlet {
         writer.flush();
     }
 
-    private void addResult(SuccessResult result, AddTableRequest addRequest) {
-        int id = -1;
-        try {
-            id = new AddTableDAO(this, addRequest).getResult();
-        } catch (Exception ignore) {
+    private Object getValueFromCell(Cell cell) {
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return cell.getNumericCellValue();
+            case Cell.CELL_TYPE_STRING:
+                return cell.getStringCellValue();
+            case Cell.CELL_TYPE_BLANK:
+                return "";
+            case Cell.CELL_TYPE_BOOLEAN:
+                return cell.getBooleanCellValue();
+            case Cell.CELL_TYPE_FORMULA:
+                return cell.getCellFormula();
         }
-        if (id < 0) {
-            result.addFail(addRequest.addValue());
-        } else {
-            result.success++;
-        }
+        return null;
     }
 
-    private interface Result {
-    }
-
-    private class ErrorResult implements Result {
+    private class ErrorResult {
         private String error;
 
         public ErrorResult(String error) {
             this.error = error;
-        }
-    }
-
-    private class SuccessResult implements Result {
-        private int success;
-        private List<String> fails;
-
-        private SuccessResult() {
-            this.fails = new ArrayList<>();
-        }
-
-        private void addFail(String fail) {
-            fails.add(fail);
         }
     }
 
