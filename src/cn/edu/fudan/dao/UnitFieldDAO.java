@@ -18,6 +18,14 @@ public class UnitFieldDAO {
         return rs.next() ? (int) rs.getObject(1) : 0;
     }
 
+    static int saleLevel(Connection connection, int saleId) throws Exception {
+        String sql = "SELECT level FROM tab_unit INNER JOIN tab_sales ON unitid=tab_unit.id WHERE tab_sales.id = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, saleId);
+        ResultSet rs = ps.executeQuery();
+        return rs.next() ? rs.getInt(1) : 0;
+    }
+
     static int level(Connection connection, int unitId) throws Exception {
         return queryIntField(connection, "level", unitId);
     }

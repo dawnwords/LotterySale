@@ -1,5 +1,6 @@
 package cn.edu.fudan.request;
 
+import cn.edu.fudan.bean.Field;
 import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
 import com.google.gson.Gson;
@@ -27,13 +28,13 @@ public class UpdateTableRequest {
         }
     }
 
-    public List<Update> updates() {
+    public List<Update> updates(int level) {
         List<Update> result = new ArrayList<>();
         Table table = table();
         for (Update update : updates) {
-            Field field = table.getField(update.field);
+            Field field = table.getField(update.field, level);
             if (field != null) {
-                update.type = field.type;
+                update.type = field.type();
                 Parser parser = TypeUtil.string2Parser(update.type);
                 if (parser != null) {
                     update.origin = parser.parse(update.origin);
@@ -74,12 +75,23 @@ public class UpdateTableRequest {
     }
 
     public enum Table {
-        UNIT(new Field[]{new Field("name", "String"), new Field("unitcode", "String"), new Field("address", "String"),
-                new Field("manager", "String"), new Field("mobile", "String"), new Field("area", "Double"),
-                new Field("population1", "Int"), new Field("population2", "Int")}, "tab_unit"),
-        SALES(new Field[]{new Field("s1", "Double"), new Field("s2", "Double"), new Field("s3", "Double"),
-                new Field("stotal", "Double")}, "tab_sales"),
-        USER(new Field[]{new Field("authority", "String")}, "tab_user"),
+        UNIT(new Field[]{
+                Field.String("name"),
+                Field.String("unitcode"),
+                Field.String("address"),
+                Field.String("manager"),
+                Field.String("mobile"),
+                Field.Double("area").levelLimit(2),
+                Field.Int("population1").levelLimit(2),
+                Field.Int("population2").levelLimit(2)
+        }, "tab_unit"),
+        SALES(new Field[]{
+                Field.Double("s1").levelLimit(3),
+                Field.Double("s2").levelLimit(3),
+                Field.Double("s3").levelLimit(3),
+                Field.Double("stotal").levelLimit(3)
+        }, "tab_sales"),
+        USER(new Field[]{Field.String("authority")}, "tab_user"),
         DEFAULT(new Field[0], "");
 
         private final Field[] fields;
@@ -90,23 +102,13 @@ public class UpdateTableRequest {
             this.table = table;
         }
 
-        private Field getField(String fieldName) {
+        private Field getField(String fieldName, int level) {
             for (Field field : fields) {
-                if (field.name.equals(fieldName)) {
-                    return field;
+                if (field.name().equals(fieldName)) {
+                    return field.matchLevel(level) ? field : null;
                 }
             }
             return null;
-        }
-    }
-
-    private static class Field {
-        private String name;
-        private String type;
-
-        public Field(String name, String type) {
-            this.name = name;
-            this.type = type;
         }
     }
 

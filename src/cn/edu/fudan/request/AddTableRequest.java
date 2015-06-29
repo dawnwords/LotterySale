@@ -1,5 +1,6 @@
 package cn.edu.fudan.request;
 
+import cn.edu.fudan.bean.Field;
 import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
 import com.google.gson.Gson;
@@ -50,8 +51,8 @@ public class AddTableRequest {
         for (Add add : adds) {
             Field field = table.matchLevel(add.field, level);
             if (field != null) {
-                add.type = field.type;
-                Parser parser = TypeUtil.string2Parser(field.type);
+                add.type = field.type();
+                Parser parser = TypeUtil.string2Parser(field.type());
                 if (parser != null) {
                     add.value = parser.parse(add.value);
                     add.qm = "?";
@@ -61,8 +62,8 @@ public class AddTableRequest {
         }
         for (CalculateField cfield : table.calculatedFields) {
             Add add = new Add();
-            add.field = cfield.field.name;
-            add.type = cfield.field.type;
+            add.field = cfield.field.name();
+            add.type = cfield.field.type();
             add.qm = cfield.qm;
             add.value = CalculateField.LEVEL.equals(cfield.defaultVal) ? level : cfield.defaultVal;
             result.add(add);
@@ -75,7 +76,7 @@ public class AddTableRequest {
         if (table.idCol < 0) return -1;
         Field field = table.fields[table.idCol];
         for (Add add : adds) {
-            if (field.name.equals(add.field)) {
+            if (field.name().equals(add.field)) {
                 return (Integer) Parser.IntParser.parse(add.value);
             }
         }
@@ -106,15 +107,36 @@ public class AddTableRequest {
     }
 
     public enum Table {
-        UNIT(new Field[]{new Field("fatherid", "Int", -1), new Field("name", "String", -1), new Field("unitcode", "String", -1),
-                new Field("address", "String", -1), new Field("manager", "String", -1), new Field("mobile", "String", -1),
-                new Field("area", "Double", 1), new Field("population1", "Int", 1), new Field("population2", "Int", 1)},
-                new CalculateField[]{new CalculateField("level", "Int", -1, "? + 1"), new CalculateField("unitnum", "Int", -1, "? = 2")}, "tab_unit", 0),
-        SALES(new Field[]{new Field("s1", "Double", 3), new Field("s2", "Double", 3), new Field("s3", "Double", 3),
-                new Field("stotal", "Double", 3), new Field("unitid", "Int", -1), new Field("saleyear", "String", -1),
-                new Field("salemonth", "String", -1), new Field("salequarter", "String", -1)}, new CalculateField[0], "tab_sales", 4),
-        USER(new Field[]{new Field("name", "String", -1), new Field("authority", "String", -1)},
-                new CalculateField[]{new CalculateField("password", "String", -1, "password(?)", "123456")}, "tab_user", -1),
+        UNIT(new Field[]{
+                Field.Int("fatherid"),
+                Field.String("name"),
+                Field.String("unitcode"),
+                Field.String("address"),
+                Field.String("manager"),
+                Field.String("mobile"),
+                Field.Double("area").levelLimit(1),
+                Field.Int("population1").levelLimit(1),
+                Field.Int("population2").levelLimit(1)},
+                new CalculateField[]{
+                        new CalculateField(Field.Int("level")).qm("? + 1"),
+                        new CalculateField(Field.Int("unitnum")).qm("? = 2")
+                }, "tab_unit", 0),
+        SALES(new Field[]{
+                Field.Double("s1").levelLimit(3),
+                Field.Double("s2").levelLimit(3),
+                Field.Double("s3").levelLimit(3),
+                Field.Double("stotal").levelLimit(3),
+                Field.Int("unitid"),
+                Field.String("saleyear"),
+                Field.String("salemonth"),
+                Field.String("salequarter")
+        }, new CalculateField[0], "tab_sales", 4),
+        USER(new Field[]{
+                Field.String("name"),
+                Field.String("authority")},
+                new CalculateField[]{
+                        new CalculateField(Field.String("password")).qm( "password(?)").defaultVal("123456")
+                }, "tab_user", -1),
         DEFAULT(new Field[0], new CalculateField[0], "", -1);
 
         private final Field[] fields;
@@ -131,8 +153,8 @@ public class AddTableRequest {
 
         private Field matchLevel(String fieldName, int level) {
             for (Field field : fields) {
-                if (field.name.equals(fieldName)) {
-                    return field.levelLimit < 0 || field.levelLimit == level ? field : null;
+                if (field.name().equals(fieldName)) {
+                    return field.matchLevel(level) ? field : null;
                 }
             }
             return null;
@@ -145,26 +167,20 @@ public class AddTableRequest {
         private String qm;
         private String defaultVal;
 
-        public CalculateField(String name, String type, int levelLimit, String qm) {
-            this(name, type, levelLimit, qm, LEVEL);
+        public CalculateField(Field field) {
+            this.field = field;
+            this.qm = "?";
+            this.defaultVal = LEVEL;
         }
 
-        public CalculateField(String name, String type, int levelLimit, String qm, String defaultVal) {
-            this.field = new Field(name, type, levelLimit);
+        public CalculateField qm(String qm) {
             this.qm = qm;
-            this.defaultVal = defaultVal;
+            return this;
         }
-    }
 
-    private static class Field {
-        private String name;
-        private String type;
-        private int levelLimit;
-
-        public Field(String name, String type, int levelLimit) {
-            this.name = name;
-            this.type = type;
-            this.levelLimit = levelLimit;
+        public CalculateField defaultVal(String defaultVal) {
+            this.defaultVal = defaultVal;
+            return this;
         }
     }
 
