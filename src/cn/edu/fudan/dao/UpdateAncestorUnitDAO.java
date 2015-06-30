@@ -23,7 +23,7 @@ public class UpdateAncestorUnitDAO extends BaseDAO<Boolean> {
 
         for (int fatherId = unitId; ; level--) {
             fatherId = UnitFieldDAO.fatherId(connection, fatherId);
-            if (fatherId == 0) break;
+            if (fatherId <= 0) break;
 
             String sql = level == 3 ?
                     "UPDATE tab_unit CROSS JOIN (" +

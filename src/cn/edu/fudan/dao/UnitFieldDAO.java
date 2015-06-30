@@ -10,28 +10,23 @@ import java.sql.SQLException;
  */
 public class UnitFieldDAO {
 
-    private static int queryIntField(Connection connection, String field, int unitId) throws SQLException {
-        String sql = "SELECT " + field + " FROM tab_unit WHERE id = ?";
+    private static int queryIntField(Connection connection, String sql, int unitId) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, unitId);
         ResultSet rs = ps.executeQuery();
-        return rs.next() ? (int) rs.getObject(1) : 0;
+        return rs.next() ? (int) rs.getObject(1) : -1;
     }
 
     static int saleLevel(Connection connection, int saleId) throws Exception {
-        String sql = "SELECT level FROM tab_unit INNER JOIN tab_sales ON unitid=tab_unit.id WHERE tab_sales.id = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, saleId);
-        ResultSet rs = ps.executeQuery();
-        return rs.next() ? rs.getInt(1) : 0;
+        return queryIntField(connection, "SELECT level FROM tab_unit INNER JOIN tab_sales ON unitid=tab_unit.id WHERE tab_sales.id = ?", saleId);
     }
 
     static int level(Connection connection, int unitId) throws Exception {
-        return queryIntField(connection, "level", unitId);
+        return queryIntField(connection, "SELECT level FROM tab_unit WHERE id = ?", unitId);
     }
 
     static int fatherId(Connection connection, int unitId) throws Exception {
-        return queryIntField(connection, "fatherid", unitId);
+        return queryIntField(connection, "SELECT fatherid FROM tab_unit WHERE id = ?", unitId);
     }
 
     static boolean updateAncestor(Connection connection, String table, int id) throws Exception {
@@ -41,4 +36,38 @@ public class UnitFieldDAO {
             return new UpdateAncestorUnitDAO(null, id).processData(connection);
         return false;
     }
+
+    public interface LevelGetter {
+        int level(Connection connection, int id);
+
+        LevelGetter NullLevelGetter = new LevelGetter() {
+            @Override
+            public int level(Connection connection, int id) {
+                return -1;
+            }
+        };
+
+        LevelGetter SaleLevelGetter = new LevelGetter() {
+            @Override
+            public int level(Connection connection, int id) {
+                try {
+                    return saleLevel(connection, id);
+                } catch (Exception e) {
+                    return -1;
+                }
+            }
+        };
+
+        LevelGetter UnitLevelGetter = new LevelGetter() {
+            @Override
+            public int level(Connection connection, int id) {
+                try {
+                    return level(connection, id);
+                } catch (Exception e) {
+                    return -1;
+                }
+            }
+        };
+    }
+
 }

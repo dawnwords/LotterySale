@@ -21,7 +21,7 @@ public class AncestorUnitsDAO extends BaseDAO<List<Integer>> {
         LinkedList<Integer> result = new LinkedList<>();
         for (int fatherId = unitId; ; ) {
             fatherId = UnitFieldDAO.fatherId(connection, fatherId);
-            if (fatherId == 0) break;
+            if (fatherId <= 0) break;
             result.addFirst(fatherId);
         }
         return result;

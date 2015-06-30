@@ -19,7 +19,8 @@ public class UpdateAncestorSalesDAO extends BaseDAO<Boolean> {
 
     @Override
     protected Boolean processData(Connection connection) throws Exception {
-        String sql = "SELECT unitid,saleyear,salemonth FROM tab_sales WHERE id = ?";
+        String sql = "SELECT unitid,saleyear,salemonth,level FROM tab_sales " +
+                "INNER JOIN tab_unit ON tab_unit.id = tab_sales.unitid WHERE id = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, saleId);
         ResultSet rs = ps.executeQuery();
@@ -28,8 +29,9 @@ public class UpdateAncestorSalesDAO extends BaseDAO<Boolean> {
         int unitId = rs.getInt(1);
         String saleYear = rs.getString(2);
         String saleMonth = rs.getString(3);
+        int level = rs.getInt(4);
 
-        if (UnitFieldDAO.level(connection, unitId) != 3) return false;
+        if (level != 3) return false;
 
         sql = "UPDATE tab_sales CROSS JOIN (" +
                 "SELECT sum(B.s1) AS sumS1," +
@@ -54,7 +56,7 @@ public class UpdateAncestorSalesDAO extends BaseDAO<Boolean> {
 
         for (int fatherId = unitId; ; ) {
             fatherId = UnitFieldDAO.fatherId(connection, fatherId);
-            if (fatherId == 0) break;
+            if (fatherId <= 0) break;
 
             ps = connection.prepareStatement(sql);
             ps.setInt(1, fatherId);
