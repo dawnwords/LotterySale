@@ -26,8 +26,7 @@ public class AddTableDAO extends BaseDAO<Integer> {
     @Override
     protected Integer processData(Connection connection) throws Exception {
         String table = request.table().table;
-        int level = UnitFieldDAO.level(connection, request.id());
-        List<Add> adds = request.adds(level);
+        List<Add> adds = request.adds(connection);
 
         if (adds.size() > 0) {
             String sql = "INSERT INTO " + table + "(";

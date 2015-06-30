@@ -1,13 +1,17 @@
 package cn.edu.fudan.request;
 
 import cn.edu.fudan.bean.Field;
+import cn.edu.fudan.dao.UnitFieldDAO.LevelGetter;
 import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
 import com.google.gson.Gson;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static cn.edu.fudan.dao.UnitFieldDAO.LevelGetter.*;
 
 /**
  * Created by Dawnwords on 2015/6/20.
@@ -45,8 +49,9 @@ public class AddTableRequest {
         return Arrays.toString(result);
     }
 
-    public List<Add> adds(int level) {
+    public List<Add> adds(Connection connection) {
         Table table = table();
+        int level = table.levelGetter.level(connection, id());
         List<Add> result = new ArrayList<>();
         for (Add add : adds) {
             Field field = table.matchLevel(add.field, level);
@@ -71,7 +76,7 @@ public class AddTableRequest {
         return result;
     }
 
-    public int id() {
+    private int id() {
         Table table = table();
         if (table.idCol < 0) return -1;
         Field field = table.fields[table.idCol];
@@ -120,7 +125,8 @@ public class AddTableRequest {
                 new CalculateField[]{
                         new CalculateField(Field.Int("level")).qm("? + 1"),
                         new CalculateField(Field.Int("unitnum")).qm("? = 2")
-                }, "tab_unit", 0),
+                }, "tab_unit", 0,
+                UnitLevelGetter),
         SALES(new Field[]{
                 Field.Double("s1").levelLimit(3),
                 Field.Double("s2").levelLimit(3),
@@ -130,25 +136,27 @@ public class AddTableRequest {
                 Field.String("saleyear"),
                 Field.String("salemonth"),
                 Field.String("salequarter")
-        }, new CalculateField[0], "tab_sales", 4),
+        }, new CalculateField[0], "tab_sales", 4, SaleLevelGetter),
         USER(new Field[]{
                 Field.String("name"),
                 Field.String("authority")},
                 new CalculateField[]{
-                        new CalculateField(Field.String("password")).qm( "password(?)").defaultVal("123456")
-                }, "tab_user", -1),
-        DEFAULT(new Field[0], new CalculateField[0], "", -1);
+                        new CalculateField(Field.String("password")).qm("password(?)").defaultVal("123456")
+                }, "tab_user", -1, NullLevelGetter),
+        DEFAULT(new Field[0], new CalculateField[0], "", -1, NullLevelGetter);
 
         private final Field[] fields;
         private final CalculateField[] calculatedFields;
         public final String table;
         private final int idCol;
+        private final LevelGetter levelGetter;
 
-        Table(Field[] fields, CalculateField[] calculatedFields, String table, int idCol) {
+        Table(Field[] fields, CalculateField[] calculatedFields, String table, int idCol, LevelGetter levelGetter) {
             this.fields = fields;
             this.calculatedFields = calculatedFields;
             this.table = table;
             this.idCol = idCol;
+            this.levelGetter = levelGetter;
         }
 
         private Field matchLevel(String fieldName, int level) {

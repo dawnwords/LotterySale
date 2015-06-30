@@ -23,9 +23,8 @@ public class UpdateTableDAO extends BaseDAO<Boolean> {
 
     @Override
     protected Boolean processData(Connection connection) throws Exception {
-        int level = UnitFieldDAO.saleLevel(connection, request.id());
-        List<Update> updates = request.updates(level);
         String table = request.table().table;
+        List<Update> updates = request.updates(connection);
         if (updates.size() > 0) {
             String sql = "UPDATE " + table + " SET ";
             for (Update update : updates) {

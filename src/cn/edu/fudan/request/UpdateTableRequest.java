@@ -1,12 +1,16 @@
 package cn.edu.fudan.request;
 
 import cn.edu.fudan.bean.Field;
+import cn.edu.fudan.dao.UnitFieldDAO.LevelGetter;
 import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
 import com.google.gson.Gson;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
+import static cn.edu.fudan.dao.UnitFieldDAO.LevelGetter.*;
 
 /**
  * Created by Dawnwords on 2015/6/12.
@@ -28,9 +32,10 @@ public class UpdateTableRequest {
         }
     }
 
-    public List<Update> updates(int level) {
+    public List<Update> updates(Connection connection) {
         List<Update> result = new ArrayList<>();
         Table table = table();
+        int level = table.levelGetter.level(connection, id);
         for (Update update : updates) {
             Field field = table.getField(update.field, level);
             if (field != null) {
@@ -84,22 +89,24 @@ public class UpdateTableRequest {
                 Field.Double("area").levelLimit(2),
                 Field.Int("population1").levelLimit(2),
                 Field.Int("population2").levelLimit(2)
-        }, "tab_unit"),
+        }, "tab_unit", UnitLevelGetter),
         SALES(new Field[]{
                 Field.Double("s1").levelLimit(3),
                 Field.Double("s2").levelLimit(3),
                 Field.Double("s3").levelLimit(3),
                 Field.Double("stotal").levelLimit(3)
-        }, "tab_sales"),
-        USER(new Field[]{Field.String("authority")}, "tab_user"),
-        DEFAULT(new Field[0], "");
+        }, "tab_sales", SaleLevelGetter),
+        USER(new Field[]{Field.String("authority")}, "tab_user", NullLevelGetter),
+        DEFAULT(new Field[0], "", NullLevelGetter);
 
         private final Field[] fields;
         public final String table;
+        private final LevelGetter levelGetter;
 
-        Table(Field[] fields, String table) {
+        Table(Field[] fields, String table, LevelGetter levelGetter) {
             this.fields = fields;
             this.table = table;
+            this.levelGetter = levelGetter;
         }
 
         private Field getField(String fieldName, int level) {

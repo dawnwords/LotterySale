@@ -8,9 +8,6 @@ public class Field {
     private String type;
     private int levelLimit;
 
-    public Field() {
-    }
-
     private Field(String name, String type) {
         this.name = name;
         this.type = type;
