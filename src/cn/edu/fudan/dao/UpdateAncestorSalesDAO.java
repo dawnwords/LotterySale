@@ -20,7 +20,7 @@ public class UpdateAncestorSalesDAO extends BaseDAO<Boolean> {
     @Override
     protected Boolean processData(Connection connection) throws Exception {
         String sql = "SELECT unitid,saleyear,salemonth,level FROM tab_sales " +
-                "INNER JOIN tab_unit ON tab_unit.id = tab_sales.unitid WHERE id = ?";
+                "INNER JOIN tab_unit ON tab_unit.id = tab_sales.unitid WHERE tab_sales.id = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, saleId);
         ResultSet rs = ps.executeQuery();

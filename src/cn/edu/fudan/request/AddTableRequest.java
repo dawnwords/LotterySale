@@ -170,7 +170,7 @@ public class AddTableRequest {
         }
 
         private Object cellValue(String fieldName, Cell cell) {
-            if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+            if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
                 return null;
             }
             for (Field field : fields) {
