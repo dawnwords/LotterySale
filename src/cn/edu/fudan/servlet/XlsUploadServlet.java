@@ -52,8 +52,8 @@ public class XlsUploadServlet extends HttpServlet {
                 while (it.hasNext()) {
                     Row row = it.next();
                     AddTableRequest addRequest = new AddTableRequest(table);
-                    if(addRequest.table()== AddTableRequest.Table.DEFAULT) {
-                        return new ErrorResult("Sheet名应为unit或sales或user");
+                    if (addRequest.table() == AddTableRequest.Table.DEFAULT) {
+                        return ErrorResult.SHEET_ERROR;
                     }
                     int i = 0;
                     for (String field : fieldList) {
@@ -63,23 +63,32 @@ public class XlsUploadServlet extends HttpServlet {
                 }
                 return new BatchAddDAO(this, adds).getResult();
             } catch (FileUploadException e) {
-                return new ErrorResult("文件上传失败");
+                return ErrorResult.UPLOAD_ERROR;
             } catch (InvalidFormatException e) {
-                return new ErrorResult("xls文件格式不正确");
+                return ErrorResult.XLS_ERROR;
+            } catch (IllegalStateException e) {
+                return ErrorResult.CELL_FORMAT_ERROR;
             } catch (Exception e) {
-                return new ErrorResult("上传文件不是xls文件");
+                return ErrorResult.UNKNOWN_ERROR;
             }
         } else {
-            return new ErrorResult("没有文件上传");
+            return ErrorResult.NO_FILE_ERROR;
         }
     }
 
-    private class ErrorResult {
+    private static class ErrorResult {
         private String error;
 
         public ErrorResult(String error) {
             this.error = error;
         }
+
+        static final ErrorResult SHEET_ERROR = new ErrorResult("Sheet名应为unit或sales或user");
+        static final ErrorResult UPLOAD_ERROR = new ErrorResult("文件上传失败");
+        static final ErrorResult XLS_ERROR = new ErrorResult("xls文件格式不正确");
+        static final ErrorResult CELL_FORMAT_ERROR = new ErrorResult("单元格格式类型错误");
+        static final ErrorResult UNKNOWN_ERROR = new ErrorResult("未知错误");
+        static final ErrorResult NO_FILE_ERROR = new ErrorResult("没有文件上传");
     }
 
     private List<String> getFieldList(Iterator<Row> iterator) {
