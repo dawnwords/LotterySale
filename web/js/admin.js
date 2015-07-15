@@ -23,6 +23,7 @@ $(document).ready(function () {
             new Table('unit', "节点", [
                 {
                     title: "fatherid",
+                    titleCh: "父节点id",
                     addType: "select",
                     ajax: {
                         url: "../admin/fatheroption",
@@ -47,26 +48,26 @@ $(document).ready(function () {
                         }
                     }
                 },
-                {title: "name", addType: "input"},
-                {title: "unitcode", addType: "input"},
-                {title: "address", addType: "input"},
-                {title: "manager", addType: "input"},
-                {title: "mobile", addType: "input"},
-                {title: "unitnum", addType: false},
-                {title: "area", addType: "input"},
-                {title: "population1", addType: "input"},
-                {title: "population2", addType: "input"}
+                {title: "name", titleCh: "节点名称", addType: "input"},
+                {title: "unitcode", titleCh: "节点代码", addType: "input"},
+                {title: "address", titleCh: "地址", addType: "input"},
+                {title: "manager", titleCh: "管理员", addType: "input"},
+                {title: "mobile", titleCh: "管理员手机", addType: "input"},
+                {title: "unitnum", titleCh: "子节点数", addType: false},
+                {title: "area", titleCh: "面积", addType: "input"},
+                {title: "population1", titleCh: "户籍人口", addType: "input"},
+                {title: "population2", titleCh: "实有人口", addType: "input"}
             ], {unitid: 0}),
             new Table('sales', "销量", [
-                {title: "unitid", addType: "input"},
+                {title: "unitid", titleCh: "节点id", addType: "input"},
                 {
-                    title: "saleyear",
+                    title: "saleyear", titleCh: "年份",
                     addType: "select",
                     options: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
                 },
-                {title: "salequarter", addType: "disabled"},
+                {title: "salequarter", titleCh: "季度", addType: "disabled"},
                 {
-                    title: "salemonth",
+                    title: "salemonth", titleCh: "月份",
                     addType: "select",
                     options: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
                     associate: function () {
@@ -74,15 +75,15 @@ $(document).ready(function () {
                         $("#add-field-salequarter").val(Math.floor((month + 2) / 3));
                     }
                 },
-                {title: "s1", addType: "input"},
-                {title: "s2", addType: "input"},
-                {title: "s3", addType: "input"},
-                {title: "stotal", addType: "input"}
+                {title: "s1", titleCh: "电脑销量", addType: "input"},
+                {title: "s2", titleCh: "即开销量", addType: "input"},
+                {title: "s3", titleCh: "中福在线销量", addType: "input"},
+                {title: "stotal", titleCh: "总销量", addType: "input"}
             ], {unitid: 1}),
             new Table('user', "用户", [
-                {title: "name", ftype: "disabled", addType: "input"},
+                {title: "name", titleCh: "用户名", ftype: "disabled", addType: "input"},
                 {
-                    title: "authority",
+                    title: "authority", titleCh: "权限",
                     ftype: "select",
                     addType: "select",
                     options: ["Admin", "Normal"]
@@ -96,7 +97,7 @@ $(document).ready(function () {
             var field = fields[i];
             var origin = rowData[i];
             html += '<div class="form-group" data-field="' + field.title + '" data-origin="' + origin + '">' +
-                '    <label for="field-' + field.title + '" class="col-xs-2 control-label">' + field.title + ':</label>' +
+                '    <label for="field-' + field.title + '" class="col-xs-2 control-label">' + field.titleCh + ':</label>' +
                 '    <div class="col-xs-10">';
             if (field.ftype == "select") {
                 html += '        <select class="form-control" id="field-' + field.title + '">';
@@ -136,7 +137,7 @@ $(document).ready(function () {
             var field = fields[i];
             if (field.addType) {
                 html += '<div class="form-group" data-field="' + field.title + '">' +
-                    '    <label for="add-field-' + field.title + '" class="col-xs-2 control-label">' + field.title + ':</label>' +
+                    '    <label for="add-field-' + field.title + '" class="col-xs-2 control-label">' + field.titleCh + ':</label>' +
                     '    <div class="col-xs-10">';
                 if (field.addType == "select") {
                     html += '        <select class="form-control" id="add-field-' + field.title + '">';
@@ -175,8 +176,10 @@ $(document).ready(function () {
     }
 
     function Table(tableName, titleName, fields, unitid) {
-        var tempFields = fields.slice();
-        tempFields.unshift({title: "id", ftype: "disabled"});
+        var tempFields = [{title:titleName+"id"}];
+        for(var i in fields){
+            tempFields.push({title:fields[i].titleCh});
+        }
 
         var table = $("#table-" + tableName).DataTable({
             scrollY: viewHeight - 315,

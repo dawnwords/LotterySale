@@ -119,10 +119,10 @@
                             <input type="radio" name="population" value="0" checked>非人均
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="population" value="1">人均/户籍
+                            <input type="radio" name="population" value="1">户籍人口人均销售额
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="population" value="2">人均/来沪
+                            <input type="radio" name="population" value="2">实有人口人均销售额
                         </label>
                     </div>
                 </div>

@@ -12,20 +12,54 @@ import java.sql.Connection;
 public class TableFieldDAO extends BaseDAO<TableField[]> {
     private TableFieldRequest request;
 
-    private static final TableField[] SALES_LV3 = {new TableField("id", false), new TableField("unitid", false),
-            new TableField("saleyear", false), new TableField("salequater", false), new TableField("salemonth", false),
-            new TableField("s1", true), new TableField("s2", true), new TableField("s3", true), new TableField("stotal", true)};
-    private static final TableField[] SALES_OTHER = {new TableField("id", false), new TableField("unitid", false),
-            new TableField("saleyear", false), new TableField("salequater", false), new TableField("salemonth", false),
-            new TableField("s1", false), new TableField("s2", false), new TableField("s3", false), new TableField("stotal", false)};
-    private static final TableField[] UNIT_LV2 = {new TableField("id", false), new TableField("fatherid", false), new TableField("name", true),
-            new TableField("unicode", true), new TableField("address", true), new TableField("manager", true),
-            new TableField("mobile", true), new TableField("unitnum", false), new TableField("area", true),
-            new TableField("population1", true), new TableField("population2", true)};
-    private static final TableField[] UNIT_OTHER = {new TableField("id", false), new TableField("fatherid", false), new TableField("name", true),
-            new TableField("unicode", true), new TableField("address", true), new TableField("manager", true),
-            new TableField("mobile", true), new TableField("unitnum", false), new TableField("area", false),
-            new TableField("population1", false), new TableField("population2", false)};
+    private static final TableField[] SALES_LV3 = {
+            TableField.disabled("id").ch("销量id"),
+            TableField.disabled("unitid").ch("节点id"),
+            TableField.disabled("saleyear").ch("年份"),
+            TableField.disabled("salequater").ch("季度"),
+            TableField.disabled("salemonth").ch("月份"),
+            TableField.input("s1").ch("电脑销量"),
+            TableField.input("s2").ch("即开销量"),
+            TableField.input("s3").ch("中福在线销量"),
+            TableField.input("stotal").ch("总销量")
+    };
+    private static final TableField[] SALES_OTHER = {
+            TableField.disabled("id").ch("销量id"),
+            TableField.disabled("unitid").ch("节点id"),
+            TableField.disabled("saleyear").ch("年份"),
+            TableField.disabled("salequater").ch("季度"),
+            TableField.disabled("salemonth").ch("月份"),
+            TableField.disabled("s1").ch("电脑销量"),
+            TableField.disabled("s2").ch("即开销量"),
+            TableField.disabled("s3").ch("中福在线销量"),
+            TableField.disabled("stotal").ch("总销量")
+    };
+    private static final TableField[] UNIT_LV2 = {
+            TableField.disabled("id").ch("节点id"),
+            TableField.disabled("fatherid").ch("父节点id"),
+            TableField.input("name").ch("节点名称"),
+            TableField.input("unicode").ch("节点代码"),
+            TableField.input("address").ch("地址"),
+            TableField.input("manager").ch("管理员"),
+            TableField.input("mobile").ch("手机"),
+            TableField.disabled("unitnum").ch("子节点数"),
+            TableField.input("area").ch("面积"),
+            TableField.input("population1").ch("户籍人口"),
+            TableField.input("population2").ch("实有人口")
+    };
+    private static final TableField[] UNIT_OTHER = {
+            TableField.disabled("id").ch("节点id"),
+            TableField.disabled("fatherid").ch("父节点id"),
+            TableField.input("name").ch("节点名称"),
+            TableField.input("unicode").ch("节点代码"),
+            TableField.input("address").ch("地址"),
+            TableField.input("manager").ch("管理员"),
+            TableField.input("mobile").ch("手机"),
+            TableField.disabled("unitnum").ch("子节点数"),
+            TableField.disabled("area").ch("面积"),
+            TableField.disabled("population1").ch("户籍人口"),
+            TableField.disabled("population2").ch("实有人口")
+    };
 
     public TableFieldDAO(HttpServlet servlet, TableFieldRequest request) {
         super(servlet);
