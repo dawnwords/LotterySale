@@ -7,6 +7,7 @@ $(document).ready(function () {
     $(".unit-content:first").height((viewHeight - 285) * 0.6);
     $(".unit-content:last").height((viewHeight - 285) * 0.4);
     $("#chart").height(viewHeight - 272);
+    $("#table").height(viewHeight - 272);
 
     var mode = 0,
         tree = new Unit("#unit-tree", "#unit-selected", "#unit-keyword"),
@@ -34,7 +35,8 @@ $(document).ready(function () {
             [chart, time, population, view, refresh],
             [chart, compare, population, view, refresh],
             [table, warning, search]
-        ];
+        ], dataTable;
+
 
     function updateGraph() {
         var dimen = $("#nav-bar").find(".active").data("dimen");
@@ -167,6 +169,63 @@ $(document).ready(function () {
                     for (var i in data) {
                         month.append("<option value='" + data[i] + "'>" + data[i] + "</option>");
                     }
+                    initDataTable();
+                }
+            }
+        });
+    }
+
+    function initDataTable() {
+        dataTable = table.find("table").DataTable({
+            scrollY: viewHeight - 315,
+            scrollCollapse: true,
+            serverSide: true,
+            searchHighlight: true,
+            columns: [
+                {title: "节点id"},
+                {title: "节点名"},
+                {title: "地址"},
+                {title: "上月总量"},
+                {title: "该月总量"},
+                {title: "增幅"}
+            ],
+            ajax: {
+                url: '../wsale',
+                type: 'POST',
+                contentType: 'application/json',
+                data: function (o) {
+                    o.year = year.val();
+                    o.month = month.val();
+                    return JSON.stringify(o);
+                },
+                dataSrc: function (json) {
+                    for (var i = 0, ien = json.data.length; i < ien; i++) {
+                        json.data[i][5] = (json.data[i][5] * 100).toFixed(1) + "%";
+                    }
+                    return json.data;
+                }
+            },
+            language: {
+                emptyTable: "数据不可用",
+                info: "第_START_至第_END_项，共_TOTAL_项",
+                infoEmpty: "无项目",
+                infoFiltered: "(从总计_MAX_项中过滤)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "显示_MENU_项目",
+                loadingRecords: "载入中...",
+                processing: "处理中...",
+                search: "关键字查询：",
+                zeroRecords: "无匹配项",
+                paginate: {
+                    first: "首页",
+                    last: "尾页",
+                    next: "下一页",
+                    previous: "上一页"
+                },
+                aria: {
+                    sortAscending: ": 升序",
+                    sortDescending: ": 降序"
                 }
             }
         });
@@ -178,6 +237,9 @@ $(document).ready(function () {
     tab.click(clickTab);
 
     refresh.click(clickRefresh);
+    search.click(function () {
+        dataTable.ajax.reload(null, false);
+    });
 
     maxmin.click(updateGraph);
     avg.click(updateGraph);

@@ -138,8 +138,12 @@
 
 /* right-bottom */
 
-#chart {
+#chart, #table {
     background-color: white;
     margin: 0 2px;
     padding: 5px;
+}
+
+table.dataTable span.highlight {
+    background-color: #FFFF88;
 }

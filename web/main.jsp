@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>浦东新区民政彩票管理系统</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css"/>
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="js/jstree/themes/default/style.min.css"/>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -14,6 +15,9 @@
     <script src="js/echarts/echarts.js"></script>
     <script src="js/jstree/jstree.min.js"></script>
     <script src="js/typeahead/bootstrap3-typeahead.min.js"></script>
+    <script src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.7/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
     <script src="js/hint.js"></script>
     <script src="js/unit.js" charset="UTF-8"></script>
     <script src="js/charts.js" charset="UTF-8"></script>
@@ -152,7 +156,9 @@
                 <button class="btn btn-primary col-xs-2" id="funcbar-refresh" type="button">刷新图表</button>
             </div>
             <div id="chart"></div>
-            <div class="hide" id="table">table</div>
+            <div class="hide" id="table">
+                <table class="display" cellspacing="0" width="100%"></table>
+            </div>
         </div>
     </div>
 </div>
