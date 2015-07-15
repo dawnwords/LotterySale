@@ -28,7 +28,9 @@ $(document).ready(function () {
         changePassPopup = $("#change-password"),
         changePassBtn = $("#change-password-submit"),
         changePassHint = $(".change-pass"),
-        visiability = [
+        year = $("#funcbar-warning-year"),
+        month = $("#funcbar-warning-month"),
+        visibility = [
             [chart, time, population, view, refresh],
             [chart, compare, population, view, refresh],
             [table, warning, search]
@@ -71,8 +73,8 @@ $(document).ready(function () {
         search.addClass("hide");
         refresh.addClass("hide");
 
-        for(var i in visiability[mode]){
-            visiability[mode][i].removeClass("hide");
+        for (var i in visibility[mode]) {
+            visibility[mode][i].removeClass("hide");
         }
 
         tree.deselectAll();
@@ -152,6 +154,24 @@ $(document).ready(function () {
         });
     }
 
+    function yearMonthSelect() {
+        $.ajax({
+            url: "../year",
+            type: 'GET',
+            success: function (data) {
+                if ($.isArray(data)) {
+                    for (var i in data) {
+                        year.append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+                    }
+                    data = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+                    for (var i in data) {
+                        month.append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+                    }
+                }
+            }
+        });
+    }
+
     changePassHint.css('display', 'none');
     changePassBtn.click(changePassword);
 
@@ -168,6 +188,6 @@ $(document).ready(function () {
 
     deselect.click(tree.deselectAll);
 
-
+    yearMonthSelect();
 });
 
