@@ -21,11 +21,11 @@
     float: right;
 }
 
-.change-pass.success{
+.change-pass.success {
     color: #3c763d;
 }
 
-.change-pass.fail{
+.change-pass.fail {
     color: #a94442;
 }
 
@@ -125,6 +125,10 @@
 
 .funcbar.left div {
     padding-top: 10px;
+}
+
+.funcbar.left-cross {
+    padding-top: 18px;
 }
 
 .funcbar.right {

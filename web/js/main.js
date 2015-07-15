@@ -17,13 +17,22 @@ $(document).ready(function () {
         compare = $("#funcbar-compare"),
         population = $("#funcbar-population"),
         refresh = $("#funcbar-refresh"),
+        view = $("#funcbar-view"),
+        search = $("#funcbar-search"),
+        warning = $("#funcbar-warning"),
+        table = $("#table"),
         maxmin = $("#funcbar-view-maxmin"),
         avg = $("#funcbar-view-avg"),
         mark = $("#funcbar-view-mark"),
         deselect = $("#unit-deselect"),
         changePassPopup = $("#change-password"),
         changePassBtn = $("#change-password-submit"),
-        changePassHint = $(".change-pass");
+        changePassHint = $(".change-pass"),
+        visiability = [
+            [chart, time, population, view, refresh],
+            [chart, compare, population, view, refresh],
+            [table, warning, search]
+        ];
 
     function updateGraph() {
         var dimen = $("#nav-bar").find(".active").data("dimen");
@@ -32,7 +41,7 @@ $(document).ready(function () {
             avg: avg.is(":checked"),
             mark: mark.is(":checked"),
             dimen: +$("input[name=" + dimen + "]:checked", "#funcbar-" + dimen).val(),
-            population: population = +$("input[name=population]:checked", "#funcbar-population").val()
+            population: +$("input[name=population]:checked", "#funcbar-population").val()
         });
     }
 
@@ -51,14 +60,21 @@ $(document).ready(function () {
     }
 
     function clickTab() {
-        mode = $(this).data("mode");
-        if (mode) {
-            time.addClass("hide");
-            compare.removeClass("hide");
-        } else {
-            time.removeClass("hide");
-            compare.addClass("hide");
+        mode = +$(this).data("mode");
+        chart.addClass("hide");
+        table.addClass("hide");
+        time.addClass("hide");
+        compare.addClass("hide");
+        population.addClass("hide");
+        warning.addClass("hide");
+        view.addClass("hide");
+        search.addClass("hide");
+        refresh.addClass("hide");
+
+        for(var i in visiability[mode]){
+            visiability[mode][i].removeClass("hide");
         }
+
         tree.deselectAll();
         chart.setGraphData(null);
     }

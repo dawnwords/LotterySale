@@ -22,19 +22,21 @@
 <body>
 <div class="header">
     <h1>浦东新区民政彩票管理系统</h1>
-    <% if (user!=null) { %>
+    <% if (user != null) { %>
     <a class="btn btn-danger text-center" href="logout">注销</a>
     <a class="btn btn-default text-center" data-toggle="modal" data-target="#change-password">账号管理</a>
-    <% if(user.isAdmin()){%>
+    <% if (user.isAdmin()) {%>
     <a class="btn btn-default text-center" href="admin.jsp">数据管理</a>
     <% } %>
     <% } %>
 </div>
-<div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-labelledby="change-password-title" aria-hidden="true">
+<div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-labelledby="change-password-title"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="change-password-title">修改密码</h4>
             </div>
             <div class="modal-body">
@@ -92,9 +94,12 @@
                 <li role="presentation" data-dimen="compare">
                     <a href="" data-toggle="tab" data-mode="1">同/环比</a>
                 </li>
+                <li role="presentation" data-dimen="compare">
+                    <a href="" data-toggle="tab" data-mode="2">销量预警</a>
+                </li>
             </ul>
             <div class="row" id="funcbar">
-                <div class="col-xs-5 funcbar left">
+                <div class="col-xs-6 funcbar left">
                     <div id="funcbar-time">
                         <label class="radio-inline">
                             <input type="radio" name="time" value="0">年度
@@ -119,14 +124,20 @@
                             <input type="radio" name="population" value="0" checked>非人均
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="population" value="1">户籍人口人均销售额
+                            <input type="radio" name="population" value="1">户籍人口人均
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="population" value="2">实有人口人均销售额
+                            <input type="radio" name="population" value="2">实有人口人均
                         </label>
                     </div>
                 </div>
-                <div class="funcbar col-xs-5 right" id="funcbar-view">
+                <div class="funcbar col-xs-10 left-cross hide" id="funcbar-warning">
+                    <label for="funcbar-warning-year">选择年份</label>
+                    <select class="input-sm" id="funcbar-warning-year"></select>
+                    <label for="funcbar-warning-month">选择月份</label>
+                    <select class="input-sm" id="funcbar-warning-month"></select>
+                </div>
+                <div class="funcbar col-xs-4 right" id="funcbar-view">
                     <label class="checkbox-inline">
                         <input type="checkbox" id="funcbar-view-mark">指标值
                     </label>
@@ -137,9 +148,11 @@
                         <input type="checkbox" id="funcbar-view-maxmin">最值
                     </label>
                 </div>
+                <button class="btn btn-primary col-xs-2 hide" id="funcbar-search" type="button">搜索</button>
                 <button class="btn btn-primary col-xs-2" id="funcbar-refresh" type="button">刷新图表</button>
             </div>
             <div id="chart"></div>
+            <div class="hide" id="table">table</div>
         </div>
     </div>
 </div>

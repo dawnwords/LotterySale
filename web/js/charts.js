@@ -258,5 +258,13 @@ function Chart(elementId) {
 
     this.setGraphData = function (d) {
         graphData = d;
-    }
+    };
+
+    this.addClass = function (c) {
+        $("#" + elementId).addClass(c);
+    };
+
+    this.removeClass = function(c){
+        $("#" + elementId).removeClass(c);
+    };
 }
