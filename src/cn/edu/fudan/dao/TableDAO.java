@@ -73,9 +73,7 @@ public class TableDAO extends BaseDAO<TableResponse> {
         int filtered = 0;
         String sql = "SELECT COUNT(id) FROM " + table.table + " where valid = 1 " + searchSQL();
         PreparedStatement ps = connection.prepareStatement(sql);
-        if (request.search() != null) {
-            prepareSearch(ps);
-        }
+        prepareSearch(ps);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             filtered = rs.getInt(1);
