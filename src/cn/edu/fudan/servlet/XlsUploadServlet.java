@@ -1,6 +1,5 @@
 package cn.edu.fudan.servlet;
 
-import cn.edu.fudan.dao.AddTableDAO;
 import cn.edu.fudan.dao.BatchAddDAO;
 import cn.edu.fudan.request.AddTableRequest;
 import org.apache.commons.fileupload.FileItem;
@@ -36,7 +35,12 @@ public class XlsUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json");
-        Object result;
+        PrintWriter writer = response.getWriter();
+        writer.write(BaseServlet.gson.toJson(getResult(request)));
+        writer.flush();
+    }
+
+    private Object getResult(HttpServletRequest request) {
         if (request.getContentType().contains("multipart/form-data")) {
             try {
                 FileItem fileItem = prepareUploadFile().parseRequest(request).get(0);
@@ -48,42 +52,26 @@ public class XlsUploadServlet extends HttpServlet {
                 while (it.hasNext()) {
                     Row row = it.next();
                     AddTableRequest addRequest = new AddTableRequest(table);
+                    if(addRequest.table()== AddTableRequest.Table.DEFAULT) {
+                        return new ErrorResult("Sheet名应为unit或sales或user");
+                    }
                     int i = 0;
                     for (String field : fieldList) {
-                        addRequest.addAdd(field, getValueFromCell(row.getCell(i++)));
+                        addRequest.addCell(field, row.getCell(i++));
                     }
                     adds.add(addRequest);
                 }
-                result = new BatchAddDAO(this, adds).getResult();
+                return new BatchAddDAO(this, adds).getResult();
             } catch (FileUploadException e) {
-                result = new ErrorResult("文件上传失败");
+                return new ErrorResult("文件上传失败");
             } catch (InvalidFormatException e) {
-                result = new ErrorResult("xls文件格式不正确");
+                return new ErrorResult("xls文件格式不正确");
             } catch (Exception e) {
-                result = new ErrorResult("上传文件不是xls文件");
+                return new ErrorResult("上传文件不是xls文件");
             }
         } else {
-            result = new ErrorResult("没有文件上传");
+            return new ErrorResult("没有文件上传");
         }
-        PrintWriter writer = response.getWriter();
-        writer.write(BaseServlet.gson.toJson(result));
-        writer.flush();
-    }
-
-    private Object getValueFromCell(Cell cell) {
-        switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
-                return cell.getNumericCellValue();
-            case Cell.CELL_TYPE_STRING:
-                return cell.getStringCellValue();
-            case Cell.CELL_TYPE_BLANK:
-                return "";
-            case Cell.CELL_TYPE_BOOLEAN:
-                return cell.getBooleanCellValue();
-            case Cell.CELL_TYPE_FORMULA:
-                return cell.getCellFormula();
-        }
-        return null;
     }
 
     private class ErrorResult {

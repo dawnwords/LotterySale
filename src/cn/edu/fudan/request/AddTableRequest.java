@@ -5,6 +5,7 @@ import cn.edu.fudan.dao.UnitFieldDAO.LevelGetter;
 import cn.edu.fudan.util.TypeUtil;
 import cn.edu.fudan.util.TypeUtil.Parser;
 import com.google.gson.Gson;
+import org.apache.poi.ss.usermodel.Cell;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public class AddTableRequest {
         this.adds = new ArrayList<>();
     }
 
-    public void addAdd(String field, Object value) {
+    public void addCell(String field, Cell value) {
         Add add = new Add();
         add.field = field;
-        add.value = value;
+        add.value = table().cellValue(field, value);
         adds.add(add);
     }
 
@@ -163,6 +164,26 @@ public class AddTableRequest {
             for (Field field : fields) {
                 if (field.name().equals(fieldName)) {
                     return field.matchLevel(level) ? field : null;
+                }
+            }
+            return null;
+        }
+
+        private Object cellValue(String fieldName, Cell cell) {
+            if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+                return null;
+            }
+            for (Field field : fields) {
+                if (field.name().equals(fieldName)) {
+                    String type = field.type();
+                    if ("String".equals(type)) {
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        return cell.getStringCellValue();
+                    }
+                    if ("Double|Int".contains(type)) {
+                        cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+                        return cell.getNumericCellValue();
+                    }
                 }
             }
             return null;
