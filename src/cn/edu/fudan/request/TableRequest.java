@@ -1,5 +1,6 @@
 package cn.edu.fudan.request;
 
+import cn.edu.fudan.bean.Field;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -61,25 +62,42 @@ public class TableRequest {
     }
 
     public enum Table {
-        UNIT(new String[]{"id", "fatherid", "name", "unitcode", "address", "manager", "mobile", "unitnum", "area", "population1", "population2"},
-                new String[]{"Int", "Int", "String", "String", "String", "String", "String", "Int", "Double", "Int", "Int"},
-                new int[]{2, 4, 5}, "tab_unit"),
-        SALES(new String[]{"id", "unitid", "saleyear", "salequarter", "salemonth", "s1", "s2", "s3", "stotal"},
-                new String[]{"Int", "Int", "String", "String", "String", "Double", "Double", "Double", "Double"},
-                new int[]{1, 2, 3, 4}, "tab_sales"),
-        USER(new String[]{"id", "name", "authority"},
-                new String[]{"Int", "String", "String"},
-                new int[]{1}, "tab_user"),
-        DEFAULT(new String[0], new String[0], new int[0], "");
-        public final String[] cols;
-        public final String[] colTypes;
-        public final int[] searchCols;
-        public final String table;
+        UNIT(new Field[]{
+                Field.Int("id"),
+                Field.Int("fatherid"),
+                Field.String("name").search(),
+                Field.String("unitcode"),
+                Field.String("address").search(),
+                Field.String("manager").search(),
+                Field.String("mobile"),
+                Field.Int("unitnum"),
+                Field.Double("area"),
+                Field.Int("population1"),
+                Field.Int("population2")
+        }, "tab_unit"),
+        SALES(new Field[]{
+                Field.Int("id"),
+                Field.Int("unitid").search(),
+                Field.String("saleyear").search(),
+                Field.String("salequarter").search(),
+                Field.String("salemonth").search(),
+                Field.Double("s1"),
+                Field.Double("s2"),
+                Field.Double("s3"),
+                Field.Double("stotal"),
+        }, "tab_sales"),
+        USER(new Field[]{
+                Field.Int("id"),
+                Field.String("name").search(),
+                Field.String("authority")
+        }, "tab_user"),
+        DEFAULT(new Field[0], "");
 
-        Table(String[] cols, String[] colTypes, int[] searchCols, String table) {
-            this.cols = cols;
-            this.colTypes = colTypes;
-            this.searchCols = searchCols;
+        public final String table;
+        public final Field[] fields;
+
+        Table(Field[] fields, String table) {
+            this.fields = fields;
             this.table = table;
         }
     }

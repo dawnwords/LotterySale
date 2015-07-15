@@ -7,11 +7,13 @@ public class Field {
     private String name;
     private String type;
     private int levelLimit;
+    private boolean isSearch;
 
     private Field(String name, String type) {
         this.name = name;
         this.type = type;
         this.levelLimit = -1;
+        this.isSearch = false;
     }
 
     public static Field String(String name) {
@@ -31,12 +33,21 @@ public class Field {
         return this;
     }
 
+    public Field search(){
+        this.isSearch = true;
+        return this;
+    }
+
     public String name() {
         return name;
     }
 
     public String type() {
         return type;
+    }
+
+    public boolean isSearch(){
+        return isSearch;
     }
 
     public boolean matchLevel(int level) {
