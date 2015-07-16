@@ -22,7 +22,7 @@ public class SaleWarningDAO extends BaseDAO<TableResponse> {
             "FROM tab_sales AS presale INNER JOIN tab_sales AS thissale ON thissale.unitid = presale.unitid " +
             "WHERE thissale.saleyear = ? AND thissale.salemonth = ? AND presale.saleyear = ? " +
             "AND presale.salemonth = ? AND thissale.valid = 1 AND presale.valid = 1" +
-            ") AS sale ON id = unitid WHERE (ratio >= 0.3 OR ratio <= -0.3) AND valid = 1";
+            ") AS sale ON id = unitid WHERE (ratio >= 0.3 OR ratio <= -0.3) AND level = 3 AND valid = 1";
     private SaleWarningRequest request;
 
     public SaleWarningDAO(HttpServlet servlet, SaleWarningRequest request) {
