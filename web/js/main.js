@@ -187,8 +187,8 @@ $(document).ready(function () {
                 serverSide: true,
                 searchHighlight: true,
                 columns: [
-                    {title: "节点id"},
-                    {title: "节点名"},
+                    {title: "序号"},
+                    {title: "区代码"},
                     {title: "地址"},
                     {title: "上月总量"},
                     {title: "该月总量"},

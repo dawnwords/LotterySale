@@ -13,17 +13,17 @@ public class UnitInfo {
     }
 
     public UnitInfo id(int id) {
-        unitInfo.add(new UserInfoEntry().title("id").value(id).titleCh("节点id"));
+        unitInfo.add(new UserInfoEntry().title("id").value(id).titleCh("网点序号"));
         return this;
     }
 
     public UnitInfo name(String name) {
-        unitInfo.add(new UserInfoEntry().title("name").value(name).titleCh("节点名称"));
+        unitInfo.add(new UserInfoEntry().title("name").value(name).titleCh("区代码"));
         return this;
     }
 
     public UnitInfo unitcode(String unitcode) {
-        unitInfo.add(new UserInfoEntry().title("unitcode").value(unitcode).titleCh("节点代码"));
+        unitInfo.add(new UserInfoEntry().title("unitcode").value(unitcode).titleCh("网点代码"));
         return this;
     }
 
