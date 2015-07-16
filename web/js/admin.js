@@ -20,10 +20,10 @@ $(document).ready(function () {
         uploadFails = $("#upload-fails"),
         uploadPopup = $("#upload"),
         tables = [
-            new Table('unit', "节点", [
+            new Table('unit', "网点", [
                 {
                     title: "fatherid",
-                    titleCh: "父节点id",
+                    titleCh: "上级序号",
                     addType: "select",
                     ajax: {
                         url: "../admin/fatheroption",
@@ -48,18 +48,18 @@ $(document).ready(function () {
                         }
                     }
                 },
-                {title: "name", titleCh: "节点名称", addType: "input"},
-                {title: "unitcode", titleCh: "节点代码", addType: "input"},
+                {title: "name", titleCh: "区代码", addType: "input"},
+                {title: "unitcode", titleCh: "网点代码", addType: "input"},
                 {title: "address", titleCh: "地址", addType: "input"},
                 {title: "manager", titleCh: "管理员", addType: "input"},
                 {title: "mobile", titleCh: "管理员手机", addType: "input"},
-                {title: "unitnum", titleCh: "子节点数", addType: false},
+                {title: "unitnum", titleCh: "子网点点数", addType: false},
                 {title: "area", titleCh: "面积", addType: "input"},
                 {title: "population1", titleCh: "户籍人口", addType: "input"},
                 {title: "population2", titleCh: "实有人口", addType: "input"}
             ], {unitid: 0}),
             new Table('sales', "销量", [
-                {title: "unitid", titleCh: "节点id", addType: "input"},
+                {title: "unitid", titleCh: "网点序号", addType: "input"},
                 {
                     title: "saleyear", titleCh: "年份",
                     addType: "select",
@@ -176,9 +176,9 @@ $(document).ready(function () {
     }
 
     function Table(tableName, titleName, fields, unitid) {
-        var tempFields = [{title:titleName+"id"}];
-        for(var i in fields){
-            tempFields.push({title:fields[i].titleCh});
+        var tempFields = [{title: titleName + "序号"}];
+        for (var i in fields) {
+            tempFields.push({title: fields[i].titleCh});
         }
 
         var table = $("#table-" + tableName).DataTable({
