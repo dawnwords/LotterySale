@@ -161,74 +161,79 @@ $(document).ready(function () {
             url: "../year",
             type: 'GET',
             success: function (data) {
-                if ($.isArray(data)) {
-                    for (var i in data) {
-                        year.append("<option value='" + data[i] + "'>" + data[i] + "</option>");
-                    }
-                    data = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-                    for (var i in data) {
-                        month.append("<option value='" + data[i] + "'>" + data[i] + "</option>");
-                    }
-                    initDataTable();
+                for (var i in data) {
+                    year.append($("<option>").val(i).text(i));
                 }
+                year.change(function () {
+                    month.html("");
+                    var m = data[year.val()];
+                    for (var i in m) {
+                        month.append($("<option>").val(m[i]).text(m[i]));
+                    }
+                });
+                year.change();
             }
         });
     }
 
-    function initDataTable() {
-        dataTable = table.find("table").DataTable({
-            scrollY: viewHeight - 315,
-            scrollCollapse: true,
-            serverSide: true,
-            searchHighlight: true,
-            columns: [
-                {title: "节点id"},
-                {title: "节点名"},
-                {title: "地址"},
-                {title: "上月总量"},
-                {title: "该月总量"},
-                {title: "增幅"}
-            ],
-            ajax: {
-                url: '../wsale',
-                type: 'POST',
-                contentType: 'application/json',
-                data: function (o) {
-                    o.year = year.val();
-                    o.month = month.val();
-                    return JSON.stringify(o);
-                },
-                dataSrc: function (json) {
-                    for (var i = 0, ien = json.data.length; i < ien; i++) {
-                        json.data[i][5] = (json.data[i][5] * 100).toFixed(1) + "%";
+    function clickSearch() {
+        if (dataTable) {
+            dataTable.ajax.reload(null, false);
+        } else {
+            dataTable = table.find("table").DataTable({
+                scrollY: viewHeight - 315,
+                scrollCollapse: true,
+                serverSide: true,
+                searchHighlight: true,
+                columns: [
+                    {title: "节点id"},
+                    {title: "节点名"},
+                    {title: "地址"},
+                    {title: "上月总量"},
+                    {title: "该月总量"},
+                    {title: "增幅"}
+                ],
+                ajax: {
+                    url: '../wsale',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: function (o) {
+                        o.year = year.val();
+                        o.month = month.val();
+                        return JSON.stringify(o);
+                    },
+                    dataSrc: function (json) {
+                        for (var i = 0, ien = json.data.length; i < ien; i++) {
+                            json.data[i][5] = (json.data[i][5] * 100).toFixed(1) + "%";
+                        }
+                        return json.data;
                     }
-                    return json.data;
-                }
-            },
-            language: {
-                emptyTable: "数据不可用",
-                info: "第_START_至第_END_项，共_TOTAL_项",
-                infoEmpty: "无项目",
-                infoFiltered: "(从总计_MAX_项中过滤)",
-                infoPostFix: "",
-                thousands: ",",
-                lengthMenu: "显示_MENU_项目",
-                loadingRecords: "载入中...",
-                processing: "处理中...",
-                search: "关键字查询：",
-                zeroRecords: "无匹配项",
-                paginate: {
-                    first: "首页",
-                    last: "尾页",
-                    next: "下一页",
-                    previous: "上一页"
                 },
-                aria: {
-                    sortAscending: ": 升序",
-                    sortDescending: ": 降序"
+                language: {
+                    emptyTable: "数据不可用",
+                    info: "第_START_至第_END_项，共_TOTAL_项",
+                    infoEmpty: "无项目",
+                    infoFiltered: "(从总计_MAX_项中过滤)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "显示_MENU_项目",
+                    loadingRecords: "载入中...",
+                    processing: "处理中...",
+                    search: "关键字查询：",
+                    zeroRecords: "无匹配项",
+                    paginate: {
+                        first: "首页",
+                        last: "尾页",
+                        next: "下一页",
+                        previous: "上一页"
+                    },
+                    aria: {
+                        sortAscending: ": 升序",
+                        sortDescending: ": 降序"
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     changePassHint.css('display', 'none');
@@ -237,9 +242,7 @@ $(document).ready(function () {
     tab.click(clickTab);
 
     refresh.click(clickRefresh);
-    search.click(function () {
-        dataTable.ajax.reload(null, false);
-    });
+    search.click(clickSearch);
 
     maxmin.click(updateGraph);
     avg.click(updateGraph);
