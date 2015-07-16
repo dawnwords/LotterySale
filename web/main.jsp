@@ -34,6 +34,19 @@
     <% } %>
     <% } %>
 </div>
+<div class="modal fade" id="show-unit" tabindex="-1" role="dialog" aria-labelledby="show-unit-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="show-unit-title">节点信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal"></form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-labelledby="change-password-title"
      aria-hidden="true">
     <div class="modal-dialog">

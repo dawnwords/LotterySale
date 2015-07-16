@@ -31,6 +31,7 @@ $(document).ready(function () {
         changePassHint = $(".change-pass"),
         year = $("#funcbar-warning-year"),
         month = $("#funcbar-warning-month"),
+        unitInfoPopup = $("#show-unit"),
         visibility = [
             [chart, time, population, view, refresh],
             [chart, compare, population, view, refresh],
@@ -232,6 +233,32 @@ $(document).ready(function () {
                         sortDescending: ": 降序"
                     }
                 }
+            });
+            table.on("click", "tr", function () {
+                $.ajax({
+                    url: '../unitinfo',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        unitId: dataTable.rows($(this)).data()[0][0]
+                    }),
+                    success: function (data) {
+                        if(data.unitInfo && data.unitInfo.length > 0){
+                            var html = "";
+                            for (var i in data.unitInfo) {
+                                var info = data.unitInfo[i];
+                                html += '<div class="form-group">' +
+                                    '   <label for="field-' + info.title + '" class="col-xs-2 control-label">' + info.titleCh + ':</label>' +
+                                    '   <div class="col-xs-10">' +
+                                    '       <input type="text" class="form-control" id="field-' + info.title + '" value="' + info.value + '" readonly>'+
+                                    '    </div>' +
+                                    '</div>';
+                            }
+                            unitInfoPopup.find("form").html(html);
+                            unitInfoPopup.modal('show');
+                        }
+                    }
+                })
             });
         }
     }
